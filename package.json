@@ -1,0 +1,26 @@
+{
+  "name": "contactLight",
+  "version": "1.0.0",
+  "description": "A trivial contact manager demo project",
+  "main": "server.js",
+  "scripts": {
+    "server-dev": "env-cmd -f ./config/dev.env nodemon --inspect src/server.js",
+    "test": "env-cmd -f ./config/test.env jest --watch --runInBand",
+    "client-install": "cd client && npm install",
+    "start": "node src/server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server-dev\" \"npm run client\""
+  },
+  "author": "Robert Thomas",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.5.9",
+    "mongoose": "^5.9.25"
+  },
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "env-cmd": "^10.1.0",
+    "nodemon": "^2.0.4"
+  }
+}

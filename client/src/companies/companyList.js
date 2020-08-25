@@ -1,38 +1,34 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import ResponsiveTable from '../components/responsiveTable';
-import { sortByField } from '../components/utilities';
-import AbstractList from '../abstractList';
+import AbstractList from '../components/abstractList';
+import ListHeaderFooter from '../components/listHeaderFooter';
 
 class CompanyList extends AbstractList {
+    
     state = {}
-    // Define the column header labels 
-    labels = ['Name', 'URL', 'Address', 'City', 'Phone'];
     
     constructor (props){
-        super(props);
-
-        const fieldOrder = ['name', 'url', 'address', 'city', 'phone']
+        super({
+            ...props,
+            fieldOrder : ['name', 'url', 'address', 'city', 'phone'],
+            labels: ['Name', 'URL', 'Address', 'City', 'Phone']
+        });
         
-        const orderedData = this.applyColumnOrder(fieldOrder, props.companies)
+        const orderedData = this.applyColumnOrder(this.fieldOrder, props.companies)
 
         this.state = {
             column: undefined,     
             ascending: undefined,
             data: orderedData
         }
-        this.sort = this.sort.bind(this);
+        this.showCompanyPopup= this.showCompanyPopup.bind(this);
     }
 
-    sort = (column, ascending) => {
-        const sortedData = this.sortByColumn(this.state.data, column, ascending);
-        this.setState( {
-            ...this.state,
-            column,
-            ascending,
-            data: sortedData
-        })
+    showCompanyPopup(){
+
     }
 
     render() {
@@ -40,12 +36,14 @@ class CompanyList extends AbstractList {
             doSort: this.sort, 
             column: this.state.column, 
             ascending: this.state.ascending
-        }    
+        }
+        const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color    
         return (
-            <>
-            <h5> Companies</h5>
-            <ResponsiveTable data={this.state.data} labels={this.labels} sortProps={sortProps}/>
-            </>
+            <div>
+                <ListHeaderFooter header='true' name='Companies' label='New Company'/>
+                <ResponsiveTable data={this.state.data} labels={this.labels} sortProps={sortProps} colors={colors} onClick={this.showCompanyPopup}/>
+                <
+            </div>
         )
     }
 }
@@ -57,5 +55,12 @@ const mapStateToProps = state => {
     }
 }
 
+const mapDispatchToProps = dispatch => {
+    return {
+        saveNewModeratorUser: user => dispatch({ type: actions.STORE_NEW_USER, user }),
+        saveNewModerator: moderator => dispatch(actions.saveModerator(moderator)),
+        changeModeratorStatus: moderator => dispatch(actions.changeModeratorStatus(moderator))
+    };
+};
 
-export default connect(mapStateToProps)(CompanyList);
+export default connect(mapStateToProps, mapDispatchToProps)(CompanyList);
