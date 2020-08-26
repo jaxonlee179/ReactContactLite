@@ -1,7 +1,7 @@
 /**
  * This reducer deals with all states related to appointments
  */
-import * as actions from './appointmentActions';
+import * as actions from './AppointmentActions';
 
 const initialState = {
     appointments: []

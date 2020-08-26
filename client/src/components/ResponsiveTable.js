@@ -1,9 +1,14 @@
-/*
-* A responsive table component. It switches from a conventional table to the Collapse By Rows form
+/** 
+ * A responsive table component. It switches from a conventional table to the Collapse By Rows form
+ * In the table form the columns are sortable. 
+ * 
+ * Columns can be specified as containing URLs, in which case the cell content is rendered as link elements,
+ * opening a new window, rather than plain text. 
+ * 
+ * A click listener can be supplied to process clicks elsewhere in a row. 
 */
 import React, { useState } from 'react';
 import styled from 'styled-components'
-import { CardColumns } from 'react-bootstrap';
 
 /**
  * Generates a Table component
@@ -11,7 +16,9 @@ import { CardColumns } from 'react-bootstrap';
  * @param {object array} props.data Table data, one element per row 
  * @param {object} props.colors (Optional) Color override values 
  * @param {string} props.border (Optional) Border override style
- * @param {object} props.sortProps (Optional) 
+ * @param {object} props.sortProps (Optional)
+ * @param {object} props.urlColumns (Optional) array of column indices to be marked up as a link
+ * @param {object} props.onRowClick (Optionsl) listener for mouse click events 
  */
 const responsiveTable = props => {
     const cellWidth = ((1 / props.labels.length) * 100).toString().split('.')[0];
@@ -33,7 +40,11 @@ const responsiveTable = props => {
                         labels={props.labels} 
                         colors={colors} 
                         cellWidth={cellWidth} 
-                        primary={props.primary} key={index}/>
+                        primary={props.primary} 
+                        key={index}
+                        rowIndex={index}
+                        urlColumns = {props.urlColumns}
+                        onRowClick = {props.onRowClick}/>
                 )
             })}
         </div>
@@ -117,13 +128,13 @@ const Row = props => {
     const values = Object.values(props.data)
     return <div className={props.className}>
             {values.map((value, index)=> {
-                return (
-                    <StyledCell width={props.cellWidth} colors={props.colors} 
-                        primary = {props.primary === index} key={index}>
+                const isUrl = props.urlColumns && props.urlColumns.includes(index);
+                    return (
+                        <StyledCell width={props.cellWidth} colors={props.colors} primary={props.primary===index} key={index}>
                             <CollapsedLabel>{props.labels[index]}</CollapsedLabel>
-                            <CellContent>{value}</CellContent>
-                    </StyledCell>
-                )
+                            <CellContent value={value} isUrl={isUrl} onRowClick={(e) => props.onRowClick(e, props.rowIndex)}></CellContent>
+                        </StyledCell>
+                    )
             })}
     </div>
 }
@@ -161,9 +172,23 @@ const CollapsedLabel = styled.div`
         overflow: hidden;    
     }
 `
-const CellContent  = styled.div`
+const inlineBlock = {display: 'inline-block'}
+const UnstyledCellContent = props => {
+    if (props.isUrl){
+        const url = '/' + props.value;
+        return (
+            <a href={url} target='_blank'>{props.value}</a>
+        )
+    }
+    else {
+        return (
+            <div style={inlineBlock} onClick={props.onRowClick}>{props.value}</div>
+        )
+    }
+}
+const CellContent = styled(UnstyledCellContent)`
     @media all and (max-width: 768px) {
-        display: inline-block;
+        display: inline-block !important;
         overflow: hidden;
     }
 `

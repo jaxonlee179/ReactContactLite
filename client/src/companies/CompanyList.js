@@ -1,10 +1,10 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { connect } from 'react-redux';
-import ResponsiveTable from '../components/responsiveTable';
-import AbstractList from '../components/abstractList';
-import ListHeaderFooter from '../components/listHeaderFooter';
+import ResponsiveTable from '../components/ResponsiveTable';
+import AbstractList from '../components/AbstractList';
+import ListHeaderFooter from '../components/ListHeaderFooter';
+import Company from './Company';
 
 class CompanyList extends AbstractList {
     
@@ -24,30 +24,33 @@ class CompanyList extends AbstractList {
             ascending: undefined,
             data: orderedData
         }
-        this.showCompanyPopup= this.showCompanyPopup.bind(this);
+        this.handleClick= this.handleClick.bind(this);
     }
 
-    showCompanyPopup(){
-
+    /**
+     * Responds to mouse click on non URL fields
+     * @param {object} e the click event object
+     * @param {number} rowIndex 
+     */
+    handleClick(e, rowIndex){
+        console.log(e)
     }
-
     render() {
         const sortProps = {
             doSort: this.sort, 
             column: this.state.column, 
             ascending: this.state.ascending
         }
-        const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color    
+        const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
+        const urlColumns = [1]    
         return (
             <div>
                 <ListHeaderFooter header='true' name='Companies' label='New Company'/>
-                <ResponsiveTable data={this.state.data} labels={this.labels} sortProps={sortProps} colors={colors} onClick={this.showCompanyPopup}/>
-                <
+                <ResponsiveTable data={this.state.data} labels={this.labels} sortProps={sortProps} colors={colors} urlColumns={urlColumns} onRowClick={this.handleClick}/>
             </div>
         )
     }
 }
-
 
 const mapStateToProps = state => {
     return {
@@ -55,12 +58,4 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    return {
-        saveNewModeratorUser: user => dispatch({ type: actions.STORE_NEW_USER, user }),
-        saveNewModerator: moderator => dispatch(actions.saveModerator(moderator)),
-        changeModeratorStatus: moderator => dispatch(actions.changeModeratorStatus(moderator))
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CompanyList);
+export default connect(mapStateToProps)(CompanyList);

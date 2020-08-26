@@ -6,17 +6,17 @@ import { LinkContainer } from 'react-router-bootstrap';
 import './App.css';
 import { CircleSpinner } from "react-spinners-kit";
 
-import AppointmentList from './appointments/appointmentList';
-import CompanyList from './companies/companyList';
-import ContactList from './contacts/contactList';
-import PersonList from './persons/personList';
-import PositionList from './positions/positionList';
+import AppointmentList from './appointments/AppointmentList';
+import CompanyList from './companies/CompanyList';
+import ContactList from './contacts/ContactList';
+import PersonList from './persons/PersonList';
+import PositionList from './positions/PositionList';
 
-import * as appointmentActions from './appointments/appointmentActions';
-import * as companyActions from './companies/companyActions';
-import * as contactActions from './contacts/contactActions';
-import * as personActions from './persons/personActions';
-import * as positionActions from './positions/positionActions';
+import * as appointmentActions from './appointments/AppointmentActions';
+import * as companyActions from './companies/CompanyActions';
+import * as contactActions from './contacts/ContactActions';
+import * as personActions from './persons/PersonActions';
+import * as positionActions from './positions/PositionActions';
 
 import axios from 'axios';
 
@@ -129,7 +129,7 @@ class App extends Component {
                     </Navbar.Collapse>                    
                 </Navbar>
 
-                <div style={{height: '100%'}}>{routes}</div>                               
+                <div style={{height: '100%', paddingLeft: '0.5em', paddingRight: '0.5em'}}>{routes}</div>                               
             </div>
         );
     }

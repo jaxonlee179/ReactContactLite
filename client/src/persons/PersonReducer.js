@@ -1,7 +1,7 @@
 /**
  * This reducer deals with all states related to persons
  */
-import * as actions from './personActions';
+import * as actions from './PersonActions';
 
 const initialState = {
     persons: []

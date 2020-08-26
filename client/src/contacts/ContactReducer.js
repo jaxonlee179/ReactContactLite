@@ -1,7 +1,7 @@
 /**
  * This reducer deals with all states related to contacts
  */
-import * as actions from './contactActions';
+import * as actions from './ContactActions';
 
 const initialState = {
     contacts: []

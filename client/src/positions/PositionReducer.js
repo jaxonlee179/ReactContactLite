@@ -1,7 +1,7 @@
 /**
  * This reducer deals with all states related to positions
  */
-import * as actions from './positionActions';
+import * as actions from './PositionActions';
 
 const initialState = {
     positions: []

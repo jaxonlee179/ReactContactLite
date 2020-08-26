@@ -1,7 +1,7 @@
 /**
  * This reducer deals with all states related to companies
  */
-import * as actions from './companyActions';
+import * as actions from './CompanyActions';
 
 const initialState = {
     companies: []
