@@ -1,3 +1,4 @@
-# Under Construction!
+# ReactContactLite
 
-A trivial contact management app based on React, Node.js, Express and MongoDB
+A simple app based on React, NodeJS, ExpressJS and MongoDB
+
