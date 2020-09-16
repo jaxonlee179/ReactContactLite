@@ -1,49 +1,63 @@
 /**
- * A modal popup for creating or viewing a company
+ * A modal popup for creating or viewing/editing a company
+ * props.company
+ * props.new
  */
 import React, { Component } from 'react';
 import { Modal, Panel, Button } from 'react-bootstrap';
 import * as actions from './CompanyActions';
 import { connect } from 'react-redux';
+import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
+import * as x from '../components/ResponsiveForm';
 
 class Company extends Component {
 
     state = {}
 
     constructor(props) {
-        super(props);
-        this.save = this.save.bind(this);
-        this.cancel = this.cancel.bind(this);
+        super(props)
+        this.handleClose = this.handleClose.bind(this)
+        if (props.company){
+            this.state.company = props.company
+            this.state.isNew = false;
+        }
+        else {
+            this.state.company = this.populateEmpty()
+            this.state.isNew = true
+        }
+     }
+
+    populateEmpty(){
+        let company = {}
+        this.fieldDefs.forEach((field, index) => {
+            company[field.name] = undefined;
+        })
+        return company;
     }
 
-    save() {
-
+    handleClose(company) {
+        console.log(company)
+        if (company){
+            this.props.saveCompany(company, this.state.sNew)
+        }
     }
 
-    cancel(){
-
-    }
-
+    fieldDefs = [
+        { name: 'name',   label: 'Name',    type: fieldType.TEXT},
+        { name: 'url',    label: 'URL',     type: fieldType.TEXT},
+        { name: 'address',label: 'Address', type: fieldType.TEXT},
+        { name: 'city',   label: 'City',    type: fieldType.TEXT},
+        { name: 'phone',  label: 'Phone',   type: fieldType.TEXT}    
+    ]
     render() {
         return (
-            <Modal show='props.show' onHide={this.cancel}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{this.props.new ? 'New Company' : 'Edit Company'}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={this.save}>Save</Button>
-                    <Button onClick={this.cancel}>Cancel</Button>
-                </Modal.Footer>
-            </Modal>  
+            <ResponsiveForm entity={this.state.company} fieldDefs={this.fieldDefs} handleClose={this.handleClose}/>
         )
     } 
 }
 const mapDispatchToProps = dispatch => {
     return {
-        saveCompany: user => dispatch({ type: actions.SAVE_COMPANY, user }),
+        saveCompany: (company, isNew) => dispatch(actions.saveCompany(company, isNew))
     };
 };
 

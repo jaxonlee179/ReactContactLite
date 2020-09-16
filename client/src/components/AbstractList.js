@@ -25,6 +25,8 @@ class AbstractList extends Component {
             columnOrder.forEach((key) => {
                 values.push(object[key]);
             })
+            // Add the object as the last element
+            values.push(object);
             sortedArray.push(values)
         })
 

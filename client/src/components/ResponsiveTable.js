@@ -1,5 +1,7 @@
 /** 
- * A responsive table component. It switches from a conventional table to the Collapse By Rows form
+ * A sortable responsive table component. It switches from a conventional table to the 
+ * Collapse By Rows form.
+ * 
  * In the table form the columns are sortable. 
  * 
  * Columns can be specified as containing URLs, in which case the cell content is rendered as link elements,
@@ -7,18 +9,19 @@
  * 
  * A click listener can be supplied to process clicks elsewhere in a row. 
 */
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components'
 
 /**
- * Generates a Table component
- * @param {string array} props.labels Column labels  
+ * Generates a ResponsiveTable component
  * @param {object array} props.data Table data, one element per row 
+ * @param {string array} props.labels Column labels  
  * @param {object} props.colors (Optional) Color override values 
  * @param {string} props.border (Optional) Border override style
  * @param {object} props.sortProps (Optional)
  * @param {object} props.urlColumns (Optional) array of column indices to be marked up as a link
- * @param {object} props.onRowClick (Optionsl) listener for mouse click events 
+ * @param {object} props.onRowClick (Optional) listener for mouse click events 
+ * @param {boolean} props.hasAppendedObject (Optional) if true, the last element of each row in props.data is an object which should not be rendered
  */
 const responsiveTable = props => {
     const cellWidth = ((1 / props.labels.length) * 100).toString().split('.')[0];
@@ -43,8 +46,10 @@ const responsiveTable = props => {
                         primary={props.primary} 
                         key={index}
                         rowIndex={index}
-                        urlColumns = {props.urlColumns}
-                        onRowClick = {props.onRowClick}/>
+                        urlColumns={props.urlColumns}
+                        onRowClick={props.onRowClick}
+                        hasAppendedObject={props.hasAppendedObject} 
+                        />
                 )
             })}
         </div>
@@ -126,17 +131,23 @@ const StyledHeader = styled(Header)`
 `
 const Row = props => {
     const values = Object.values(props.data)
-    return <div className={props.className}>
+    const attachedData = props.hasAppendedObject ? values[values.length - 1] : undefined
+    return (<div className={props.className}>
             {values.map((value, index)=> {
                 const isUrl = props.urlColumns && props.urlColumns.includes(index);
+                if (props.hasAppendedObject && index === props.data.length-1){
+                    return ''
+                }
+                else {
                     return (
                         <StyledCell width={props.cellWidth} colors={props.colors} primary={props.primary===index} key={index}>
                             <CollapsedLabel>{props.labels[index]}</CollapsedLabel>
-                            <CellContent value={value} isUrl={isUrl} onRowClick={(e) => props.onRowClick(e, props.rowIndex)}></CellContent>
+                            <CellContent value={value} isUrl={isUrl} onRowClick={(e) => props.onRowClick(e, props.rowIndex, attachedData)}></CellContent>
                         </StyledCell>
                     )
+                }
             })}
-    </div>
+    </div>)
 }
 
 const StyledRow = styled(Row)`

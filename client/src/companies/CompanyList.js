@@ -22,19 +22,39 @@ class CompanyList extends AbstractList {
         this.state = {
             column: undefined,     
             ascending: undefined,
-            data: orderedData
+            data: orderedData,
+            display: false
         }
-        this.handleClick= this.handleClick.bind(this);
+        this.selectCompany= this.selectCompany.bind(this);
+        this.createNew= this.createNew.bind(this);
     }
 
     /**
-     * Responds to mouse click on non URL fields
-     * @param {object} e the click event object
-     * @param {number} rowIndex 
+     * Displays the popup to creatre a new company
      */
-    handleClick(e, rowIndex){
-        console.log(e)
+    createNew(){
+        this.displayCompanyForm()
     }
+
+    /**
+     * Responds to mouse click anywhere on the row expect url fields
+     * @param {object} e the click event object
+     * @param {number} rowIndex display index of the row object
+     * @param {object} company the full MongoDB company object retrieved from the server
+     */
+    selectCompany(e, rowIndex, company){
+        this.displayCompanyForm(company)
+    }
+
+    displayCompanyForm(company){
+        this.setState({
+            ...this.state,
+            display: true,
+    /*        new: false,*/
+            company
+        })
+    }
+
     render() {
         const sortProps = {
             doSort: this.sort, 
@@ -42,11 +62,20 @@ class CompanyList extends AbstractList {
             ascending: this.state.ascending
         }
         const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
-        const urlColumns = [1]    
+        const urlColumns = [1]   
+        // new={this.state.new} 
         return (
             <div>
-                <ListHeaderFooter header='true' name='Companies' label='New Company'/>
-                <ResponsiveTable data={this.state.data} labels={this.labels} sortProps={sortProps} colors={colors} urlColumns={urlColumns} onRowClick={this.handleClick}/>
+                <ListHeaderFooter header='true' name='Companies' label='New Company' createNew={this.createNew}/>
+                <ResponsiveTable 
+                    data={this.state.data}
+                    labels={this.labels}
+                    colors={colors}
+                    sortProps={sortProps}
+                    urlColumns={urlColumns}
+                    onRowClick={this.selectCompany}
+                    hasAppendedObject='true'/>
+                {this.state.display ? <Company company={this.state.company}></Company> : ''}
             </div>
         )
     }

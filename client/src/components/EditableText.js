@@ -8,13 +8,13 @@
  * Additional props:
  * type:            the html input type, either 'text' or 'url'
  * label:           the control label
- * labelClass:      label style class
- * valueClass:      value style class
+ * //labelClass:      label style class
+ * //valueClass:      value style class
  * placeholder:     placeholder to be displayed when mode = 'create' 
  * value:           the current value
  * changeHandler:   function to receive the onChange event     
  * attribute:       name of the attribute
- * dimensions:      optional 12-column grid dimensions of the label and options list in format "x1,x2[,x3]"
+ * //dimensions:      optional 12-column grid dimensions of the label and options list in format "x1,x2[,x3]"
  *                  where x1 = column width of label
  *                        x2 = column width of the value
  *                        x3 = column odffset of label (optional)
