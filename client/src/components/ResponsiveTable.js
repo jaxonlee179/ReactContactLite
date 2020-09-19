@@ -14,7 +14,7 @@ import styled from 'styled-components'
 
 /**
  * Generates a ResponsiveTable component
- * @param {object array} props.data Table data, one element per row 
+ * @param {object array} props.entities Table data, one element per row 
  * @param {string array} props.labels Column labels  
  * @param {object} props.colors (Optional) Color override values 
  * @param {string} props.border (Optional) Border override style
@@ -36,11 +36,12 @@ const responsiveTable = props => {
     return (
         <div style={tableStyle}>
             <StyledHeader labels={props.labels} cellWidth={cellWidth} colors={colors} sortProps={props.sortProps}/>
-            {props.data.map((datum, index) => {
+            {props.entities.map((entity, index) => {
                 return (
-                    <StyledRow data={datum} 
+                    <StyledRow entity={entity} 
                         striped={index % 2 === 1} 
-                        labels={props.labels} 
+                        labels={props.labels}
+                        fieldOrder={props.fieldOrder} 
                         colors={colors} 
                         cellWidth={cellWidth} 
                         primary={props.primary} 
@@ -48,7 +49,6 @@ const responsiveTable = props => {
                         rowIndex={index}
                         urlColumns={props.urlColumns}
                         onRowClick={props.onRowClick}
-                        hasAppendedObject={props.hasAppendedObject} 
                         />
                 )
             })}
@@ -130,23 +130,16 @@ const StyledHeader = styled(Header)`
     }
 `
 const Row = props => {
-    const values = Object.values(props.data)
-    const attachedData = props.hasAppendedObject ? values[values.length - 1] : undefined
     return (<div className={props.className}>
-            {values.map((value, index)=> {
-                const isUrl = props.urlColumns && props.urlColumns.includes(index);
-                if (props.hasAppendedObject && index === props.data.length-1){
-                    return ''
-                }
-                else {
-                    return (
-                        <StyledCell width={props.cellWidth} colors={props.colors} primary={props.primary===index} key={index}>
-                            <CollapsedLabel>{props.labels[index]}</CollapsedLabel>
-                            <CellContent value={value} isUrl={isUrl} onRowClick={(e) => props.onRowClick(e, props.rowIndex, attachedData)}></CellContent>
-                        </StyledCell>
-                    )
-                }
-            })}
+        {props.fieldOrder.map((fieldName, index) => {
+            const isUrl = props.urlColumns && props.urlColumns.includes(index);
+            return (
+                <StyledCell width={props.cellWidth} colors={props.colors} primary={props.primary === index} key={index}>
+                    <CollapsedLabel>{props.labels[index]}</CollapsedLabel>
+                    <CellContent value={props.entity[fieldName]} isUrl={isUrl} onRowClick={(e) => props.onRowClick(e, props.rowIndex, props.entity)}></CellContent>
+                </StyledCell>
+            )
+        })}
     </div>)
 }
 

@@ -4,11 +4,7 @@
  * props.new
  */
 import React, { Component } from 'react';
-import { Modal, Panel, Button } from 'react-bootstrap';
-import * as actions from './CompanyActions';
-import { connect } from 'react-redux';
 import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
-import * as x from '../components/ResponsiveForm';
 
 class Company extends Component {
 
@@ -16,16 +12,8 @@ class Company extends Component {
 
     constructor(props) {
         super(props)
-        this.handleClose = this.handleClose.bind(this)
-        if (props.company){
-            this.state.company = props.company
-            this.state.isNew = false;
-        }
-        else {
-            this.state.company = this.populateEmpty()
-            this.state.isNew = true
-        }
-     }
+        this.state.company = props.company ? props.company : this.populateEmpty()
+    }
 
     populateEmpty(){
         let company = {}
@@ -33,13 +21,6 @@ class Company extends Component {
             company[field.name] = undefined;
         })
         return company;
-    }
-
-    handleClose(company) {
-        console.log(company)
-        if (company){
-            this.props.saveCompany(company, this.state.sNew)
-        }
     }
 
     fieldDefs = [
@@ -51,14 +32,9 @@ class Company extends Component {
     ]
     render() {
         return (
-            <ResponsiveForm entity={this.state.company} fieldDefs={this.fieldDefs} handleClose={this.handleClose}/>
+            <ResponsiveForm entity={this.state.company} fieldDefs={this.fieldDefs} closeForm={this.props.closeForm}/>
         )
     } 
 }
-const mapDispatchToProps = dispatch => {
-    return {
-        saveCompany: (company, isNew) => dispatch(actions.saveCompany(company, isNew))
-    };
-};
 
-export default connect(null, mapDispatchToProps)(Company)
+export default Company

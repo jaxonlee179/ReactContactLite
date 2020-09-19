@@ -1,61 +1,91 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ResponsiveTable from '../components/ResponsiveTable';
-import AbstractList from '../components/AbstractList';
 import ListHeaderFooter from '../components/ListHeaderFooter';
 import Company from './Company';
+import * as actions from './CompanyActions';
 
-class CompanyList extends AbstractList {
+
+class CompanyList extends Component {
     
     state = {}
     
     constructor (props){
-        super({
-            ...props,
-            fieldOrder : ['name', 'url', 'address', 'city', 'phone'],
-            labels: ['Name', 'URL', 'Address', 'City', 'Phone']
-        });
+        super(props);
+ 
+        this.fieldOrder = ['name', 'url', 'address', 'city', 'phone']
+        this.labels = ['Name', 'URL', 'Address', 'City', 'Phone']
         
-        const orderedData = this.applyColumnOrder(this.fieldOrder, props.companies)
-
         this.state = {
             column: undefined,     
             ascending: undefined,
-            data: orderedData,
-            display: false
+            displayForm: false,
+
         }
-        this.selectCompany= this.selectCompany.bind(this);
+        this.select= this.select.bind(this);
         this.createNew= this.createNew.bind(this);
+        this.closeForm= this.closeForm.bind(this);
     }
 
+    sort = (column, ascending) => {
+        const sorted = [...this.props.companies].sort( (a, b) => {
+            return ascending ? -a[this.fieldOrder[column]].localeCompare(b[this.fieldOrder[column]]) 
+            : a[this.fieldOrder[column]].localeCompare(b[this.fieldOrder[column]])
+        })
+        this.props.storeAll(sorted)
+        
+        this.setState( {
+            ...this.state,
+            column,
+            ascending
+        })
+    }
     /**
-     * Displays the popup to creatre a new company
+     * Displays the popup to create a new company
      */
     createNew(){
-        this.displayCompanyForm()
+        this.setState({
+            ...this.state,
+            selectedRow: null,
+            displayForm: true
+        })
     }
 
     /**
-     * Responds to mouse click anywhere on the row expect url fields
+     * Responds to mouse click anywhere on the row except url fields
      * @param {object} e the click event object
-     * @param {number} rowIndex display index of the row object
+     * @param {number} selectedRow display index of the row object
      * @param {object} company the full MongoDB company object retrieved from the server
      */
-    selectCompany(e, rowIndex, company){
-        this.displayCompanyForm(company)
-    }
-
-    displayCompanyForm(company){
+    select(e, selectedRow, company){
         this.setState({
             ...this.state,
-            display: true,
-    /*        new: false,*/
+            selectedRow,
+            displayForm: true,
             company
         })
     }
 
+    // displayForm(company){
+    //     this.setState({
+    //         ...this.state,
+    //         displayForm: true,
+    //         company
+    //     })
+    // }
+
+    closeForm(company){
+        this.setState({
+            ...this.state,
+            displayForm: false
+        })
+        if (company) {
+            this.props.saveCompany(company, this.state.selectedRow)
+        }    
+    }
+
     render() {
+
         const sortProps = {
             doSort: this.sort, 
             column: this.state.column, 
@@ -63,19 +93,19 @@ class CompanyList extends AbstractList {
         }
         const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
         const urlColumns = [1]   
-        // new={this.state.new} 
         return (
             <div>
                 <ListHeaderFooter header='true' name='Companies' label='New Company' createNew={this.createNew}/>
                 <ResponsiveTable 
-                    data={this.state.data}
+                    entities={this.props.companies}
                     labels={this.labels}
+                    fieldOrder={this.fieldOrder}
                     colors={colors}
                     sortProps={sortProps}
                     urlColumns={urlColumns}
-                    onRowClick={this.selectCompany}
+                    onRowClick={this.select}
                     hasAppendedObject='true'/>
-                {this.state.display ? <Company company={this.state.company}></Company> : ''}
+                {this.state.displayForm ? <Company company={this.state.company} closeForm={this.closeForm}></Company> : ''}
             </div>
         )
     }
@@ -87,4 +117,11 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(CompanyList);
+const mapDispatchToProps = dispatch => {
+    return {
+        saveCompany: (company, selectedRow) => dispatch(actions.saveCompany(company, selectedRow)),
+        storeAll: (companies) => dispatch( { type: actions.STORE_ALL, companies})
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CompanyList);

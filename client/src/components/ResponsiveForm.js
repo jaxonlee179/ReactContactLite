@@ -60,15 +60,7 @@ class ResponsiveForm extends Component{
     
     constructor(props){
         super(props)
-
-        this.state.show = true;
-        if (props.entity){
-            this.state.isNew = false
-            this.state.entity = {...props.entity}
-        }
-        else {
-            this.state.isNew = true
-        }
+        this.state.entity = {...props.entity}
         
         this.save= this.save.bind(this);
         this.cancel= this.cancel.bind(this);
@@ -76,12 +68,10 @@ class ResponsiveForm extends Component{
     }
 
     save(){
-        this.setState({show: false})
-        this.props.handleClose(this.state.entity, this.props.isNew)
+        this.props.closeForm(this.state.entity)
     }
     cancel(){
-        this.setState({show: false})
-        this.props.handleClose()
+        this.props.closeForm()
     }
     onChange(e){
         const entity = {...this.state.entity}
@@ -94,7 +84,7 @@ class ResponsiveForm extends Component{
 
     render(){
         return (
-            <Modal show={this.state.show} onHide={this.cancel}>
+            <Modal show='true' >
                 <Modal.Header closeButton>
                     <Modal.Title>{this.props.new ? 'New Company' : 'Edit Company'}</Modal.Title>
                 </Modal.Header>
