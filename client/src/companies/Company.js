@@ -1,20 +1,22 @@
 /**
- * A modal popup for creating or viewing/editing a company
- * props.company
- * props.new
+ * A modal popup for creating or viewing/editing a company.
+ * Properties:
+ * props.company (optional) an existing company to edit
+ * props.closeForm handler for Save and Close buttons
  */
 import React, { Component } from 'react';
 import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
 
 class Company extends Component {
 
-    state = {}
+    // state = {}
 
     constructor(props) {
         super(props)
-        this.state.company = props.company ? props.company : this.populateEmpty()
+        // this.state.company = props.company ? props.company : this.populateEmpty()
     }
 
+    // Creates a new empty company object
     populateEmpty(){
         let company = {}
         this.fieldDefs.forEach((field, index) => {
@@ -31,8 +33,10 @@ class Company extends Component {
         { name: 'phone',  label: 'Phone',   type: fieldType.TEXT}    
     ]
     render() {
+        const entity = this.props.company ? this.props.company : this.populateEmpty()
+        const isNew = this.props.company == null
         return (
-            <ResponsiveForm entity={this.state.company} fieldDefs={this.fieldDefs} closeForm={this.props.closeForm}/>
+            <ResponsiveForm entity={entity} entityClass='Company' fieldDefs={this.fieldDefs} closeForm={this.props.closeForm} isNew={isNew}/>
         )
     } 
 }
