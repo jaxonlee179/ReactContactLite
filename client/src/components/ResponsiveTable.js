@@ -179,7 +179,7 @@ const CollapsedLabel = styled.div`
 const inlineBlock = {display: 'inline-block'}
 const UnstyledCellContent = props => {
     if (props.isUrl){
-        const url = '/' + props.value;
+        const url = props.value.startsWith('http') ? props.value : 'http://' + props.value
         return (
             <a href={url} target='_blank'>{props.value}</a>
         )
