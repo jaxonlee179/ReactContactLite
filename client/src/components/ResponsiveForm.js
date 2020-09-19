@@ -85,7 +85,7 @@ class ResponsiveForm extends Component{
     render(){
         return (
             <Modal show='true' >
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <Modal.Title>{this.props.new ? 'New Company' : 'Edit Company'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
