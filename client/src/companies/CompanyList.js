@@ -47,7 +47,8 @@ class CompanyList extends Component {
         this.setState({
             ...this.state,
             selectedRow: null,
-            displayForm: true
+            displayForm: true,
+            company: null
         })
     }
 
@@ -65,14 +66,6 @@ class CompanyList extends Component {
             company
         })
     }
-
-    // displayForm(company){
-    //     this.setState({
-    //         ...this.state,
-    //         displayForm: true,
-    //         company
-    //     })
-    // }
 
     closeForm(company){
         this.setState({
