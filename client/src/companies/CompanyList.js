@@ -13,9 +13,13 @@ class CompanyList extends Component {
     constructor (props){
         super(props);
  
-        this.fieldOrder = ['name', 'url', 'address', 'city', 'phone']
-        this.labels = ['Name', 'URL', 'Address', 'City', 'Phone']
-        
+        this.fieldDefs = [
+            { name: 'name',     label: 'Name' },
+            { name: 'url',      label: 'URL',       isUrl: true },
+            { name: 'address',  label: 'Address'},
+            { name: 'city',     label: 'City' },
+            { name: 'phone',    label: 'Phone' }
+        ]
         this.state = {
             column: undefined,     
             ascending: undefined,
@@ -29,8 +33,8 @@ class CompanyList extends Component {
 
     sort = (column, ascending) => {
         const sorted = [...this.props.companies].sort( (a, b) => {
-            return ascending ? -a[this.fieldOrder[column]].localeCompare(b[this.fieldOrder[column]]) 
-            : a[this.fieldOrder[column]].localeCompare(b[this.fieldOrder[column]])
+            return ascending ? -a[this.fieldDefs[column].name].localeCompare(b[this.fieldDefs[column].name]) 
+            : a[this.fieldDefs[column].name].localeCompare(b[this.fieldDefs[column].name])
         })
         this.props.storeAll(sorted)
         
@@ -85,20 +89,16 @@ class CompanyList extends Component {
             ascending: this.state.ascending
         }
         const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
-        const urlColumns = [1]   
         return (
             <div>
                 <ListHeaderFooter header='true' name='Companies' label='New Company' createNew={this.createNew}/>
                 <ResponsiveTable 
                     entities={this.props.companies}
-                    labels={this.labels}
-                    fieldOrder={this.fieldOrder}
+                    fieldDefs={this.fieldDefs}
                     colors={colors}
                     sortProps={sortProps}
-                    urlColumns={urlColumns}
-                    onRowClick={this.select}
-                    hasAppendedObject='true'/>
-                {this.state.displayForm ? <Company company={this.state.company} closeForm={this.closeForm}></Company> : ''}
+                    onRowClick={this.select}/>
+                {this.state.displayForm ? <Company entity={this.state.company} closeForm={this.closeForm}></Company> : ''}
             </div>
         )
     }

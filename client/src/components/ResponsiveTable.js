@@ -1,5 +1,5 @@
 /** 
- * A sortable responsive table component. It switches from a conventional table to the 
+ * A sortable, editable and responsive table component. It switches from a conventional table to the 
  * Collapse By Rows form.
  * 
  * In the table form the columns are sortable. 
@@ -15,16 +15,14 @@ import styled from 'styled-components'
 /**
  * Generates a ResponsiveTable component
  * @param {object array} props.entities Table data, one element per row 
- * @param {string array} props.labels Column labels  
+ * @param {array} props.fieldDefs Array of {name, label, isUrl }  
  * @param {object} props.colors (Optional) Color override values 
- * @param {string} props.border (Optional) Border override style
  * @param {object} props.sortProps (Optional)
- * @param {object} props.urlColumns (Optional) array of column indices to be marked up as a link
  * @param {object} props.onRowClick (Optional) listener for mouse click events 
- * @param {boolean} props.hasAppendedObject (Optional) if true, the last element of each row in props.data is an object which should not be rendered
+ * @param {string} props.border (Optional) Border override style
  */
 const responsiveTable = props => {
-    const cellWidth = ((1 / props.labels.length) * 100).toString().split('.')[0];
+    const cellWidth = ((1 / props.fieldDefs.length) * 100).toString().split('.')[0];
     
     const tableStyle = {
         textAlign: 'left',
@@ -35,19 +33,17 @@ const responsiveTable = props => {
 
     return (
         <div style={tableStyle}>
-            <StyledHeader labels={props.labels} cellWidth={cellWidth} colors={colors} sortProps={props.sortProps}/>
+            <StyledHeader fieldDefs={props.fieldDefs} cellWidth={cellWidth} colors={colors} sortProps={props.sortProps}/>
             {props.entities.map((entity, index) => {
                 return (
                     <StyledRow entity={entity} 
                         striped={index % 2 === 1} 
-                        labels={props.labels}
-                        fieldOrder={props.fieldOrder} 
+                        fieldDefs={props.fieldDefs}
                         colors={colors} 
                         cellWidth={cellWidth} 
                         primary={props.primary} 
                         key={index}
                         rowIndex={index}
-                        urlColumns={props.urlColumns}
                         onRowClick={props.onRowClick}
                         />
                 )
@@ -95,21 +91,21 @@ const Header = props => {
     const ascending = props.sortProps ? props.sortProps.ascending : undefined;
     
     return <div className={props.className}>
-            {props.labels.map((label, index) => {
+            {props.fieldDefs.map((fieldDef, index) => {
                 if (doSort && sortColumn === index){
                     if (ascending){
                         return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index)}>
-                            {label}<span className="fas fa-caret-down fa-lg"></span>
+                            {fieldDef.label}<span className="fas fa-caret-down fa-lg"></span>
                         </div>
                     }
                     else {
                         return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index)}>
-                            {label}<span className="fas fa-caret-up fa-lg"></span>
+                            {fieldDef.label}<span className="fas fa-caret-up fa-lg"></span>
                         </div>
                     }
                 }
                 else {
-                    return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index)}>{label}</div>
+                    return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index)}>{fieldDef.label}</div>
                 }
             })}
     </div>
@@ -131,12 +127,11 @@ const StyledHeader = styled(Header)`
 `
 const Row = props => {
     return (<div className={props.className}>
-        {props.fieldOrder.map((fieldName, index) => {
-            const isUrl = props.urlColumns && props.urlColumns.includes(index);
-            return (
+        {props.fieldDefs.map((fieldDef, index) => {
+           return (
                 <StyledCell width={props.cellWidth} colors={props.colors} primary={props.primary === index} key={index}>
-                    <CollapsedLabel>{props.labels[index]}</CollapsedLabel>
-                    <CellContent value={props.entity[fieldName]} isUrl={isUrl} onRowClick={(e) => props.onRowClick(e, props.rowIndex, props.entity)}></CellContent>
+                    <CollapsedLabel>{fieldDef.label}</CollapsedLabel>
+                    <CellContent value={props.entity[fieldDef.name]} isUrl={fieldDef.isUrl} onRowClick={(e) => props.onRowClick(e, props.rowIndex, props.entity)}></CellContent>
                 </StyledCell>
             )
         })}
