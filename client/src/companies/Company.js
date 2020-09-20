@@ -7,36 +7,34 @@
 import React, { Component } from 'react';
 import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
 
+export const fieldDefs = [
+    { name: 'name',   label: 'Name',    type: fieldType.TEXT},
+    { name: 'url',    label: 'URL',     type: fieldType.URL},
+    { name: 'address',label: 'Address', type: fieldType.TEXT},
+    { name: 'city',   label: 'City',    type: fieldType.TEXT},
+    { name: 'phone',  label: 'Phone',   type: fieldType.TEXT}    
+]
+
 class Company extends Component {
 
-    // state = {}
+    entityClass = 'Company'
 
     constructor(props) {
         super(props)
-        // this.state.company = props.company ? props.company : this.populateEmpty()
     }
 
-    // Creates a new empty company object
     populateEmpty(){
-        let company = {}
+        let entity = {}
         this.fieldDefs.forEach((field, index) => {
-            company[field.name] = undefined;
+            entity[field.name] = undefined;
         })
-        return company;
+        return entity;
     }
-
-    fieldDefs = [
-        { name: 'name',   label: 'Name',    type: fieldType.TEXT},
-        { name: 'url',    label: 'URL',     type: fieldType.TEXT},
-        { name: 'address',label: 'Address', type: fieldType.TEXT},
-        { name: 'city',   label: 'City',    type: fieldType.TEXT},
-        { name: 'phone',  label: 'Phone',   type: fieldType.TEXT}    
-    ]
     render() {
-        const entity = this.props.company ? this.props.company : this.populateEmpty()
-        const isNew = this.props.company == null
+        const entity = this.props.entity ? this.props.entity : this.populateEmpty()
+        const isNew = this.props.entity == null
         return (
-            <ResponsiveForm entity={entity} entityClass='Company' fieldDefs={this.fieldDefs} closeForm={this.props.closeForm} isNew={isNew}/>
+            <ResponsiveForm entity={entity} entityClass={this.entityClass} fieldDefs={fieldDefs} closeForm={this.props.closeForm} isNew={isNew}/>
         )
     } 
 }

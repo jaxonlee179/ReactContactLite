@@ -14,7 +14,7 @@ import "react-datepicker/dist/react-datepicker.css";
 //import TimePicker from 'basic-react-timepicker';
 import { Modal, Button } from 'react-bootstrap';
 
-export const fieldType = {'TEXT': 'TEXT', 'TIME': 'TIME', 'DATE': 'DATE'}
+export const fieldType = {'TEXT': 'TEXT', 'TIME': 'TIME', 'DATE': 'DATE', 'URL': 'URL'}
 
 class ResponsiveForm extends Component{
 
@@ -104,7 +104,8 @@ const StyledLabel = styled(Label)`
 const Field = props => {
     const style={width:'100%'}
     switch (props.type) {
-        case fieldType.TEXT: return <div className={props.className}><input type='text' onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></input></div>
+        case fieldType.TEXT: 
+        case fieldType.URL:  return <div className={props.className}><input type='text' onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></input></div>
         case fieldType.DATE: return <div className={props.className}><DatePicker name={props.name} defaultValue={props.value}/></div>
         default: return <div>FUBAR</div>
     }

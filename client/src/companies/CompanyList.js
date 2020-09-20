@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ResponsiveTable from '../components/ResponsiveTable';
 import ListHeaderFooter from '../components/ListHeaderFooter';
-import Company from './Company';
+import Company, { fieldDefs } from './Company';
 import * as actions from './CompanyActions';
 
 
@@ -13,13 +13,6 @@ class CompanyList extends Component {
     constructor (props){
         super(props);
  
-        this.fieldDefs = [
-            { name: 'name',     label: 'Name' },
-            { name: 'url',      label: 'URL',       isUrl: true },
-            { name: 'address',  label: 'Address'},
-            { name: 'city',     label: 'City' },
-            { name: 'phone',    label: 'Phone' }
-        ]
         this.state = {
             column: undefined,     
             ascending: undefined,
@@ -33,8 +26,8 @@ class CompanyList extends Component {
 
     sort = (column, ascending) => {
         const sorted = [...this.props.companies].sort( (a, b) => {
-            return ascending ? -a[this.fieldDefs[column].name].localeCompare(b[this.fieldDefs[column].name]) 
-            : a[this.fieldDefs[column].name].localeCompare(b[this.fieldDefs[column].name])
+            return ascending ? -a[fieldDefs[column].name].localeCompare(b[fieldDefs[column].name]) 
+            : a[fieldDefs[column].name].localeCompare(b[fieldDefs[column].name])
         })
         this.props.storeAll(sorted)
         
@@ -94,7 +87,7 @@ class CompanyList extends Component {
                 <ListHeaderFooter header='true' name='Companies' label='New Company' createNew={this.createNew}/>
                 <ResponsiveTable 
                     entities={this.props.companies}
-                    fieldDefs={this.fieldDefs}
+                    fieldDefs={fieldDefs}
                     colors={colors}
                     sortProps={sortProps}
                     onRowClick={this.select}/>

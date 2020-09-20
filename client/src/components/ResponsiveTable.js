@@ -11,11 +11,13 @@
 */
 import React from 'react';
 import styled from 'styled-components'
+import { fieldType } from './ResponsiveForm';
+
 
 /**
  * Generates a ResponsiveTable component
  * @param {object array} props.entities Table data, one element per row 
- * @param {array} props.fieldDefs Array of {name, label, isUrl }  
+ * @param {array} props.fieldDefs Array of { name, label, type }  
  * @param {object} props.colors (Optional) Color override values 
  * @param {object} props.sortProps (Optional)
  * @param {object} props.onRowClick (Optional) listener for mouse click events 
@@ -131,7 +133,7 @@ const Row = props => {
            return (
                 <StyledCell width={props.cellWidth} colors={props.colors} primary={props.primary === index} key={index}>
                     <CollapsedLabel>{fieldDef.label}</CollapsedLabel>
-                    <CellContent value={props.entity[fieldDef.name]} isUrl={fieldDef.isUrl} onRowClick={(e) => props.onRowClick(e, props.rowIndex, props.entity)}></CellContent>
+                    <CellContent value={props.entity[fieldDef.name]} isUrl={fieldDef.type === fieldType.URL} onRowClick={(e) => props.onRowClick(e, props.rowIndex, props.entity)}></CellContent>
                 </StyledCell>
             )
         })}
