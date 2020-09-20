@@ -25,7 +25,7 @@ class Company extends Component {
 
     populateEmpty(){
         let entity = {}
-        this.fieldDefs.forEach((field, index) => {
+        fieldDefs.forEach((field, index) => {
             entity[field.name] = undefined;
         })
         return entity;
