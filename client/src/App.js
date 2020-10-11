@@ -98,33 +98,30 @@ class App extends Component {
             </>
         );
         const navbarHeight = {
-            minHeight: '40px !important',
-            maxHeight: '40px !important'    
+            minHeight: '20px !important',
+            maxHeight: '20px !important'    
         }
         return (
             <div className="App">
-                <Navbar collapseOnSelect style={navbarHeight}>
-                    <Navbar.Header>                        
-                        <Navbar.Toggle />
-                    </Navbar.Header>
-                    <Navbar.Collapse>
-                        <Nav pullRight>
-                        
-                            <LinkContainer to="/appointments">
-                                <NavItem>Appointments</NavItem>
-                            </LinkContainer>
-                            <LinkContainer to="/contacts">
-                                <NavItem>Contacts</NavItem>
-                            </LinkContainer>
-                            <LinkContainer to="/persons">
-                                <NavItem>Persons</NavItem>
-                            </LinkContainer>
-                            <LinkContainer to="/positions">
-                                <NavItem>Positions</NavItem>
-                            </LinkContainer>
-                            <LinkContainer to="/companies">
-                                <NavItem>Companies</NavItem>
-                            </LinkContainer>
+                <Navbar bg="dark" expand="md" variant="dark" style={navbarHeight}>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="mr-auto">
+                            <Nav.Item>
+                                <Nav.Link href="/appointments">Appointments</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link href="/contacts">Contacts</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link href="/contacts">Persons</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link href="/positions">Positions</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link href="/companies">Companies</Nav.Link>
+                            </Nav.Item>
                         </Nav>
                     </Navbar.Collapse>                    
                 </Navbar>
