@@ -4,24 +4,25 @@
  */
 import React from 'react';
 import { Button } from 'react-bootstrap';
+import styled from 'styled-components'
 
 /**
  * Constructor
  * @param {} props 
  */
-const listHeaderFooter= props => {
-     const style2= { 
-        display: 'flex',
-        alignItems: 'baseline',
-        justifyContent: 'space-between'
-      }
-      // {props.header ? <h1>{props.name}</h1> : ''}
+const listHeaderFooter= (props, className) => {
     return (        
-        <div style={style2}>
+        <StyledDiv>
             {props.header ? <h4>{props.name}</h4> : ''}
-            <Button type="button" size="sm" variant="secondary" className="btn btn-xs" onClick={props.createNew}>{props.label}</Button>
-        </div>
+            <Button className={className} type="button" size="sm" variant="secondary" onClick={props.createNew}>{props.label}</Button>
+        </StyledDiv>
     )
 }
 
+const StyledDiv = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1em;
+    margin-bottom: 0.2em;
+`
 export default listHeaderFooter;
