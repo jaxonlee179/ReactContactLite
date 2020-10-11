@@ -63,8 +63,8 @@ class ResponsiveForm extends Component{
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={this.save}>Save</Button>
-                    <Button onClick={this.cancel}>Cancel</Button>
+                    <Button size="sm" variant="secondary" onClick={this.save}>Save</Button>
+                    <Button size="sm" variant="secondary" onClick={this.cancel}>Cancel</Button>
                 </Modal.Footer>
             </Modal>
         )
