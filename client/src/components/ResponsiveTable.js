@@ -159,38 +159,34 @@ const StyledCell = styled(Cell)`
     overflow: hidden;
     width: ${props => props.width + '%'};
     @media all and (max-width: 768px) {
-        display: block;
+        display: flex;
         width: 100% !important;    
     }
 `
 const CollapsedLabel = styled.div`
     display: none;
     @media all and (max-width: 768px) {
-        display: inline-block;
-        width: 30%;
+        display: inline;
+        flex-basis: 30%;
         text-align: right;
         margin-right: 0.6em;
         overflow: hidden;    
     }
 `
-const inlineBlock = {display: 'inline-block'}
 const UnstyledCellContent = props => {
     if (props.isUrl){
         const url = props.value.startsWith('http') ? props.value : 'http://' + props.value
-        return (
-            <a href={url} target='_blank'>{props.value}</a>
-        )
+        return <a href={url} target='_blank'>{props.value}</a>
     }
     else {
-        return (
-            <div style={inlineBlock} onClick={props.onRowClick}>{props.value}</div>
-        )
+        return <span onClick={props.onRowClick}>{props.value}</span>
     }
 }
 const CellContent = styled(UnstyledCellContent)`
     @media all and (max-width: 768px) {
-        display: inline-block !important;
+        display: inline !important;
         overflow: hidden;
+        margin-bottom: 0.6em;
     }
 `
 export default responsiveTable;
