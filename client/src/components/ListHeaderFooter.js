@@ -19,7 +19,7 @@ const listHeaderFooter= props => {
     return (        
         <div style={style2}>
             {props.header ? <h4>{props.name}</h4> : ''}
-            <Button type="button" className="btn btn-xs" onClick={props.createNew}>{props.label}</Button>
+            <Button type="button" size="sm" variant="secondary" className="btn btn-xs" onClick={props.createNew}>{props.label}</Button>
         </div>
     )
 }
