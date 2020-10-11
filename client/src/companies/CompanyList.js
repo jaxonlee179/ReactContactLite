@@ -24,13 +24,8 @@ class CompanyList extends Component {
         this.closeForm= this.closeForm.bind(this);
     }
 
-    sort = (column, ascending) => {
-        const sorted = [...this.props.companies].sort( (a, b) => {
-            return ascending ? -a[fieldDefs[column].name].localeCompare(b[fieldDefs[column].name]) 
-            : a[fieldDefs[column].name].localeCompare(b[fieldDefs[column].name])
-        })
-        this.props.storeAll(sorted)
-        
+    afterSort = (sorted, column, ascending) => {
+        this.props.storeAll(sorted)        
         this.setState( {
             ...this.state,
             column,
@@ -77,7 +72,7 @@ class CompanyList extends Component {
     render() {
 
         const sortProps = {
-            doSort: this.sort, 
+            afterSort: this.afterSort, 
             column: this.state.column, 
             ascending: this.state.ascending
         }

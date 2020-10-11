@@ -13,7 +13,6 @@ import React from 'react';
 import styled from 'styled-components'
 import { fieldType } from './ResponsiveForm';
 
-
 /**
  * Generates a ResponsiveTable component
  * @param {object array} props.entities Table data, one element per row 
@@ -35,7 +34,7 @@ const responsiveTable = props => {
 
     return (
         <div style={tableStyle}>
-            <StyledHeader fieldDefs={props.fieldDefs} cellWidth={cellWidth} colors={colors} sortProps={props.sortProps}/>
+            <StyledHeader fieldDefs={props.fieldDefs} cellWidth={cellWidth} colors={colors} sortProps={props.sortProps} entities={props.entities}/>
             {props.entities.map((entity, index) => {
                 return (
                     <StyledRow entity={entity} 
@@ -96,26 +95,30 @@ const Header = props => {
             {props.fieldDefs.map((fieldDef, index) => {
                 if (doSort && sortColumn === index){
                     if (ascending){
-                        return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index)}>
+                        return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index, props.fieldDefs, props.entities)}>
                             {fieldDef.label}<span className="fas fa-caret-down fa-lg"></span>
                         </div>
                     }
                     else {
-                        return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index)}>
+                        return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index, props.fieldDefs, props.entities)}>
                             {fieldDef.label}<span className="fas fa-caret-up fa-lg"></span>
                         </div>
                     }
                 }
                 else {
-                    return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index)}>{fieldDef.label}</div>
+                    return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index, props.fieldDefs, props.entities)}>{fieldDef.label}</div>
                 }
             })}
     </div>
 }
 
-const doNewSort = (sortProps, column) => {
+const doNewSort = (sortProps, column, fieldDefs, entities) => {
     const ascending = sortProps.column === column ? !sortProps.ascending : false
-    sortProps.doSort(column, ascending);
+    const sorted = [...entities].sort( (a, b) => {
+        return ascending ? -a[fieldDefs[column].name].localeCompare(b[fieldDefs[column].name]) 
+        : a[fieldDefs[column].name].localeCompare(b[fieldDefs[column].name])
+    })
+    sortProps.afterSort(sorted, column, ascending);
 }
 
 const StyledHeader = styled(Header)`
