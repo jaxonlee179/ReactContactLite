@@ -114,7 +114,7 @@ class App extends Component {
                                 <Nav.Link href="/contacts">Contacts</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link href="/contacts">Persons</Nav.Link>
+                                <Nav.Link href="/persons">Persons</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
                                 <Nav.Link href="/positions">Positions</Nav.Link>
@@ -145,11 +145,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        storeAppointments:  (appointments)  => dispatch({ type: appointmentActions.STORE_ALL_APPOINTMENTS,  appointments }),
+        storeAppointments:  (appointments)  => dispatch({ type: appointmentActions.STORE_ALL,  appointments }),
         storeCompanies:     (companies)     => dispatch({ type: companyActions.STORE_ALL,         companies }),
-        storeContacts:      (contacts)      => dispatch({ type: contactActions.STORE_ALL_CONTACTS,          contacts }),
-        storePersons:       (persons)       => dispatch({ type: personActions.STORE_ALL_PERSONS,            persons }),
-        storePositions:     (positions)     => dispatch({ type: positionActions.STORE_ALL_POSITIONS,        positions })
+        storeContacts:      (contacts)      => dispatch({ type: contactActions.STORE_ALL,          contacts }),
+        storePersons:       (persons)       => dispatch({ type: personActions.STORE_ALL,            persons }),
+        storePositions:     (positions)     => dispatch({ type: positionActions.STORE_ALL,        positions })
     }
 }
 
