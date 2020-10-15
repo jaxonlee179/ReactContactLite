@@ -12,6 +12,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import { fieldType } from './ResponsiveForm';
+import moment from 'moment';
 
 /**
  * Generates a ResponsiveTable component
@@ -40,6 +41,7 @@ const responsiveTable = props => {
                     <StyledRow entity={entity} 
                         striped={index % 2 === 1} 
                         fieldDefs={props.fieldDefs}
+                        optionSets={props.optionSets}
                         colors={colors} 
                         cellWidth={cellWidth} 
                         primary={props.primary} 
@@ -136,7 +138,7 @@ const Row = props => {
            return (
                 <StyledCell width={props.cellWidth} colors={props.colors} primary={props.primary === index} key={index}>
                     <CollapsedLabel>{fieldDef.label}</CollapsedLabel>
-                    <CellContent value={props.entity[fieldDef.name]} isUrl={fieldDef.type === fieldType.URL} onRowClick={(e) => props.onRowClick(e, props.rowIndex, props.entity)}></CellContent>
+                    <CellContent value={props.entity[fieldDef.name]} type={fieldDef.type} onRowClick={(e) => props.onRowClick(e, props.rowIndex, props.entity)}></CellContent>
                 </StyledCell>
             )
         })}
@@ -177,9 +179,17 @@ const CollapsedLabel = styled.div`
     }
 `
 const UnstyledCellContent = props => {
-    if (props.isUrl){
+    if (props.type === fieldType.URL){
         const url = props.value.startsWith('http') ? props.value : 'http://' + props.value
         return <a href={url} target='_blank'>{props.value}</a>
+    }
+    else if (props.type === fieldType.DATE){
+        // Convert from ISO format
+        const reformatted = moment(new Date(props.value)).format('ddd, MMM Do YYYY, h:mm a');
+        return <span onClick={props.onRowClick}>{reformatted}</span>
+    }
+    else if (props.type === fieldType.SELECT){
+        return <span onClick={props.onRowClick}>{props.value}</span>
     }
     else {
         return <span onClick={props.onRowClick}>{props.value}</span>
