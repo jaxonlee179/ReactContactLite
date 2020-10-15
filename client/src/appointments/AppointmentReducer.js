@@ -2,26 +2,18 @@
  * This reducer deals with all states related to appointments
  */
 import * as actions from './AppointmentActions';
+import { storeAll, storeOne } from '../utilities/reducerHelper';
 
 const initialState = {
-    appointments: []
+    appointments: [],
+    appointmentsMap: undefined
 }
 
 const appointmentReducer = (state = initialState, action) => {
     switch (action.type){
-        case actions.STORE_ALL_APPOINTMENTS : return storeAllAppointments(action.appointments, state);
+        case actions.STORE_ALL : return storeAll(state, 'appointments', 'appointmentsMap', action.appointments);
+        case actions.SAVE_AND_STORE : return storeOne(state, action.data.appointment, action.data.rowIndex, 'appointments', 'appointmentsMap');
         default: return state;
-    }
-}
-
-const storeAllAppointments = (appointments, state) => {
-    // const allUsers = users.reduce((map, appointment) => {
-    //     map[user.id] = appointment;
-    //     return map
-    // }, {});
-    return {
-        ...state,
-        appointments
     }
 }
 

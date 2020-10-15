@@ -2,22 +2,18 @@
  * This reducer deals with all states related to persons
  */
 import * as actions from './PersonActions';
+import { storeAll, storeOne } from '../utilities/reducerHelper';
 
 const initialState = {
-    persons: []
+    persons: [],
+    personsMap: undefined
 }
 
 const personReducer = (state = initialState, action) => {
     switch (action.type){
-        case actions.STORE_ALL_PERSONS : return storeAllPersons(action.persons, state);
+        case actions.STORE_ALL : return storeAll(state, 'persons', 'personsMap', action.persons);
+        case actions.SAVE_AND_STORE : return storeOne(state, action.data.person, action.data.rowIndex, 'persons', 'personsMap');
         default: return state;
-    }
-}
-
-const storeAllPersons = (persons, state) => {
-    return {
-        ...state,
-        persons
     }
 }
 
