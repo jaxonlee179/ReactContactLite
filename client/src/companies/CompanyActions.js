@@ -4,11 +4,8 @@
 import axios from 'axios';
 
 /******* Synchronous actions *********/
-// Store all companies retrieved from server
-export const STORE_ALL = 'STORE_ALL';   
-
-// Send and store a newly created company, or an edited one
-export const SAVE_AND_STORE = 'SAVE_AND_STORE'; 
+export const STORE_ALL = 'STORE_ALL_COMPANIES';
+export const SAVE_AND_STORE = 'SAVE_AND_STORE_COMPANIES'; 
 
 /******* Asynchronous actions *********/
 /**
