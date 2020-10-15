@@ -23,15 +23,8 @@ class Company extends Component {
         super(props)
     }
 
-    populateEmpty(){
-        let entity = {}
-        fieldDefs.forEach((field, index) => {
-            entity[field.name] = undefined;
-        })
-        return entity;
-    }
     render() {
-        const entity = this.props.entity ? this.props.entity : this.populateEmpty()
+        const entity = this.props.entity ? this.props.entity : {}
         const isNew = this.props.entity == null
         return (
             <ResponsiveForm entity={entity} entityClass={this.entityClass} fieldDefs={fieldDefs} closeForm={this.props.closeForm} isNew={isNew}/>
