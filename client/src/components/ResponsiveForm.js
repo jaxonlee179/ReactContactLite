@@ -11,14 +11,15 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-//import TimePicker from 'basic-react-timepicker';
 import { Modal, Button } from 'react-bootstrap';
+import Selector from './Selector';
 
-export const fieldType = {'TEXT': 'TEXT', 'TIME': 'TIME', 'DATE': 'DATE', 'URL': 'URL'}
+export const fieldType = {'TEXT': 'TEXT', 'TIME': 'TIME', 'DATE': 'DATE', 'URL': 'URL', 'SELECT': 'SELECT'}
 
 class ResponsiveForm extends Component{
 
     state = {}
+    valueToLabelMaps = {}
     
     constructor(props){
         super(props)
@@ -27,6 +28,18 @@ class ResponsiveForm extends Component{
         this.save= this.save.bind(this);
         this.cancel= this.cancel.bind(this);
         this.onChange = this.onChange.bind(this)
+
+        const selectorNames = this.props.optionSets ? Object.keys(this.props.optionSets) : null
+        if (selectorNames){
+            selectorNames.forEach ( selectorName => {
+                const options = this.props.optionSets[selectorName];
+                this.valueToLabelMaps[selectorName]= options.reduce((map, option, index, options) => {
+                    map[option.value] = index;
+                    return map
+                }, {})
+            })
+            console.log(this.valueToLabelMaps)
+        }
     }
 
     save(){
@@ -37,7 +50,15 @@ class ResponsiveForm extends Component{
     }
     onChange(e){
         const entity = {...this.state.entity}
-        entity[e.target.name] = e.target.value
+        if (e.target){ 
+            entity[e.target.name] = e.target.value
+        }
+        else if (e.date){
+            entity[e.name] = e.date
+        }
+        else { // Selector event is not a conventional control event, i.e. no "target" attribute
+            entity[e.name] = e.value
+        }
         this.setState({
             ...this.state,
             entity
@@ -53,12 +74,26 @@ class ResponsiveForm extends Component{
                 <Modal.Body>
                     <Form>
                         {this.props.fieldDefs.map((field, index) => {
-                            return <StyledRow name={field.name} 
-                                label={field.label} 
-                                type={field.type} 
-                                value={this.state.entity[field.name]} 
-                                onChange={this.onChange}
-                                key={index} />
+                            if (field.type === 'SELECT'){
+                                const options = this.props.optionSets[field.name]
+                                const valueMap = this.valueToLabelMaps[field.name]
+                                const value = this.state.entity[field.name] ? options[this.valueToLabelMaps['company'][this.state.entity[field.name]]] : null
+                                return <StyledRow name={field.name} 
+                                    label={field.label} 
+                                    type={field.type} 
+                                    value={value}
+                                    options={options}
+                                    onChange={this.onChange}
+                                    key={index} />
+                            }
+                            else {
+                                return <StyledRow name={field.name} 
+                                    label={field.label} 
+                                    type={field.type} 
+                                    value={this.state.entity[field.name]}
+                                    onChange={this.onChange}
+                                    key={index} />
+                            }
                         })}
                     </Form>
                 </Modal.Body>
@@ -74,11 +109,12 @@ class ResponsiveForm extends Component{
 const Form = styled.div`
     border: none;
 `
+
 const Row = props => {
     return (
         <div className={props.className}>
             <StyledLabel label={props.label}/>
-            <StyledField type={props.type} name={props.name} value={props.value} onChange={props.onChange}/>
+            <StyledField type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} />
         </div>
     )
 }
@@ -105,11 +141,22 @@ const Field = props => {
     const style={width:'100%'}
     switch (props.type) {
         case fieldType.TEXT: 
-        case fieldType.URL:  return <div className={props.className}><input type='text' onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></input></div>
-        case fieldType.DATE: return <div className={props.className}><DatePicker name={props.name} defaultValue={props.value}/></div>
+        case fieldType.URL:     return <div className={props.className}><input type='text' onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></input></div>
+
+        case fieldType.DATE:    const theDate = new Date(props.value)
+                                return (
+                                    <div className={props.className}>
+                                        <DatePicker name={props.name} selected={theDate} onChange={date => props.onChange({name: props.name, date: date})}
+                                            isClearable timeInputLabel="Time:" dateFormat="yyyy/MM/dd h:mm aa" showTimeInput/>
+                                    </div>
+                                )
+
+        case fieldType.SELECT:  return <div className={props.className}><Selector name={props.name} value={props.value} options={props.options} onChange={props.onChange}/></div>
+
         default: return <div>FUBAR</div>
     }
 }
+
 const StyledField = styled(Field)`
     width: 70%;
     @media all and (max-width: 768px) {
