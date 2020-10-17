@@ -14,7 +14,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Modal, Button } from 'react-bootstrap';
 import Selector from './Selector';
 
-export const fieldType = {'TEXT': 'TEXT', 'TIME': 'TIME', 'DATE': 'DATE', 'URL': 'URL', 'SELECT': 'SELECT'}
+export const fieldType = {
+    'TEXT': 'TEXT', 
+    'DATE_TIME': 'DATE_TIME', 
+    'DATE': 'DATE', 
+    'URL': 'URL', 
+    'SELECT': 'SELECT'}
 
 class ResponsiveForm extends Component{
 
@@ -77,7 +82,7 @@ class ResponsiveForm extends Component{
                             if (field.type === 'SELECT'){
                                 const options = this.props.optionSets[field.name]
                                 const valueMap = this.valueToLabelMaps[field.name]
-                                const value = this.state.entity[field.name] ? options[this.valueToLabelMaps['company'][this.state.entity[field.name]]] : null
+                                const value = this.state.entity[field.name] ? options[this.valueToLabelMaps[field.name][this.state.entity[field.name]]] : null
                                 return <StyledRow name={field.name} 
                                     label={field.label} 
                                     type={field.type} 
@@ -143,11 +148,20 @@ const Field = props => {
         case fieldType.TEXT: 
         case fieldType.URL:     return <div className={props.className}><input type='text' onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></input></div>
 
-        case fieldType.DATE:    const theDate = new Date(props.value)
+        case fieldType.DATE_TIME:
+        case fieldType.DATE:    const theDate = props.value ? new Date(props.value) : null
                                 return (
                                     <div className={props.className}>
-                                        <DatePicker name={props.name} selected={theDate} onChange={date => props.onChange({name: props.name, date: date})}
-                                            isClearable timeInputLabel="Time:" dateFormat="yyyy/MM/dd h:mm aa" showTimeInput/>
+                                        <DatePicker 
+                                            selected={theDate} 
+                                            onChange={date => props.onChange({name: props.name, date: date})}
+                                            showTimeSelect={props.type === fieldType.DATE_TIME ? "true" : undefined}
+                                            isClearable 
+                                            timeFormat="HH:mm" 
+                                            timeIntervals={15}
+                                            timeCaption="time"
+                                            dateFormat={props.type === fieldType.DATE_TIME ? "yyyy/MM/dd h:mm aa" : "yyyy/MM/dd"} 
+                                            />
                                     </div>
                                 )
 
