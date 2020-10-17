@@ -42,6 +42,7 @@ const responsiveTable = props => {
                         striped={index % 2 === 1} 
                         fieldDefs={props.fieldDefs}
                         optionSets={props.optionSets}
+                        entityMaps={props.entityMaps}
                         colors={colors} 
                         cellWidth={cellWidth} 
                         primary={props.primary} 
@@ -138,7 +139,9 @@ const Row = props => {
            return (
                 <StyledCell width={props.cellWidth} colors={props.colors} primary={props.primary === index} key={index}>
                     <CollapsedLabel>{fieldDef.label}</CollapsedLabel>
-                    <CellContent value={props.entity[fieldDef.name]} type={fieldDef.type} onRowClick={(e) => props.onRowClick(e, props.rowIndex, props.entity)}></CellContent>
+                    <CellContent value={props.entity[fieldDef.name]} 
+                    type={fieldDef.type} entityMap={props.entityMaps ? props.entityMaps[fieldDef.name] : null}
+                    onRowClick={(e) => props.onRowClick(e, props.rowIndex, props.entity)}></CellContent>
                 </StyledCell>
             )
         })}
@@ -185,11 +188,17 @@ const UnstyledCellContent = props => {
     }
     else if (props.type === fieldType.DATE){
         // Convert from ISO format
-        const reformatted = moment(new Date(props.value)).format('ddd, MMM Do YYYY, h:mm a');
+        const reformatted = props.value ? moment(new Date(props.value)).format('ddd, MMM Do YYYY') : '';
+        return <span onClick={props.onRowClick}>{reformatted}</span>
+    }
+    else if (props.type === fieldType.DATE_TIME){
+        // Convert from ISO format
+        const reformatted = props.value ? moment(new Date(props.value)).format('ddd, MMM Do YYYY, h:mm a') : '';
         return <span onClick={props.onRowClick}>{reformatted}</span>
     }
     else if (props.type === fieldType.SELECT){
-        return <span onClick={props.onRowClick}>{props.value}</span>
+        let displayValue = props.value ? props.entityMap.entities[props.value][props.entityMap.displayField] : ''
+        return <span onClick={props.onRowClick}>{displayValue}</span>
     }
     else {
         return <span onClick={props.onRowClick}>{props.value}</span>
