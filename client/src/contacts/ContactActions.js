@@ -12,7 +12,7 @@ export const SAVE_AND_STORE = 'SAVE_AND_STORE_CONTACTS';
  * Sends a new or updated contact to the server then dispatches to the store
  * @param {*} contact 
  */
-export const saveAppointment = ((contact, rowIndex) => {
+export const saveContact = ((contact, rowIndex) => {
     return dispatch => {
         if (rowIndex === null){
             axios.post('/contacts', contact)
