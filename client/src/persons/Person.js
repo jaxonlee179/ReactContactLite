@@ -24,7 +24,7 @@ class Person extends Component {
     constructor(props) {
         super(props)
         this.optionSets = this.props.buildOptionSets([
-            {entityList: this.props.companies, type: 'company'}
+            {entityList: this.props.companies, type: 'company', mappedAttribute: 'name'}
         ])
     }
 

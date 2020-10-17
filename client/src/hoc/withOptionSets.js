@@ -25,7 +25,7 @@ export default function withOptionSets(WrappedComponent){
             defs.forEach( def => {
                 let options = []
                 def.entityList.forEach( entity => {
-                    options.push({label: entity[def.mappedAttribute ? def.mappedAttribute : 'name'], value: entity._id})
+                    options.push({label: entity[def.mappedAttribute], value: entity._id})
                 })
                optionSets[def.type] = options
             })

@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import withOptionSets from '../hoc/withOptionSets'
 
 export const fieldDefs = [
-    { name: 'when',     label: 'When',    type: fieldType.DATE},
+    { name: 'when',     label: 'When',    type: fieldType.DATE_TIME},
     { name: 'position', label: 'Position',type: fieldType.SELECT},
     { name: 'person',   label: 'Person',  type: fieldType.SELECT},    
     { name: 'company',  label: 'Company', type: fieldType.SELECT}    
@@ -25,9 +25,9 @@ class Appointment extends Component {
         super(props)
 
         this.optionSets = this.props.buildOptionSets([
-            {entityList: this.props.companies, type: 'company'},
-            {entityList: this.props.positions, type: 'person'},
-            {entityList: this.props.persons,   type: 'person'}
+            {entityList: this.props.companies, type: 'company',  mappedAttribute: 'name'},
+            {entityList: this.props.positions, type: 'position', mappedAttribute: 'title'},
+            {entityList: this.props.persons,   type: 'person',   mappedAttribute: 'name'}
         ])
     }
 
