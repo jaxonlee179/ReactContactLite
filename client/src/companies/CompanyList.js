@@ -5,7 +5,6 @@ import ListHeaderFooter from '../components/ListHeaderFooter';
 import Company, { fieldDefs } from './Company';
 import * as actions from './CompanyActions';
 
-
 class CompanyList extends Component {
     
     state = {}
@@ -16,8 +15,7 @@ class CompanyList extends Component {
         this.state = {
             column: undefined,     
             ascending: undefined,
-            displayForm: false,
-
+            displayForm: false
         }
         this.select= this.select.bind(this);
         this.createNew= this.createNew.bind(this);
@@ -32,6 +30,7 @@ class CompanyList extends Component {
             ascending
         })
     }
+    
     /**
      * Displays the popup to create a new company
      */

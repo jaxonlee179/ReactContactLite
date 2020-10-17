@@ -6,8 +6,8 @@ import Person, { fieldDefs } from './Person';
 import * as actions from './PersonActions';
 
 class PersonList  extends Component {
+
     state = {}
-    optionSets = {}
 
     constructor (props){
         super(props);
@@ -20,11 +20,6 @@ class PersonList  extends Component {
         this.select= this.select.bind(this);
         this.createNew= this.createNew.bind(this);
         this.closeForm= this.closeForm.bind(this);
-
-        this.optionSets = this.props.buildOptionSets([
-            {entityList: this.props.companies, type: 'company'}
-        ])
-
     }
 
     afterSort = (sorted, column, ascending) => {
@@ -79,12 +74,16 @@ class PersonList  extends Component {
             column: this.state.column, 
             ascending: this.state.ascending
         }
+        const entityMaps = {
+            'company':  {entities: this.props.companiesMap, displayField: 'name'}
+        }
         const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
         return (
             <div>
                 <ListHeaderFooter header='true' name='Persons' label='New Person' createNew={this.createNew}/>
                 <ResponsiveTable 
                     entities={this.props.persons}
+                    entityMaps={entityMaps}
                     fieldDefs={fieldDefs}
                     colors={colors}
                     sortProps={sortProps}
@@ -98,7 +97,7 @@ class PersonList  extends Component {
 const mapStateToProps = state => {
     return {
         persons: state.personReducer.persons,
-        companies: state.companyReducer.companies
+        companiesMap: state.companyReducer.companiesMap
     }
 }
 
