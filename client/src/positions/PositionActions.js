@@ -12,7 +12,7 @@ export const SAVE_AND_STORE = 'SAVE_AND_STORE_POSITIONS';
  * Sends a new or updated position to the server then dispatches to the store
  * @param {*} position 
  */
-export const saveAppointment = ((position, rowIndex) => {
+export const savePosition = ((position, rowIndex) => {
     return dispatch => {
         if (rowIndex === null){
             axios.post('/positions', position)
