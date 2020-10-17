@@ -6,6 +6,7 @@ import Appointment, { fieldDefs } from './Appointment';
 import * as actions from './AppointmentActions';
 
 class AppointmentList  extends Component {
+
     state = {}
 
     constructor (props){
@@ -29,6 +30,7 @@ class AppointmentList  extends Component {
             ascending
         })
     }
+    
     /**
      * Displays the popup to create a new appointment
      */
@@ -73,12 +75,18 @@ class AppointmentList  extends Component {
             column: this.state.column, 
             ascending: this.state.ascending
         }
+        const entityMaps = {
+            'company':  {entities: this.props.companiesMap, displayField: 'name'},
+            'person':   {entities: this.props.personsMap,   displayField: 'name'},
+            'position': {entities: this.props.positionsMap, displayField: 'title'}
+        }
         const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
         return (
             <div>
                 <ListHeaderFooter header='true' name='Appointments' label='New Appointment' createNew={this.createNew}/>
                 <ResponsiveTable 
                     entities={this.props.appointments}
+                    entityMaps={entityMaps}
                     fieldDefs={fieldDefs}
                     colors={colors}
                     sortProps={sortProps}
@@ -91,7 +99,10 @@ class AppointmentList  extends Component {
 
 const mapStateToProps = state => {
     return {
-        appointments: state.appointmentReducer.appointments
+        appointments: state.appointmentReducer.appointments,
+        companiesMap: state.companyReducer.companiesMap,
+        personsMap: state.personReducer.personsMap,
+        positionsMap: state.positionReducer.positionsMap
     }
 }
 
