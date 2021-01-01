@@ -1,5 +1,5 @@
 /**
- * An Person is typed as either a recruiter or an "enterprise" (public or private)
+ * A Person 
  */
 const mongoose = require('mongoose')
 
