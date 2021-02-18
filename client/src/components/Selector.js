@@ -1,12 +1,14 @@
 /**
-* A wrapper for a (single) select control . 
+* A wrapper for the React Select component (https://react-select.com/) providing a left side
+* label and custom styling. 
 * Additional props:
-* name:                 optional control name               
+* name:                 an optional string passed to the selectHandler argument 'name'                
 * label:                the control label
-* options:              array of options, each one either a text string,
-*                       or {'label': string, 'options': [{label: string, value: object }]} if options are to be grouped
+* options:              either an array [{label: string, value: object }], or an object 
+*                       {'label': string, 'options': [{label: string, value: object }]} if options are to be grouped
 * selectHandler:        function to receive the onChange event     
 * value:                the current selected value
+* placeholder:          optional placeholder
 */
 import React from 'react';
 import Select from 'react-select';
@@ -46,7 +48,6 @@ const onChange = ((event, props) => {
 })
 
 const selector = (props) => {    
-// <Selector name={props.name} value={props.value} options={props.options} onChange={props.onChange}/>
     const component = (
         <Select
             options={props.options}

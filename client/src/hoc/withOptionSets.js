@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 
 /**
- * A high order component providing helper methods for components which render 
- * a ResponsiveForm containing one or more entity selectors 
+ * A high order component providing a method to build the option sets for selectors
+ * displayed in a ResponsiveForm 
  * @param {object} WrappedComponent 
  */
 export default function withOptionSets(WrappedComponent){
