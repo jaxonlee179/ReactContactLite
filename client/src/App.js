@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import './App.css';
 import { CircleSpinner } from "react-spinners-kit";
 
@@ -20,32 +19,14 @@ import * as positionActions from './positions/PositionActions';
 
 import axios from 'axios';
 
-
 /**
  * The root component of the application. 
  */
 class App extends Component {
 
     state = {
-        loading: undefined
+        loading: true
     };
-
-    constructor(props) {
-        super(props);
-        // Add axios interceptors
-        axios.interceptors.request.use(request => {
-            this.setState({
-                requestUrl: request.url,
-                requestData: request.data
-            });
-            return request;
-        }, error => {
-            console.log(error);
-            return Promise.reject(error);
-        });
-
-        this.state.loading = true;
-    }
 
     componentDidMount() {
         Promise.all([
@@ -132,17 +113,6 @@ class App extends Component {
     }
 }
 
-const navbarHeight = {
-    minHeight: '40px !important',
-    maxHeight: '40px !important'    
-}
-
-const mapStateToProps = state => {
-    return {
-/*        loggedInUser: state.userReducer.loggedInUser,*/
-    }
-}
-
 const mapDispatchToProps = dispatch => {
     return {
         storeAppointments:  (appointments)  => dispatch({ type: appointmentActions.STORE_ALL,  appointments }),
@@ -153,4 +123,5 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(null, mapDispatchToProps)(App));
+
