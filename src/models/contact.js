@@ -3,13 +3,17 @@
  * For an email contact, the email ObjectId value is set. Otherwise the details value describes the conversation
  */
 const mongoose = require('mongoose')
+var Schema = mongoose.Schema;
 
-
-const contactSchema = new mongoose.Schema({
+const contactSchema = new Schema({
     person:     {type: mongoose.ObjectId},
     position:   {type: mongoose.ObjectId},
     when:       {type: Date},
-    type:       {type: String},       //TODO: export the values
+    type:       {
+                    type: String,
+                    enum: ['email', 'phone'],
+                    lowercase: true
+                },
     details:    {type: String},
     email:      {type: mongoose.ObjectId}
 }, {
@@ -18,4 +22,5 @@ const contactSchema = new mongoose.Schema({
 
 const Contact = mongoose.model('Contact', contactSchema)
 
-module.exports = Contact
+module.exports =  Contact 
+// module.exports = {Contact}
