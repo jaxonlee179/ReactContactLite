@@ -12,8 +12,8 @@ import withOptionSets from '../hoc/withOptionSets'
 export const fieldDefs = [
     { name: 'title',        label: 'Title',     type: fieldType.TEXT},
     { name: 'url',          label: 'URL',       type: fieldType.URL},
-    { name: 'person',       label: 'Person',    type: fieldType.SELECT},    
-    { name: 'company',      label: 'Company',   type: fieldType.SELECT},    
+    { name: 'person',       label: 'Person',    type: fieldType.SELECT_ENTITY},    
+    { name: 'company',      label: 'Company',   type: fieldType.SELECT_ENTITY},    
     { name: 'postedDate',   label: 'Posted',    type: fieldType.DATE},
     { name: 'appliedDate',  label: 'Applied',   type: fieldType.DATE}
 ]

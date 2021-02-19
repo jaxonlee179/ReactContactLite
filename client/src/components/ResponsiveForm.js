@@ -19,6 +19,7 @@ export const fieldType = {
     'DATE_TIME': 'DATE_TIME', 
     'DATE': 'DATE', 
     'URL': 'URL', 
+    'SELECT_ENTITY': 'SELECT_ENTITY',
     'SELECT': 'SELECT'}
 
 class ResponsiveForm extends Component{
@@ -72,16 +73,15 @@ class ResponsiveForm extends Component{
 
     render(){
         return (
-            <Modal show='true' >
+            <Modal show={true} >
                 <Modal.Header>
                     <Modal.Title>{this.props.isNew ? `New ${this.props.entityClass}` : `Edit ${this.props.entityClass}`}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         {this.props.fieldDefs.map((field, index) => {
-                            if (field.type === 'SELECT'){
+                            if (field.type === 'SELECT_ENTITY' || field.type === 'SELECT'){
                                 const options = this.props.optionSets[field.name]
-                                const valueMap = this.valueToLabelMaps[field.name]
                                 const value = this.state.entity[field.name] ? options[this.valueToLabelMaps[field.name][this.state.entity[field.name]]] : null
                                 return <StyledRow name={field.name} 
                                     label={field.label} 
@@ -165,7 +165,8 @@ const Field = props => {
                                     </div>
                                 )
 
-        case fieldType.SELECT:  return <div className={props.className}><Selector name={props.name} value={props.value} options={props.options} onChange={props.onChange}/></div>
+        case fieldType.SELECT:
+        case fieldType.SELECT_ENTITY:  return <div className={props.className}><Selector name={props.name} value={props.value} options={props.options} onChange={props.onChange}/></div>
 
         default: return <div>FUBAR</div>
     }

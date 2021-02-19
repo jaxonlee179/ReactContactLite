@@ -10,13 +10,11 @@ import { connect } from 'react-redux';
 import withOptionSets from '../hoc/withOptionSets'
 
 export const fieldDefs = [
-    { name: 'when',     label: 'When',    type: fieldType.DATE},
-    { name: 'position', label: 'Position',type: fieldType.SELECT},
-    { name: 'person',   label: 'Person',  type: fieldType.SELECT},    
-    { name: 'type',     label: 'Type', type: fieldType.TEXT},    // Phone or email
-    { name: 'details',  label: 'Details', type: fieldType.TEXT},
-//    { name: 'email',    label: 'Details', type: fieldType.TEXT}
-        
+    { name: 'when',     label: 'When',      type: fieldType.DATE},
+    { name: 'position', label: 'Position',  type: fieldType.SELECT_ENTITY},
+    { name: 'person',   label: 'Person',    type: fieldType.SELECT_ENTITY},    
+    { name: 'type',     label: 'Type',      type: fieldType.SELECT}, 
+    { name: 'details',  label: 'Details',   type: fieldType.TEXT},
 ]
 
 class Contact extends Component {
@@ -31,7 +29,9 @@ class Contact extends Component {
             {entityList: this.props.positions, type: 'position', mappedAttribute: 'title'},
             {entityList: this.props.persons,   type: 'person',   mappedAttribute: 'name'}
         ])
-    }
+
+        this.optionSets['type'] = [{label: 'Email', value: 'email'}, {label: 'Phone', value: 'phone'}]
+     }
 
     render() {
         const entity = this.props.entity ? this.props.entity : {}

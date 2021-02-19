@@ -13,7 +13,7 @@ export const fieldDefs = [
     { name: 'name',     label: 'Name',    type: fieldType.TEXT},
     { name: 'email',    label: 'Address', type: fieldType.TEXT},
     { name: 'phone',    label: 'Phone',   type: fieldType.TEXT},    
-    { name: 'company',  label: 'Company', type: fieldType.SELECT}    
+    { name: 'company',  label: 'Company', type: fieldType.SELECT_ENTITY}    
 ]
 
 class Person extends Component {

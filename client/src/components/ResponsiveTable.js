@@ -184,7 +184,7 @@ const CollapsedLabel = styled.div`
 const UnstyledCellContent = props => {
     if (props.type === fieldType.URL){
         const url = props.value.startsWith('http') ? props.value : 'http://' + props.value
-        return <a href={url} target='_blank'>{props.value}</a>
+        return <a href={url} target='_blank' rel="noopener noreferrer">{props.value}</a>
     }
     else if (props.type === fieldType.DATE){
         // Convert from ISO format
@@ -196,7 +196,7 @@ const UnstyledCellContent = props => {
         const reformatted = props.value ? moment(new Date(props.value)).format('ddd, MMM Do YYYY, h:mm a') : '';
         return <span onClick={props.onRowClick}>{reformatted}</span>
     }
-    else if (props.type === fieldType.SELECT){
+    else if (props.type === fieldType.SELECT_ENTITY){
         let displayValue = props.value ? props.entityMap.entities[props.value][props.entityMap.displayField] : ''
         return <span onClick={props.onRowClick}>{displayValue}</span>
     }

@@ -11,9 +11,9 @@ import withOptionSets from '../hoc/withOptionSets'
 
 export const fieldDefs = [
     { name: 'when',     label: 'When',    type: fieldType.DATE_TIME},
-    { name: 'position', label: 'Position',type: fieldType.SELECT},
-    { name: 'person',   label: 'Person',  type: fieldType.SELECT},    
-    { name: 'company',  label: 'Company', type: fieldType.SELECT}    
+    { name: 'position', label: 'Position',type: fieldType.SELECT_ENTITY},
+    { name: 'person',   label: 'Person',  type: fieldType.SELECT_ENTITY},    
+    { name: 'company',  label: 'Company', type: fieldType.SELECT_ENTITY}    
 ]
 
 class Appointment extends Component {
