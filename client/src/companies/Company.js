@@ -19,10 +19,6 @@ class Company extends Component {
 
     entityClass = 'Company'
 
-    constructor(props) {
-        super(props)
-    }
-
     render() {
         const entity = this.props.entity ? this.props.entity : {}
         const isNew = this.props.entity == null
