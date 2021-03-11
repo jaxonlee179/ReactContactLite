@@ -1,6 +1,8 @@
 const express = require('express')
 const path = require('path')
+
 require('./database/mongoose')
+
 const appointmentRouter = require('./routers/appointment')
 const companyRouter = require('./routers/company')
 const contactRouter = require('./routers/contact')
@@ -11,7 +13,7 @@ const positionRouter = require('./routers/position')
 const app = express()
 const port = process.env.PORT || 5000
 
-// Set up static directory to erve the client code
+// Set up static directory to serve the client code
 const public = path.join(__dirname, '../client/build')
 app.use(express.static(public))
 

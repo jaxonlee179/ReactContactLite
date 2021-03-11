@@ -27,6 +27,42 @@ class App extends Component {
     state = {
         loading: true
     };
+    
+    constructor(props){
+        super(props);
+        
+        // Add axios interceptors
+        axios.interceptors.request.use(request => {
+            this.setState({
+                requestUrl: request.url,
+                requestData: request.data
+            });
+            return request;
+        }, error => {
+            console.log(error);
+            return Promise.reject(error);
+        });
+
+        axios.interceptors.response.use(response => {
+            return response;
+        }, error => {
+            console.log(error);
+            if (error.response){
+                if (error.response.status !== 401 && error.response.status !== 403){
+                alert('An error has occurred. Please report this information:\n'
+                    + 'Status = ' + error.response.status
+                    + '\nURL = ' + this.state.requestUrl
+                    + '\ndata = ' + JSON.stringify(this.state.requestData));
+                }
+            }
+            else {
+                alert('There was a problem connecting to the server\n'
+                    + 'Try closing your browser and try again');
+            }
+            return Promise.reject(error);
+        });
+
+    }
 
     componentDidMount() {
         Promise.all([
