@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Navbar, Nav } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import './App.css';
 import { CircleSpinner } from "react-spinners-kit";
 
@@ -124,21 +125,22 @@ class App extends Component {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
-                            <Nav.Item>
-                                <Nav.Link href="/appointments">Appointments</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href="/contacts">Contacts</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href="/persons">Persons</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href="/positions">Positions</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href="/companies">Companies</Nav.Link>
-                            </Nav.Item>
+                            <LinkContainer to="/appointments">
+                                <Nav.Link>Appointments</Nav.Link>
+                            </LinkContainer>
+                            <LinkContainer to="/contacts">
+                                <Nav.Link>Contacts</Nav.Link>
+                            </LinkContainer>
+                            <LinkContainer to="/persons">
+                                <Nav.Link>Persons</Nav.Link>
+                            </LinkContainer>
+                            <LinkContainer to="/positions">
+                                <Nav.Link>Positions</Nav.Link>
+                            </LinkContainer>
+                            <LinkContainer to="/companies">
+                                <Nav.Link>Companies</Nav.Link>
+                            </LinkContainer>
+
                         </Nav>
                     </Navbar.Collapse>                    
                 </Navbar>
