@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import personReducer from './persons/PersonReducer';
@@ -30,30 +30,12 @@ const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)))
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'; // Necessary ?
 
-let baseURI = document.baseURI;
-if (!baseURI) {
-    // For IE
-    baseURI = window.location.href;
-}
-
-// baseURI = baseURI.indexOf('#') > 0 ? baseURI.substring(0, baseURI.indexOf('#')) : baseURI;
-// axios.defaults.baseURL = baseURI
-// console.log(baseURI);
-// if (baseURI === "http://localhost:3000/"){
-//   // Client loaded from VSCode local server 
-//   axios.defaults.baseURL ="http://localhost:5000/"; 
-// }
-// else {
-//   // Client loaded from local or remote App Engine server
-//   axios.defaults.baseURL =  baseURI;
-// }
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <Router>
         <App />
-      </BrowserRouter>
+      </Router>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
