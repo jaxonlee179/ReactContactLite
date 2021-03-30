@@ -14,8 +14,13 @@
   "author": "Robert Thomas",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.10.0",
     "aws-sdk": "^2.848.0",
+    "axios": "^0.21.1",
     "express": "^4.17.1",
+    "fs-extra": "^9.1.0",
+    "mailparser": "^3.1.0",
+    "mailparser-mit": "^1.0.0",
     "mongodb": "^3.6",
     "mongoose": "^5.11.18"
   },
