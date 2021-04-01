@@ -4,12 +4,11 @@
 const mongoose = require('mongoose')
 
 const emailSchema = new mongoose.Schema({
-    from:       String,
-    to:         [String],
-    date:       Date,
+    from:       [{name: String, address: String}],
+    to:         [{name: String, address: String}],
     subject:    String,
     text:       String,
-    attachments:[{bucket: String, key: String, contentType: String}]
+    attachments:[{bucket: String, key: String, fileName: String, contentType: String}]
 }, {
     timestamps: true
 })

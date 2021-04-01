@@ -3,15 +3,10 @@
  */
 const express = require('express')
 const axios = require('axios')
-const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3')
-//const { createWriteStream } = require('fs-extra');
-
-// For fs docs, see: https://www.npmjs.com/package/fs-extra
-// Solution to fetch described here: https://github.com/aws/aws-sdk-js-v3/issues/1096 (Thanks AM. Changed from v2 to v3 without clarity)
-
+const { S3Client, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3')
+const { v4: uuidv4 } = require('uuid');
 
 const Email = require('../models/email')
-//const { sendSimple } = require('../services/mailSender')
 const parseEmail = require('../services/parser')
 
 const router = new express.Router()
@@ -54,23 +49,60 @@ router.post('/emails', async (req, res) => {
             const bucketName = message.receipt.action.bucketName
             const objectKey = message.receipt.action.objectKey;
 
-            // Retrieve the "raw" message from the S3 bucket
-            const client = new S3Client({ region: "us-west-2" });
-            const params = {
-                Bucket: bucketName,
-                Key: objectKey
-            }
             try {
+                // Send a message to S3 to retrieve the "raw" message from the S3 bucket
+                const S3 = new S3Client({ region: "us-west-2" });
+                const params = {
+                    Bucket: bucketName,
+                    Key: objectKey
+                }
                 const command = new GetObjectCommand(params)
-                const response = await client.send(command);
-                const email = parseEmail(response.Body)
+                const response = await S3.send(command);
+                
+                // Parse and extract required fields
+                const emailFields = await parseEmail(response.Body)
+                if (emailFields.attachments){
+                    emailFields.attachments = await saveAttachments(emailFields.attachments, S3)
+                }
+                // Create an Email entity in the database
+                const email = new Email(emailFields)
+                await email.save()
+                res.status(200).send()
             } 
             catch (err) {
                 console.error(err);
+                res.status(400).send()
             }
         }
     }
 })
+
+/**
+ * Saves the attachments to S3 
+ */
+const saveAttachments = async (attachments, S3) => {
+
+    for (let i = 0; i < attachments.length; i++){
+        let attachment = attachments[i]; 
+        const { fileName, contentType, content } = attachment;
+        const params = {
+            Bucket:         'contactlite-email',
+            Key:            'ATTACHMENT/' + uuidv4(),
+            Body:           content,
+            ContentType:    contentType,
+            Metadata:       {fileName}
+        }
+        const command = new PutObjectCommand(params)
+        const response = await S3.send(command)
+        console.log('Saved file ' + fileName)
+        
+        // Replace the attachment fields
+        attachments[i] = {bucket: params.Bucket, key: params.Key, fileName, contentType}
+    }
+    return new Promise((resolve, reject) => {
+        resolve(attachments)
+    })
+}
 
 
 /**

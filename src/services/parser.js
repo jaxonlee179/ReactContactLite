@@ -4,21 +4,49 @@
 const MailParser = require("mailparser-mit").MailParser;
 const { Readable } = require('stream');
 
+/**
+ * Parses an email to extract required fields
+ * @param {Stream} readableStream stream from which to read entire email text
+ * @return {Object} fields {subject, from, to date, contentType, attachments}
+ */
 const parseEmail = async (readableStream) => {
-    const email = await parse(readableStream)
     
-    email.attachments.forEach( async attachment => {
-        console.log('---------------------------------------------------------------')
-        if (attachment.contentType === 'message/rfc822'){
-            // This will become the text
-            readableStream = Readable.from(Buffer.from(attachment.content).toString());
+    const email = await parse(readableStream)
+    if (email.attachments){
+        const rfc822 = extractRrfc822(email.attachments)
+        if (rfc822){
+            // A forwarded message is sometimed delivered as 'message/rfc822' attachment. 
+            // Parse the attachment and use its text instead of that of the enclosing message
+            email.attachments = email.attachments.length === 0 ? null : email.attachments;
+            readableStream = Readable.from(Buffer.from(rfc822).toString());
             const attachedEmail = await parse(readableStream);
             email.text = attachedEmail.text;
+            return new Promise((resolve, reject) => {
+                resolve(email);
+            })
         }
+    }
+
+    return new Promise((resolve, reject) => {
+        resolve(email);
     })
 }
+
+const extractRrfc822 = attachments => {
+    const i = attachments.findIndex(attachment => attachment.contentType === 'message/rfc822');
+    if (i >= 0){
+        // A forwarded message is sometimed delivered as 'message/rfc822' attachment. 
+        // Parse the attachment and use its text instead of that of the enclosing message
+        rfc822 = attachments[i];
+        delete attachments[i];
+        attachments = attachments.filter(attachment => attachment != null);
+        return rfc822
+    }
+    return null
+}
+
 /**
- * Parses the email text and returns
+ * Parses the email 
  * @param readableStream a readable Stream
  */
 const parse = async (readableStream) => {
@@ -49,7 +77,7 @@ const parse = async (readableStream) => {
 }    
 
 /**
- * Converts the response.Body object from Node 
+ * Creates a string from the stream
  */
 const streamToString = async (stream) => {
     const chunks = [];
