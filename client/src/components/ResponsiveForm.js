@@ -15,12 +15,13 @@ import { Modal, Button } from 'react-bootstrap';
 import Selector from './Selector';
 
 export const fieldType = {
-    'TEXT': 'TEXT', 
-    'DATE_TIME': 'DATE_TIME', 
-    'DATE': 'DATE', 
-    'URL': 'URL', 
-    'SELECT_ENTITY': 'SELECT_ENTITY',
-    'SELECT': 'SELECT'}
+    'TEXT':         'TEXT', 
+    'TEXT_AREA':    'TEXT_AREA', 
+    'DATE_TIME':    'DATE_TIME', 
+    'DATE':         'DATE', 
+    'URL':          'URL', 
+    'SELECT_ENTITY':'SELECT_ENTITY',
+    'SELECT':       'SELECT'}
 
 class ResponsiveForm extends Component{
 
@@ -148,6 +149,8 @@ const Field = props => {
         case fieldType.TEXT: 
         case fieldType.URL:     return <div className={props.className}><input type='text' onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></input></div>
 
+        case fieldType.TEXT_AREA:   return <div className={props.className}><textarea onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></textarea></div>
+        
         case fieldType.DATE_TIME:
         case fieldType.DATE:    const theDate = props.value ? new Date(props.value) : null
                                 return (
@@ -179,4 +182,4 @@ const StyledField = styled(Field)`
     }
 `
 
-export default ResponsiveForm
+export { ResponsiveForm, StyledRow, StyledField }
