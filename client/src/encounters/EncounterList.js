@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ResponsiveTable from '../components/ResponsiveTable';
 import ListHeaderFooter from '../components/ListHeaderFooter';
-import Contact, { fieldDefs } from './Contact';
-import * as actions from './ContactActions';
+import Encounter, { fieldDefs } from './Encounter';
+import * as actions from './EncounterActions';
 
-class ContactList  extends Component {
+class EncounterList  extends Component {
 
     state = {}
 
@@ -32,14 +32,14 @@ class ContactList  extends Component {
     }
     
     /**
-     * Displays the popup to create a new contact
+     * Displays the popup to create a new encounter
      */
     createNew(){
         this.setState({
             ...this.state,
             selectedRow: null,
             displayForm: true,
-            contact: null
+            encounter: null
         })
     }
 
@@ -47,24 +47,24 @@ class ContactList  extends Component {
      * Responds to mouse click anywhere on the row except url fields
      * @param {object} e the click event object
      * @param {number} selectedRow display index of the row object
-     * @param {object} contact the full MongoDB contact object retrieved from the server
+     * @param {object} encounter the full MongoDB encounter object retrieved from the server
      */
-    select(e, selectedRow, contact){
+    select(e, selectedRow, encounter){
         this.setState({
             ...this.state,
             selectedRow,
             displayForm: true,
-            contact
+            encounter
         })
     }
 
-    closeForm(contact){
+    closeForm(encounter){
         this.setState({
             ...this.state,
             displayForm: false
         })
-        if (contact) {
-            this.props.saveContact(contact, this.state.selectedRow)
+        if (encounter) {
+            this.props.saveEncounter(encounter, this.state.selectedRow)
         }    
     }
 
@@ -82,15 +82,15 @@ class ContactList  extends Component {
         const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
         return (
             <div>
-                <ListHeaderFooter header='true' name='Contacts' label='New Contact' createNew={this.createNew}/>
+                <ListHeaderFooter header='true' name='Encounters' label='New Encounter' createNew={this.createNew}/>
                 <ResponsiveTable 
-                    entities={this.props.contacts}
+                    entities={this.props.encounters}
                     entityMaps={entityMaps}
                     fieldDefs={fieldDefs}
                     colors={colors}
                     sortProps={sortProps}
                     onRowClick={this.select}/>
-                {this.state.displayForm ? <Contact entity={this.state.contact} closeForm={this.closeForm}></Contact> : ''}
+                {this.state.displayForm ? <Encounter entity={this.state.encounter} closeForm={this.closeForm}></Encounter> : ''}
             </div>
         )
     }
@@ -98,7 +98,7 @@ class ContactList  extends Component {
 
 const mapStateToProps = state => {
     return {
-        contacts: state.contactReducer.contacts,
+        encounters: state.encounterReducer.encounters,
         positionsMap: state.positionReducer.positionsMap,
         personsMap: state.personReducer.personsMap
     }
@@ -106,9 +106,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        saveContact: (contact, selectedRow) => dispatch(actions.saveContact(contact, selectedRow)),
-        storeAll: (contacts) => dispatch( { type: actions.STORE_ALL, contacts})
+        saveEncounter: (encounter, selectedRow) => dispatch(actions.saveEncounter(encounter, selectedRow)),
+        storeAll: (encounters) => dispatch( { type: actions.STORE_ALL, encounters})
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactList);
+export default connect(mapStateToProps, mapDispatchToProps)(EncounterList);

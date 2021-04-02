@@ -1,7 +1,7 @@
 /**
- * A modal popup for creating or viewing/editing a Contact.
+ * A modal popup for creating or viewing/editing a Encounter.
  * Properties:
- * props.contact (optional) an existing contact to edit
+ * props.encounter (optional) an existing encounter to edit
  * props.closeForm handler for Save and Close buttons
  */
 import React, { Component } from 'react';
@@ -17,7 +17,7 @@ export const fieldDefs = [
     { name: 'details',  label: 'Details',   type: fieldType.TEXT},
 ]
 
-class Contact extends Component {
+class Encounter extends Component {
 
     state = {}
     optionSets = {}
@@ -39,7 +39,7 @@ class Contact extends Component {
 
         const isNew = this.props.entity == null
         return (
-            <ResponsiveForm entity={entity} entityClass='Contact' fieldDefs={fieldDefs} optionSets={this.optionSets} closeForm={this.props.closeForm} isNew={isNew}/>
+            <ResponsiveForm entity={entity} entityClass='Encounter' fieldDefs={fieldDefs} optionSets={this.optionSets} closeForm={this.props.closeForm} isNew={isNew}/>
         )
     } 
 }
@@ -51,4 +51,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default withOptionSets(connect(mapStateToProps)(Contact));
+export default withOptionSets(connect(mapStateToProps)(Encounter));
