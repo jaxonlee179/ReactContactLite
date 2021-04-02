@@ -5,7 +5,7 @@
 const mongoose = require('mongoose')
 var Schema = mongoose.Schema;
 
-const contactSchema = new Schema({
+const encounterSchema = new Schema({
     person:     {type: mongoose.ObjectId},
     position:   {type: mongoose.ObjectId},
     when:       {type: Date},
@@ -20,7 +20,6 @@ const contactSchema = new Schema({
     timestamps: true
 })
 
-const Contact = mongoose.model('Contact', contactSchema)
+const Encounter = mongoose.model('Encounter', encounterSchema)
 
-module.exports =  Contact 
-// module.exports = {Contact}
+module.exports =  Encounter 
