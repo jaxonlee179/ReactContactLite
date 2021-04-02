@@ -5,7 +5,7 @@ require('./database/mongoose')
 
 const appointmentRouter = require('./routers/appointmentRouter')
 const companyRouter = require('./routers/companyRouter')
-const contactRouter = require('./routers/contactRouter')
+const encounterRouter = require('./routers/encounterRouter')
 const emailRouter = require('./routers/emailRouter')
 const personRouter = require('./routers/personRouter')
 const positionRouter = require('./routers/positionRouter')
@@ -25,7 +25,7 @@ app.use(express.json({type: [
 
 app.use(appointmentRouter)
 app.use(companyRouter)
-app.use(contactRouter)
+app.use(encounterRouter)
 app.use(emailRouter)
 app.use(personRouter)
 app.use(positionRouter)
