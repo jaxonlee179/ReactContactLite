@@ -11,25 +11,92 @@ const { Readable } = require('stream');
  */
 const parseEmail = async (readableStream) => {
     
-    const email = await parse(readableStream)
-    if (email.attachments){
-        const rfc822 = extractRrfc822(email.attachments)
+    let fields = await parse(readableStream)
+    if (fields.attachments){
+        const rfc822 = extractRrfc822(fields.attachments)
         if (rfc822){
             // A forwarded message is sometimed delivered as 'message/rfc822' attachment. 
-            // Parse the attachment and use its text instead of that of the enclosing message
-            email.attachments = email.attachments.length === 0 ? null : email.attachments;
+            // Parse the attachment and use it instead of the enclosing message
+            fields.attachments = fields.attachments.length === 0 ? null : fields.attachments;
             readableStream = Readable.from(Buffer.from(rfc822).toString());
-            const attachedEmail = await parse(readableStream);
-            email.text = attachedEmail.text;
+            fields = await parse(readableStream)
             return new Promise((resolve, reject) => {
-                resolve(email);
+                resolve(fields);
             })
         }
     }
+    
+    if (fields.text && fields.text.length > 0){
+        // If the message text is a forwarded message, replace
+        // the 'wrapper' email with one parsed from the text
+        const pattern = /- Forwarded Message -/i
+        let text = fields.text;
+        let i =  (text.search(pattern));
+        if (i >= 0){
+            i += '- Forwarded Message -'.length;
+            while (text.charAt(i) === '-') {
+                i++;
+            } 
+            text = text.substring(i)
+            fields = parseEmbeddedForward(text);
+        }
+    }  
 
     return new Promise((resolve, reject) => {
-        resolve(email);
+        resolve(fields);
     })
+}
+
+const parseEmbeddedForward = text => {
+    const fieldsToFind = [
+        {label: 'from:',    pattern: /(F|f)rom.+\n/,  convertAddresses: true}, 
+        {label: 'to:',      pattern: /(T|t)o.+\n/,    convertAddresses: true}, 
+        {label: 'cc:',      pattern: /(C|c)c.+\n/,    convertAddresses: true}, 
+        {label: 'bcc:',     pattern: /(B|b)cc.+\n/,   convertAddresses: true},
+        {label: 'date:',    pattern: /(D|d)ate.+\n/ } ,
+        {label: 'subject:', pattern: /(S|s)ubject.+\n/ } 
+    ]
+    const fields = {};
+    fieldsToFind.forEach( ({ label, pattern, convertAddresses }) => {
+        let key;
+        let lines = text.match(pattern);
+        if (lines){
+            const line = lines[0];
+            const key = label.substring(0, label.length - 1)
+            let value = line.substring(label.length).trim()
+            if (convertAddresses){
+                value = convertAddressString(value)
+            }
+            fields[key] = value;
+            text = text.replace(line, '');
+        }
+    })
+    fields.from = fields.from[0];
+    fields.text = text.trim();
+    fields.contentType = 'text/plain';
+    return fields
+}
+
+const convertAddressString = s => {
+    const addresses = s.split(',').map( address => {
+        const parts = address.split('<');
+        address = { 
+            name: parts[0].length > 0 ? parts[0].trim() : null,
+            address: parts[1].substring(0, parts[1].length - 1)
+        }
+        return address
+    });
+    return addresses;
+}
+
+
+const log = (title, text) => {
+    console.log('************************************************************')
+    console.log(title);
+    console.log('************************************************************')
+    console.log(text)
+    console.log('************************************************************')
+    console.log('************************************************************')
 }
 
 const extractRrfc822 = attachments => {

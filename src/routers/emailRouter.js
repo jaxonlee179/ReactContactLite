@@ -7,6 +7,8 @@ const { S3Client, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/clien
 const { v4: uuidv4 } = require('uuid');
 
 const Email = require('../models/email')
+const Person = require('../models/person')
+const Encounter = require('../models/encounter')
 const parseEmail = require('../services/parser')
 
 const router = new express.Router()
@@ -42,7 +44,7 @@ router.post('/emails', async (req, res) => {
         // In such cases the notification Subject is 'Amazon SES Email Receipt Subscription Notification'
         // For normal emails, notification Subject is 'Amazon SES Email Receipt Notification'
         if (notification.Subject === 'Amazon SES Email Receipt Subscription Notification'){
-            // Nothing
+            res.status(200).send()
         }
         else if (notification.Subject === 'Amazon SES Email Receipt Notification'){
             const message = JSON.parse(notification.Message)
@@ -61,13 +63,28 @@ router.post('/emails', async (req, res) => {
                 
                 // Parse and extract required fields
                 const emailFields = await parseEmail(response.Body)
-                if (emailFields.attachments){
-                    emailFields.attachments = await saveAttachments(emailFields.attachments, S3)
-                }
-                // Create an Email entity in the database
-                const email = new Email(emailFields)
-                await email.save()
-                res.status(200).send()
+                console.log(emailFields);
+                
+                
+                // if (emailFields.attachments){
+                //     emailFields.attachments = await saveAttachments(emailFields.attachments, S3)
+                // }
+                // // Create an Email entity in the database
+                // const email = new Email(emailFields)
+                // // Link it to Person who sent it
+                // linkEmailToPerson(email)
+                // await email.save()
+               
+                // // Create an Encounter 
+                // const encounter = new Encounter({
+                //     person: email.sender,
+                //     when:   email.date,
+                //     type:   'email',
+                //     email:  email._id 
+                // })
+                // await encounter.save()
+               
+                // res.status(200).send()
             } 
             catch (err) {
                 console.error(err);
@@ -104,12 +121,24 @@ const saveAttachments = async (attachments, S3) => {
     })
 }
 
+// Find the Person entity of the sender and link the Email to it 
+const linkEmailToPerson = async email => {
+    const senderEmail = email.from.address;
+    const person = await Person.findOne({email: senderEmail})
+    email.sender = person._id
+    return new Promise((resolve, reject) => {
+        resolve(email)
+    })
+}
+
 
 /**
- * Gets all Email documents
+ * Gets all Email documents or those of a single Person, signified
+ * by a'person' query parameter
  */
 router.get('/emails', async (req, res) => {
     try {
+//        const query = req.query.person ? {
         const emails = await Email.find({})
         res.send(emails)
     } 
