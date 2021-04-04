@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import personReducer from './persons/PersonReducer';
 import companyReducer from './companies/CompanyReducer';
-import contactReducer from './contacts/ContactReducer';
+import encounterReducer from './encounters/EncounterReducer';
 import positionReducer from './positions/PositionReducer';
 import appointmentReducer from './appointments/AppointmentReducer';
 import './index.css';
@@ -18,7 +18,7 @@ import thunk from 'redux-thunk';
 const rootReducer = combineReducers({
     personReducer,
     companyReducer,
-    contactReducer,
+    encounterReducer,
     positionReducer,
     appointmentReducer,
 });

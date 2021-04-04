@@ -8,13 +8,13 @@ import { CircleSpinner } from "react-spinners-kit";
 
 import AppointmentList from './appointments/AppointmentList';
 import CompanyList from './companies/CompanyList';
-import ContactList from './contacts/ContactList';
+import EncounterList from './encounters/EncounterList';
 import PersonList from './persons/PersonList';
 import PositionList from './positions/PositionList';
 
 import * as appointmentActions from './appointments/AppointmentActions';
 import * as companyActions from './companies/CompanyActions';
-import * as contactActions from './contacts/ContactActions';
+import * as encounterActions from './encounters/EncounterActions';
 import * as personActions from './persons/PersonActions';
 import * as positionActions from './positions/PositionActions';
 
@@ -69,21 +69,21 @@ class App extends Component {
         Promise.all([
             axios.get('/appointments'),
             axios.get('/companies'),
-            axios.get('/contacts'),
+            axios.get('/encounters'),
             axios.get('/persons'),
             axios.get('/positions'),
             // axios.get('/emails')
         ]).then(([
             appointments,
             companies,
-            contacts,
+            encounters,
             persons,
             positions
             // emails
         ]) => {
             this.props.storeAppointments(appointments.data);
             this.props.storeCompanies(companies.data);
-            this.props.storeContacts(contacts.data);
+            this.props.storeEncounters(encounters.data);
             this.props.storePersons(persons.data);
             this.props.storePositions(positions.data);
             // this.props.storeEmails(emails.data);
@@ -110,7 +110,7 @@ class App extends Component {
             <>
                 <Route path="/appointments" exact component={AppointmentList} />
                 <Route path="/companies" exact component={CompanyList} />
-                <Route path="/contacts" exact component={ContactList} />
+                <Route path="/encounters" exact component={EncounterList} />
                 <Route path="/persons" exact component={PersonList} />
                 <Route path="/positions" exact component={PositionList} />
             </>
@@ -128,8 +128,8 @@ class App extends Component {
                             <LinkContainer to="/appointments">
                                 <Nav.Link>Appointments</Nav.Link>
                             </LinkContainer>
-                            <LinkContainer to="/contacts">
-                                <Nav.Link>Contacts</Nav.Link>
+                            <LinkContainer to="/encounters">
+                                <Nav.Link>Encounters</Nav.Link>
                             </LinkContainer>
                             <LinkContainer to="/persons">
                                 <Nav.Link>Persons</Nav.Link>
@@ -153,11 +153,11 @@ class App extends Component {
 
 const mapDispatchToProps = dispatch => {
     return {
-        storeAppointments:  (appointments)  => dispatch({ type: appointmentActions.STORE_ALL,  appointments }),
-        storeCompanies:     (companies)     => dispatch({ type: companyActions.STORE_ALL,         companies }),
-        storeContacts:      (contacts)      => dispatch({ type: contactActions.STORE_ALL,          contacts }),
-        storePersons:       (persons)       => dispatch({ type: personActions.STORE_ALL,            persons }),
-        storePositions:     (positions)     => dispatch({ type: positionActions.STORE_ALL,        positions })
+        storeAppointments:  (appointments)  => dispatch({ type: appointmentActions.STORE_ALL,   appointments }),
+        storeCompanies:     (companies)     => dispatch({ type: companyActions.STORE_ALL,       companies }),
+        storeEncounters:    (encounters)    => dispatch({ type: encounterActions.STORE_ALL,     encounters }),
+        storePersons:       (persons)       => dispatch({ type: personActions.STORE_ALL,        persons }),
+        storePositions:     (positions)     => dispatch({ type: positionActions.STORE_ALL,      positions })
     }
 }
 
