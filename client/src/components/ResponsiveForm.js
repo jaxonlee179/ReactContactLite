@@ -5,7 +5,8 @@
  * isNew            if true, the entity is new (i.e. unpopulated)
  * propertyClass    name of the entity type
  * closeForm                
- * fieldDefs        array of {label, name, type} defining the entity attributes 
+ * fieldDefs        array of {label, name, type} defining the entity attributes
+ * isReadOnly       if true, all fields are read only
  */
 import React, { Component } from 'react';
 import styled from 'styled-components';
@@ -73,10 +74,12 @@ class ResponsiveForm extends Component{
     }
 
     render(){
+        const title = this.props.isreadOnly ? this.props.entityClass :
+            this.props.isNew ? `New ${this.props.entityClass}` : `Edit ${this.props.entityClass}`
         return (
             <Modal show={true} >
                 <Modal.Header>
-                    <Modal.Title>{this.props.isNew ? `New ${this.props.entityClass}` : `Edit ${this.props.entityClass}`}</Modal.Title>
+                    <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -120,7 +123,7 @@ const Row = props => {
     return (
         <div className={props.className}>
             <StyledLabel label={props.label}/>
-            <StyledField type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} />
+            <StyledField type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} isReadOnly={props.isReadOnly}/>
         </div>
     )
 }
@@ -147,29 +150,37 @@ const Field = props => {
     const style={width:'100%'}
     switch (props.type) {
         case fieldType.TEXT: 
-        case fieldType.URL:     return <div className={props.className}><input type='text' onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></input></div>
+        case fieldType.URL:     
+            return (
+                <div className={props.className}>
+                    <input type='text' disabled={props.isReadOnly ? 'true' : 'false'} onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></input>
+                </div>
+            )
 
-        case fieldType.TEXT_AREA:   return <div className={props.className}><textarea onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></textarea></div>
+        case fieldType.TEXT_AREA:   
+            return <div className={props.className}><textarea onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></textarea></div>
         
         case fieldType.DATE_TIME:
-        case fieldType.DATE:    const theDate = props.value ? new Date(props.value) : null
-                                return (
-                                    <div className={props.className}>
-                                        <DatePicker 
-                                            selected={theDate} 
-                                            onChange={date => props.onChange({name: props.name, date: date})}
-                                            showTimeSelect={props.type === fieldType.DATE_TIME ? "true" : undefined}
-                                            isClearable 
-                                            timeFormat="HH:mm" 
-                                            timeIntervals={15}
-                                            timeCaption="time"
-                                            dateFormat={props.type === fieldType.DATE_TIME ? "yyyy/MM/dd h:mm aa" : "yyyy/MM/dd"} 
-                                            />
-                                    </div>
-                                )
+        case fieldType.DATE:    
+            const theDate = props.value ? new Date(props.value) : null
+            return (
+                <div className={props.className}>
+                    <DatePicker 
+                        selected={theDate} 
+                        onChange={date => props.onChange({name: props.name, date: date})}
+                        showTimeSelect={props.type === fieldType.DATE_TIME ? "true" : undefined}
+                        isClearable 
+                        timeFormat="HH:mm" 
+                        timeIntervals={15}
+                        timeCaption="time"
+                        dateFormat={props.type === fieldType.DATE_TIME ? "yyyy/MM/dd h:mm aa" : "yyyy/MM/dd"} 
+                        />
+                </div>
+            )
 
         case fieldType.SELECT:
-        case fieldType.SELECT_ENTITY:  return <div className={props.className}><Selector name={props.name} value={props.value} options={props.options} onChange={props.onChange}/></div>
+        case fieldType.SELECT_ENTITY:  
+            return <div className={props.className}><Selector name={props.name} value={props.value} options={props.options} onChange={props.onChange}/></div>
 
         default: return <div>FUBAR</div>
     }
