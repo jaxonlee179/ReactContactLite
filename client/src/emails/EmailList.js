@@ -79,7 +79,7 @@ class EmailList  extends Component {
 
         return (
             <div>
-                <ListHeaderFooter header='true' name='Emails' label='Email'/>
+                <ListHeaderFooter header='true' name='Emails' label='Email' readOnly='true'/>
                 <ResponsiveTable 
                     entities={this.props.emails}
                     fieldDefs={fieldDefs}
