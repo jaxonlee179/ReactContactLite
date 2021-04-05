@@ -4,7 +4,7 @@
  * props.email the email object
  */
 import React, { Component } from 'react';
-import { ResponsiveForm, fieldType } from '../components/ResponsiveForm';
+import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
 import { connect } from 'react-redux';
 
 export const fieldDefs = [
