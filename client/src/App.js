@@ -11,12 +11,14 @@ import CompanyList from './companies/CompanyList';
 import EncounterList from './encounters/EncounterList';
 import PersonList from './persons/PersonList';
 import PositionList from './positions/PositionList';
+import EmailList from './emails/EmailList';
 
 import * as appointmentActions from './appointments/AppointmentActions';
 import * as companyActions from './companies/CompanyActions';
 import * as encounterActions from './encounters/EncounterActions';
 import * as personActions from './persons/PersonActions';
 import * as positionActions from './positions/PositionActions';
+import * as emailActions from './emails/EmailActions';
 
 import axios from 'axios';
 
@@ -72,21 +74,21 @@ class App extends Component {
             axios.get('/encounters'),
             axios.get('/persons'),
             axios.get('/positions'),
-            // axios.get('/emails')
+            axios.get('/emails')
         ]).then(([
             appointments,
             companies,
             encounters,
             persons,
-            positions
-            // emails
+            positions,
+            emails
         ]) => {
             this.props.storeAppointments(appointments.data);
             this.props.storeCompanies(companies.data);
             this.props.storeEncounters(encounters.data);
             this.props.storePersons(persons.data);
             this.props.storePositions(positions.data);
-            // this.props.storeEmails(emails.data);
+            this.props.storeEmails(emails.data);
             })
         .then(() => {
             this.setState({loading: false});
@@ -113,6 +115,7 @@ class App extends Component {
                 <Route path="/encounters" exact component={EncounterList} />
                 <Route path="/persons" exact component={PersonList} />
                 <Route path="/positions" exact component={PositionList} />
+                <Route path="/emails" exact component={EmailList} />
             </>
         );
         const navbarHeight = {
@@ -140,6 +143,9 @@ class App extends Component {
                             <LinkContainer to="/companies">
                                 <Nav.Link>Companies</Nav.Link>
                             </LinkContainer>
+                            <LinkContainer to="/emails">
+                                <Nav.Link>Emails</Nav.Link>
+                            </LinkContainer>
 
                         </Nav>
                     </Navbar.Collapse>                    
@@ -157,7 +163,8 @@ const mapDispatchToProps = dispatch => {
         storeCompanies:     (companies)     => dispatch({ type: companyActions.STORE_ALL,       companies }),
         storeEncounters:    (encounters)    => dispatch({ type: encounterActions.STORE_ALL,     encounters }),
         storePersons:       (persons)       => dispatch({ type: personActions.STORE_ALL,        persons }),
-        storePositions:     (positions)     => dispatch({ type: positionActions.STORE_ALL,      positions })
+        storePositions:     (positions)     => dispatch({ type: positionActions.STORE_ALL,      positions }),
+        storeEmails:        (emails)        => dispatch({ type: emailActions.STORE_ALL,         emails })
     }
 }
 

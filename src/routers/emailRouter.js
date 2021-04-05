@@ -65,26 +65,25 @@ router.post('/emails', async (req, res) => {
                 const emailFields = await parseEmail(response.Body)
                 console.log(emailFields);
                 
-                
-                // if (emailFields.attachments){
-                //     emailFields.attachments = await saveAttachments(emailFields.attachments, S3)
-                // }
-                // // Create an Email entity in the database
-                // const email = new Email(emailFields)
-                // // Link it to Person who sent it
-                // linkEmailToPerson(email)
-                // await email.save()
+                if (emailFields.attachments){
+                    emailFields.attachments = await saveAttachments(emailFields.attachments, S3)
+                }
+                // Create an Email entity in the database
+                const email = new Email(emailFields)
+                // Link it to Person who sent it
+                linkEmailToPerson(email)
+                await email.save()
                
-                // // Create an Encounter 
-                // const encounter = new Encounter({
-                //     person: email.sender,
-                //     when:   email.date,
-                //     type:   'email',
-                //     email:  email._id 
-                // })
-                // await encounter.save()
+                // Create an Encounter 
+                const encounter = new Encounter({
+                    person: email.sender,
+                    when:   email.date,
+                    type:   'email',
+                    email:  email._id 
+                })
+                await encounter.save()
                
-                // res.status(200).send()
+                res.status(200).send()
             } 
             catch (err) {
                 console.error(err);

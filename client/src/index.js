@@ -8,6 +8,7 @@ import companyReducer from './companies/CompanyReducer';
 import encounterReducer from './encounters/EncounterReducer';
 import positionReducer from './positions/PositionReducer';
 import appointmentReducer from './appointments/AppointmentReducer';
+import emailReducer from './emails/EmailReducer';
 import './index.css';
 import App from './App';
 //import * as serviceWorker from './serviceWorker';
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
     encounterReducer,
     positionReducer,
     appointmentReducer,
+    emailReducer
 });
   
 // Enable Redux devtools Chrome extension, and add thunk middleware (support for asynchronous 
