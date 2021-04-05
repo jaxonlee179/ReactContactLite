@@ -193,4 +193,4 @@ const StyledField = styled(Field)`
     }
 `
 
-export { ResponsiveForm, StyledRow, StyledField }
+export default ResponsiveForm;
