@@ -7,10 +7,12 @@ import { connect } from 'react-redux';
 import ResponsiveTable from '../components/ResponsiveTable';
 import ListHeaderFooter from '../components/ListHeaderFooter';
 import Email, { fieldDefs } from './Email';
+import * as actions from './EmailActions';
 
 class EmailList  extends Component {
 
     state = {}
+    displayFieldDefs = {}
 
     constructor (props){
         super(props);
@@ -20,6 +22,10 @@ class EmailList  extends Component {
             ascending: undefined,
             displayForm: false
         }
+        this.displayFieldDefs = fieldDefs.filter( fieldDef => {
+            // For compactness, cc and bcc will not be shown in the table
+            return fieldDef.name != 'cc' && fieldDef.name != 'bcc' && fieldDef.name != 'text'
+        })
         this.select= this.select.bind(this);
         this.closeForm= this.closeForm.bind(this);
     }
@@ -68,8 +74,6 @@ class EmailList  extends Component {
     }
 
     render() {
-//                    entityMaps={entityMaps}
-
         const sortProps = {
             afterSort: this.afterSort, 
             column: this.state.column, 
@@ -82,7 +86,7 @@ class EmailList  extends Component {
                 <ListHeaderFooter header='true' name='Emails' label='Email' readOnly='true'/>
                 <ResponsiveTable 
                     entities={this.props.emails}
-                    fieldDefs={fieldDefs}
+                    fieldDefs={this.displayFieldDefs}
                     colors={colors}
                     sortProps={sortProps}
                     onRowClick={this.select}
@@ -96,8 +100,14 @@ class EmailList  extends Component {
 const mapStateToProps = state => {
     return {
         emails: state.emailReducer.emails,
+        emailMap: state.emailReducer.emailMap
     }
 }
 
+const mapDispatchToProps = dispatch => {
+    return {
+        storeAll: (emails) => dispatch( { type: actions.STORE_ALL, emails})
+    };
+};
 
-export default connect(mapStateToProps)(EmailList);
+export default connect(mapStateToProps, mapDispatchToProps)(EmailList);
