@@ -5,8 +5,8 @@ const express = require('express')
 const router = new express.Router()
 const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3')
 
-const attachmentPrefix = 'ATTACHMENT/'
-const bucketName = 'contactlite-email'
+const ATTACHMENT_PREFIX = process.env.ATTACHMENT_PREFIX
+const bucketName = process.env.BUCKET_NAME
 
 /**
  * Retrieves an attachment. 
@@ -17,7 +17,7 @@ router.get('/attachments/:key', async (req, res) => {
         const S3 = new S3Client({ region: "us-west-2" });
         const params = {
             Bucket: bucketName,
-            Key: attachmentPrefix + req.params.key
+            Key: ATTACHMENT_PREFIX + req.params.key
         }
         const command = new GetObjectCommand(params)
         const response = await S3.send(command);

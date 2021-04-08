@@ -17,8 +17,8 @@ const CR_FROM = 'contactlite@softart-consulting.com'
 const CR_TO = 'robert.t.toms@gmail.com'
 const CR_SUBJECT = 'AWS Subscription Confirmation Request'
 
-const attachmentPrefix = 'ATTACHMENT/'
-const bucketName = 'contactlite-email'
+const ATTACHMENT_PREFIX = process.env.ATTACHMENT_PREFIX
+const BUCKET_NAME = process.env.BUCKET_NAME
 
 /**
  * Processes email receipt notifications. If the 
@@ -107,8 +107,8 @@ const saveAttachments = async (attachments, S3) => {
         let attachment = attachments[i]; 
         const { fileName, contentType, content } = attachment;
         const params = {
-            Bucket:         bucketName,
-            Key:            attachmentPrefix + uuidv4(),
+            Bucket:         BUCKET_NAME,
+            Key:            ATTACHMENT_PREFIX + uuidv4(),
             Body:           content,
             ContentType:    contentType,
             Metadata:       {fileName}
