@@ -136,7 +136,7 @@ const parse = async (readableStream) => {
                 text: parsed.text,
                 contentType: parsed.headers['content-type'],
                 subject: parsed.subject,
-                from: parsed.from[0],
+                from: parsed.from,
                 to: parsed.to,
                 date: parsed.date,
                 attachments: parsed.attachments
