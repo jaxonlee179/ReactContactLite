@@ -17,6 +17,9 @@ const CR_FROM = 'contactlite@softart-consulting.com'
 const CR_TO = 'robert.t.toms@gmail.com'
 const CR_SUBJECT = 'AWS Subscription Confirmation Request'
 
+const attachmentPrefix = 'ATTACHMENT/'
+const bucketName = 'contactlite-email'
+
 /**
  * Processes email receipt notifications. If the 
  * @return the new Email document with code 201 Created
@@ -74,14 +77,16 @@ router.post('/emails', async (req, res) => {
                 linkEmailToPerson(email)
                 await email.save()
                
-                // Create an Encounter 
-                const encounter = new Encounter({
-                    person: email.sender,
-                    when:   email.date,
-                    type:   'email',
-                    email:  email._id 
-                })
-                await encounter.save()
+                // If a sender Person was found, create an Encounter 
+                if (email.sender){
+                    const encounter = new Encounter({
+                        person: email.sender,
+                        when:   email.date,
+                        type:   'email',
+                        email:  email._id 
+                    })
+                    await encounter.save()
+                }
                
                 res.status(200).send()
             } 
@@ -102,8 +107,8 @@ const saveAttachments = async (attachments, S3) => {
         let attachment = attachments[i]; 
         const { fileName, contentType, content } = attachment;
         const params = {
-            Bucket:         'contactlite-email',
-            Key:            'ATTACHMENT/' + uuidv4(),
+            Bucket:         bucketName,
+            Key:            attachmentPrefix + uuidv4(),
             Body:           content,
             ContentType:    contentType,
             Metadata:       {fileName}
@@ -124,7 +129,7 @@ const saveAttachments = async (attachments, S3) => {
 const linkEmailToPerson = async email => {
     const senderEmail = email.from.address;
     const person = await Person.findOne({email: senderEmail})
-    email.sender = person._id
+    email.sender = person ? person._id : null;
     return new Promise((resolve, reject) => {
         resolve(email)
     })
