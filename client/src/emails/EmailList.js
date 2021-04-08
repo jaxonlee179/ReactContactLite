@@ -40,19 +40,7 @@ class EmailList  extends Component {
     }
     
     /**
-     * Displays an email in a popup
-     */
-    showEmail(){
-        this.setState({
-            ...this.state,
-            selectedRow: null,
-            displayForm: true,
-            email: null
-        })
-    }
-
-    /**
-     * Responds to mouse click anywhere on the row
+     * Responds to mouse click anywhere on the row. 
      * @param {object} e the click event object
      * @param {number} selectedRow display index of the row object
      * @param {object} email the full MongoDB email object retrieved from the server
