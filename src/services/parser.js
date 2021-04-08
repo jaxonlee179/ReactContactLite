@@ -3,6 +3,7 @@
 */
 const MailParser = require("mailparser-mit").MailParser;
 const { Readable } = require('stream');
+const moment = require('moment');
 
 /**
  * Parses an email to extract required fields
@@ -74,7 +75,8 @@ const parseEmbeddedForward = text => {
     fields.from = fields.from[0];
     fields.text = text.trim();
     fields.contentType = 'text/plain';
-    return fields
+    fields.date = convertDateString(fields.date);
+    return fields;
 }
 
 const convertAddressString = s => {
@@ -89,14 +91,18 @@ const convertAddressString = s => {
     return addresses;
 }
 
+/** Converts date string into Date object */
+const convertDateString = dateString => {
+    const defaultInputFormat = "ddd, MMM DD, YYYY at LT"; // Matrches e.g. "Sun, Mar 28, 2021 at 11:14 AM"
+    const inputFormats = [defaultInputFormat];
 
-const log = (title, text) => {
-    console.log('************************************************************')
-    console.log(title);
-    console.log('************************************************************')
-    console.log(text)
-    console.log('************************************************************')
-    console.log('************************************************************')
+    if (process.env.DATE_FORMATS){
+        // Additional formats are defined, delimited by '|'
+        const otherFormats = process.env.DATE_FORMATS.split('|');
+        otherFormats.forEach( otherFormat => inputFormats.push(otherFormat))
+    }
+    let m = moment(dateString, inputFormats);
+    return new Date(m.toDate());
 }
 
 const extractRrfc822 = attachments => {
@@ -104,7 +110,7 @@ const extractRrfc822 = attachments => {
     if (i >= 0){
         // A forwarded message is sometimed delivered as 'message/rfc822' attachment. 
         // Parse the attachment and use its text instead of that of the enclosing message
-        rfc822 = attachments[i];
+        const rfc822 = attachments[i];
         delete attachments[i];
         attachments = attachments.filter(attachment => attachment != null);
         return rfc822
@@ -135,6 +141,7 @@ const parse = async (readableStream) => {
                 date: parsed.date,
                 attachments: parsed.attachments
             }
+            parsed.text = removeFalseNewlines(parsed.text)
             resolve(parsed)
         });
         // Send the email to the parser
@@ -153,6 +160,21 @@ const streamToString = async (stream) => {
         stream.on('error', (err) => reject(err));
         stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
     })
+}
+
+/** 
+ * Replaces newline chars followed by a lower case letter or a digit with a blank
+ */
+const removeFalseNewlines = text => {
+   while (true){
+        let i = text.search(/\n(\d|[a-z])/)
+        if (i == -1){
+            break;
+        }
+        let toReplace = text.substring(i, i+2)
+        text = text.replace(toReplace, ' ' + text.charAt(i + 1))
+    }
+    return text
 }
 
 module.exports = parseEmail
