@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 
 const emailSchema = new mongoose.Schema({
     date:       Date,
-    from:       {name: String, address: String},
+    from:       [{name: String, address: String}],
     to:         [{name: String, address: String}],
     cc:         [{name: String, address: String}],
     bcc:        [{name: String, address: String}],

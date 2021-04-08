@@ -50,12 +50,12 @@ const parseEmail = async (readableStream) => {
 
 const parseEmbeddedForward = text => {
     const fieldsToFind = [
-        {label: 'from:',    pattern: /(F|f)rom.+\n/,  convertAddresses: true}, 
-        {label: 'to:',      pattern: /(T|t)o.+\n/,    convertAddresses: true}, 
-        {label: 'cc:',      pattern: /(C|c)c.+\n/,    convertAddresses: true}, 
-        {label: 'bcc:',     pattern: /(B|b)cc.+\n/,   convertAddresses: true},
-        {label: 'date:',    pattern: /(D|d)ate.+\n/ } ,
-        {label: 'subject:', pattern: /(S|s)ubject.+\n/ } 
+        {label: 'from:',    pattern: /(F|f)rom:.+\n/,  convertAddresses: true}, 
+        {label: 'to:',      pattern: /(T|t)o:.+\n/,    convertAddresses: true}, 
+        {label: 'cc:',      pattern: /(C|c)c:.+\n/,    convertAddresses: true}, 
+        {label: 'bcc:',     pattern: /(B|b)cc:.+\n/,   convertAddresses: true},
+        {label: 'date:',    pattern: /(D|d)ate:.+\n/ } ,
+        {label: 'subject:', pattern: /(S|s)ubject:.+\n/ } 
     ]
     const fields = {};
     fieldsToFind.forEach( ({ label, pattern, convertAddresses }) => {
@@ -72,7 +72,6 @@ const parseEmbeddedForward = text => {
             text = text.replace(line, '');
         }
     })
-    fields.from = fields.from[0];
     fields.text = text.trim();
     fields.contentType = 'text/plain';
     fields.date = convertDateString(fields.date);
@@ -136,7 +135,7 @@ const parse = async (readableStream) => {
                 text: parsed.text,
                 contentType: parsed.headers['content-type'],
                 subject: parsed.subject,
-                from: parsed.from[0],
+                from: parsed.from,
                 to: parsed.to,
                 date: parsed.date,
                 attachments: parsed.attachments
