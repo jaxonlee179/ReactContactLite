@@ -4,24 +4,24 @@
  * props.email the email object
  */
 import React, { Component } from 'react';
-import { ResponsiveForm, fieldType } from '../components/ResponsiveForm';
+import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
 import { connect } from 'react-redux';
 
 export const fieldDefs = [
     { name: 'subject',  label: 'Subject',   type: fieldType.TEXT},
-    { name: 'from',     label: 'From',      type: fieldType.TEXT},
-    { name: 'to',       label: 'To',        type: fieldType.TEXT},
-    { name: 'cc',       label: 'Cc',        type: fieldType.TEXT},
-    { name: 'bcc',      label: 'Bcc',       type: fieldType.TEXT},
-    { name: 'date',     label: 'Date',      type: fieldType.DATE},
-    { name: 'text',     label: '',          type: fieldType.TEXT_AREA},
+    { name: 'from',     label: 'From',      type: fieldType.EMAIL},
+    { name: 'to',       label: 'To',        type: fieldType.EMAIL},
+    { name: 'cc',       label: 'Cc',        type: fieldType.EMAIL},
+    { name: 'bcc',      label: 'Bcc',       type: fieldType.EMAIL},
+    { name: 'date',     label: 'Date',      type: fieldType.DATE_TIME},
+    { name: 'text',                         type: fieldType.TEXT_AREA},
 ]
 
 const email = props => {
-    const email = props.email;
+    const email = props.entity;
     
     return (
-        <ResponsiveForm entity={email} entityClass='Email' fieldDefs={fieldDefs} closeForm={this.props.closeForm} isReadOnly='true'/>
+        <ResponsiveForm entity={email} entityClass='Email' fieldDefs={fieldDefs} closeForm={props.closeForm} readOnly='true'/>
     )
 }
 

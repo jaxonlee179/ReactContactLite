@@ -197,7 +197,23 @@ const UnstyledCellContent = props => {
         return <span onClick={props.onRowClick}>{reformatted}</span>
     }
     else if (props.type === fieldType.SELECT_ENTITY){
-        let displayValue = props.value ? props.entityMap.entities[props.value][props.entityMap.displayField] : ''
+        const displayValue = props.value ? props.entityMap.entities[props.value][props.entityMap.displayField] : ''
+        return <span onClick={props.onRowClick}>{displayValue}</span>
+    }
+    else if (props.type === fieldType.EMAIL){
+        let displayValue;
+        if (props.value){
+            if (Object.getOwnPropertyNames(props.value).find( name => name ==='address')){
+                //Single email, not an array
+                displayValue = props.value.address
+            }
+            else {
+                displayValue = props.value[0].address + (props.value.length > 1 ? `, ...${props.value.length-1} more` : '')
+            }
+        }
+        else {
+            displayValue = '';
+        }
         return <span onClick={props.onRowClick}>{displayValue}</span>
     }
     else {

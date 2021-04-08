@@ -14,7 +14,9 @@ const listHeaderFooter= (props, className) => {
     return (        
         <StyledDiv>
             {props.header ? <h4>{props.name}</h4> : ''}
-            <Button className={className} type="button" size="sm" variant="secondary" onClick={props.createNew}>{props.label}</Button>
+            {props.readOnly ? '' :
+                <Button className={className} type="button" size="sm" variant="secondary" onClick={props.createNew}>{props.label}</Button>
+            }
         </StyledDiv>
     )
 }

@@ -22,7 +22,9 @@ export const fieldType = {
     'DATE':         'DATE', 
     'URL':          'URL', 
     'SELECT_ENTITY':'SELECT_ENTITY',
-    'SELECT':       'SELECT'}
+    'SELECT':       'SELECT',
+    'EMAIL':        'EMAIL'
+}
 
 class ResponsiveForm extends Component{
 
@@ -74,10 +76,17 @@ class ResponsiveForm extends Component{
     }
 
     render(){
-        const title = this.props.isreadOnly ? this.props.entityClass :
+        const title = this.props.readOnly ? this.props.entityClass :
             this.props.isNew ? `New ${this.props.entityClass}` : `Edit ${this.props.entityClass}`
+        const bottomButtons = this.props.readOnly ?
+            (<Button size="sm" variant="secondary" onClick={this.cancel}>Close</Button>)
+            :
+            (<>
+                <Button size="sm" variant="secondary" onClick={this.save}>Save</Button>
+                <Button size="sm" variant="secondary" onClick={this.cancel}>Cancel</Button>
+            </>)
         return (
-            <Modal show={true} >
+            <Modal show={true} size="md">
                 <Modal.Header>
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
@@ -87,7 +96,8 @@ class ResponsiveForm extends Component{
                             if (field.type === 'SELECT_ENTITY' || field.type === 'SELECT'){
                                 const options = this.props.optionSets[field.name]
                                 const value = this.state.entity[field.name] ? options[this.valueToLabelMaps[field.name][this.state.entity[field.name]]] : null
-                                return <StyledRow name={field.name} 
+                                return <StyledRow name={field.name}
+                                    readOnly = {this.props.readOnly} 
                                     label={field.label} 
                                     type={field.type} 
                                     value={value}
@@ -97,6 +107,7 @@ class ResponsiveForm extends Component{
                             }
                             else {
                                 return <StyledRow name={field.name} 
+                                    readOnly = {this.props.readOnly}
                                     label={field.label} 
                                     type={field.type} 
                                     value={this.state.entity[field.name]}
@@ -107,8 +118,7 @@ class ResponsiveForm extends Component{
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button size="sm" variant="secondary" onClick={this.save}>Save</Button>
-                    <Button size="sm" variant="secondary" onClick={this.cancel}>Cancel</Button>
+                    {bottomButtons}
                 </Modal.Footer>
             </Modal>
         )
@@ -123,7 +133,7 @@ const Row = props => {
     return (
         <div className={props.className}>
             <StyledLabel label={props.label}/>
-            <StyledField type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} isReadOnly={props.isReadOnly}/>
+            <StyledField type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} readOnly={props.readOnly}/>
         </div>
     )
 }
@@ -153,19 +163,32 @@ const Field = props => {
         case fieldType.URL:     
             return (
                 <div className={props.className}>
-                    <input type='text' disabled={props.isReadOnly ? 'true' : 'false'} onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></input>
+                    <input type='text' disabled={props.readOnly} onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></input>
+                </div>
+            )
+
+        case fieldType.EMAIL:
+            const value = props.readOnly ? formatEmailObject(props.value) : props.value;
+            return (
+                <div className={props.className}>
+                    <input type='email' disabled={props.readOnly} onChange={props.onChange} id={props.name} name={props.name} value={value} style={style}></input>
                 </div>
             )
 
         case fieldType.TEXT_AREA:   
-            return <div className={props.className}><textarea onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></textarea></div>
+            return (
+                <div className={props.className}>
+                    <textarea disabled={props.readOnly} onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></textarea>
+                </div>
+            )
         
         case fieldType.DATE_TIME:
         case fieldType.DATE:    
             const theDate = props.value ? new Date(props.value) : null
             return (
                 <div className={props.className}>
-                    <DatePicker 
+                    <DatePicker
+                        disabled={props.readOnly}
                         selected={theDate} 
                         onChange={date => props.onChange({name: props.name, date: date})}
                         showTimeSelect={props.type === fieldType.DATE_TIME ? "true" : undefined}
@@ -186,6 +209,26 @@ const Field = props => {
     }
 }
 
+const formatEmailObject = email => {
+    let value;
+    if (Object.getOwnPropertyNames(email).find( name => name ==='address')){
+        // Single { ?name, address }
+        value = email.name ? email.name + ` <${email.address}>` : email.address;
+    }
+    else if (Object.getOwnPropertyNames(email).find( name => name ==='length')){
+        // Array of { ?name, address}
+        value = '';
+        email.forEach( (em, i, email) => {
+            value += em.name ? em.name + ` <${em.address}>` : em.address
+                + (i < email.length - 1 ? ', ' : '');
+        })
+    }
+    else {
+        value = email;
+    }
+    return value;
+}
+
 const StyledField = styled(Field)`
     width: 70%;
     @media all and (max-width: 768px) {
@@ -193,4 +236,4 @@ const StyledField = styled(Field)`
     }
 `
 
-export { ResponsiveForm, StyledRow, StyledField }
+export default ResponsiveForm;
