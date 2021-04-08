@@ -41,7 +41,7 @@ class Encounter extends Component {
         const isNew = this.props.entity == null
         // The encounter type field will not be displayed. It's value will be set
         // to 'phone' upon first saving
-        const defs = fieldDefs.filter( fieldDef => fieldDef.name != 'type')
+        const defs = fieldDefs.filter( fieldDef => fieldDef.name !== 'type')
 
         return (
             <ResponsiveForm entity={entity} entityClass='Phone Encounter' fieldDefs={defs} optionSets={this.optionSets} closeForm={this.props.closeForm} isNew={isNew}/>

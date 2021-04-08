@@ -49,10 +49,10 @@ class Email extends Component {
                 const port = '8080'        
                 let url = `http://${host}:${port}/attachments/${key}`        
                 
-                if ( attachment.contentType == 'text/plain' ||  attachment.contentType == 'application/msword') {
+                if ( attachment.contentType === 'text/plain' ||  attachment.contentType === 'application/msword') {
                     attachment.onClick = this.openAttachment;
                     attachment.viewable = true
-                    if (attachment.contentType == 'application/msword') {
+                    if (attachment.contentType === 'application/msword') {
                         // Wrap the url in one for Google Document Viewer            
                         url = `https://docs.google.com/gview?url=${url}&embedded=true`;
                     }

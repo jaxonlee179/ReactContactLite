@@ -118,7 +118,7 @@ const Header = props => {
 const doNewSort = (sortProps, column, fieldDefs, entities) => {
     const ascending = sortProps.column === column ? !sortProps.ascending : false
     const fieldName = fieldDefs[column].name
-    const isEmailObject = fieldDefs[column].type == fieldType.EMAIL;
+    const isEmailObject = fieldDefs[column].type ===  fieldType.EMAIL;
     const sorted = [...entities].sort( (aValue, bValue) => {
         // Convert EMAIL fields from object {name, address } to string address
         let a = isEmailObject ? aValue[fieldName][0]['address'] : aValue[fieldName];

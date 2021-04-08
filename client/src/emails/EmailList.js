@@ -24,7 +24,7 @@ class EmailList  extends Component {
         }
         this.displayFieldDefs = fieldDefs.filter( fieldDef => {
             // For compactness, cc and bcc will not be shown in the table
-            return fieldDef.name != 'cc' && fieldDef.name != 'bcc' && fieldDef.name != 'text'
+            return fieldDef.name !== 'cc' && fieldDef.name !== 'bcc' && fieldDef.name !== 'text'
         })
         this.select= this.select.bind(this);
         this.closeForm= this.closeForm.bind(this);
