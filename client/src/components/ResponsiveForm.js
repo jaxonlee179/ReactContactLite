@@ -15,6 +15,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Modal, Button } from 'react-bootstrap';
 import Selector from './Selector';
 
+
 export const fieldType = {
     'TEXT':         'TEXT', 
     'TEXT_AREA':    'TEXT_AREA', 
@@ -23,7 +24,8 @@ export const fieldType = {
     'URL':          'URL', 
     'SELECT_ENTITY':'SELECT_ENTITY',
     'SELECT':       'SELECT',
-    'EMAIL':        'EMAIL'
+    'EMAIL':        'EMAIL',        // Valid only if readOnly
+    'ATTACHMENT':   'ATTACHMENT'    // Valid only if readOnly TODO
 }
 
 class ResponsiveForm extends Component{
@@ -86,7 +88,8 @@ class ResponsiveForm extends Component{
                 <Button size="sm" variant="secondary" onClick={this.cancel}>Cancel</Button>
             </>)
         return (
-            <Modal show={true} size="md">
+            <>
+            <Modal show={true} size={this.props.width ? this.props.width : 'md'}>
                 <Modal.Header>
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
@@ -121,6 +124,8 @@ class ResponsiveForm extends Component{
                     {bottomButtons}
                 </Modal.Footer>
             </Modal>
+
+            </>
         )
     }
 }
@@ -132,8 +137,12 @@ const Form = styled.div`
 const Row = props => {
     return (
         <div className={props.className}>
-            <StyledLabel label={props.label}/>
-            <StyledField type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} readOnly={props.readOnly}/>
+            {props.label ? <>
+                <StyledLabel label={props.label}/>
+                <StyledField type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} readOnly={props.readOnly}/>
+            </> :  
+                <StyledFieldWithoutLabel type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} readOnly={props.readOnly}/>
+            }
         </div>
     )
 }
@@ -160,10 +169,11 @@ const Field = props => {
     const style={width:'100%'}
     switch (props.type) {
         case fieldType.TEXT: 
-        case fieldType.URL:     
+        case fieldType.URL: 
             return (
                 <div className={props.className}>
-                    <input type='text' disabled={props.readOnly} onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></input>
+                    <input type='text' disabled={props.readOnly ? 'disabled' : null} onChange={props.onChange} 
+                    id={props.name} name={props.name} value={props.value} style={style}></input>
                 </div>
             )
 
@@ -171,14 +181,16 @@ const Field = props => {
             const value = props.readOnly ? formatEmailObject(props.value) : props.value;
             return (
                 <div className={props.className}>
-                    <input type='email' disabled={props.readOnly} onChange={props.onChange} id={props.name} name={props.name} value={value} style={style}></input>
+                    <input type='email' disabled={props.readOnly ? 'disabled' : null} onChange={props.onChange} 
+                    id={props.name} name={props.name} value={value} style={style}></input>
                 </div>
             )
 
         case fieldType.TEXT_AREA:   
             return (
                 <div className={props.className}>
-                    <textarea disabled={props.readOnly} onChange={props.onChange} id={props.name} name={props.name} value={props.value} style={style}></textarea>
+                    <textarea disabled={props.readOnly ? 'disabled' : null} onChange={props.onChange} id={props.name} 
+                    name={props.name} value={props.value} style={style}></textarea>
                 </div>
             )
         
@@ -188,7 +200,7 @@ const Field = props => {
             return (
                 <div className={props.className}>
                     <DatePicker
-                        disabled={props.readOnly}
+                        disabled={props.readOnly ? 'disabled': null}
                         selected={theDate} 
                         onChange={date => props.onChange({name: props.name, date: date})}
                         showTimeSelect={props.type === fieldType.DATE_TIME ? "true" : undefined}
@@ -203,7 +215,20 @@ const Field = props => {
 
         case fieldType.SELECT:
         case fieldType.SELECT_ENTITY:  
-            return <div className={props.className}><Selector name={props.name} value={props.value} options={props.options} onChange={props.onChange}/></div>
+            return (
+                <div className={props.className}>
+                    <Selector name={props.name} value={props.value} options={props.options} onChange={props.onChange}/>
+                </div>
+            )
+
+        case fieldType.ATTACHMENT:
+            const text = `${props.value.fileName};  ${props.value.contentType}` 
+            return (
+                 props.value.viewable ?
+                    <div className={props.className} onClick={ e => props.value.onClick(props.value.url)}>{text}</div>
+                    :
+                    <a href={props.value.url}>{text}</a>
+            )
 
         default: return <div>FUBAR</div>
     }
@@ -234,6 +259,10 @@ const StyledField = styled(Field)`
     @media all and (max-width: 768px) {
         width: 100%;;
     }
+`
+
+const StyledFieldWithoutLabel = styled(Field)`
+    width: 100%;
 `
 
 export default ResponsiveForm;
