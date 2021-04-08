@@ -1,5 +1,7 @@
 /**
- * A modal popup for creating or viewing/editing a Encounter.
+ * A modal popup for creating or viewing/editing a phone call encounter Encounter.
+ * Note that Encounter entities for emails are created automatically on the server
+ * when it receives the emails
  * Properties:
  * props.encounter (optional) an existing encounter to edit
  * props.closeForm handler for Save and Close buttons
@@ -10,11 +12,11 @@ import { connect } from 'react-redux';
 import withOptionSets from '../hoc/withOptionSets'
 
 export const fieldDefs = [
-    { name: 'when',     label: 'When',      type: fieldType.DATE},
+    { name: 'when',     label: 'When',      type: fieldType.DATE_TIME},
+    { name: 'type',     label: 'Type',      type: fieldType.TEXT,           readOnly: true},
     { name: 'position', label: 'Position',  type: fieldType.SELECT_ENTITY},
     { name: 'person',   label: 'Person',    type: fieldType.SELECT_ENTITY},    
-    { name: 'type',     label: 'Type',      type: fieldType.SELECT}, 
-    { name: 'details',  label: 'Details',   type: fieldType.TEXT},
+    { name: 'details',  label: 'Details',   type: fieldType.TEXT_AREA}
 ]
 
 class Encounter extends Component {
@@ -30,7 +32,6 @@ class Encounter extends Component {
             {entityList: this.props.persons,   type: 'person',   mappedAttribute: 'name'}
         ])
 
-        this.optionSets['type'] = [{label: 'Email', value: 'email'}, {label: 'Phone', value: 'phone'}]
      }
 
     render() {
@@ -38,8 +39,12 @@ class Encounter extends Component {
         console.log("from server" + entity.when)
 
         const isNew = this.props.entity == null
+        // The encounter type field will not be displayed. It's value will be set
+        // to 'phone' upon first saving
+        const defs = fieldDefs.filter( fieldDef => fieldDef.name != 'type')
+
         return (
-            <ResponsiveForm entity={entity} entityClass='Encounter' fieldDefs={fieldDefs} optionSets={this.optionSets} closeForm={this.props.closeForm} isNew={isNew}/>
+            <ResponsiveForm entity={entity} entityClass='Phone Encounter' fieldDefs={defs} optionSets={this.optionSets} closeForm={this.props.closeForm} isNew={isNew}/>
         )
     } 
 }

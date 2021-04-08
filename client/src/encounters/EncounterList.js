@@ -5,6 +5,8 @@ import ListHeaderFooter from '../components/ListHeaderFooter';
 import Encounter, { fieldDefs } from './Encounter';
 import * as actions from './EncounterActions';
 
+const PHONE_ENCOUNTER = 'phone'
+
 class EncounterList  extends Component {
 
     state = {}
@@ -32,7 +34,7 @@ class EncounterList  extends Component {
     }
     
     /**
-     * Displays the popup to create a new encounter
+     * Displays the popup to create a new phone encounter
      */
     createNew(){
         this.setState({
@@ -64,6 +66,9 @@ class EncounterList  extends Component {
             displayForm: false
         })
         if (encounter) {
+            if (!encounter.type){
+                encounter.type = PHONE_ENCOUNTER
+            }
             this.props.saveEncounter(encounter, this.state.selectedRow)
         }    
     }
@@ -79,6 +84,11 @@ class EncounterList  extends Component {
             'position':  {entities: this.props.positionsMap, displayField: 'title'},
             'person':   {entities: this.props.personsMap,   displayField: 'name'},
          }
+
+        // The encounter type field will not be displayed. It's value will be set
+        // to 'phone' upon first saving
+        // const defs = fieldDefs.filter( fieldDef => fieldDef.name != 'type')
+        
         const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
         return (
             <div>
