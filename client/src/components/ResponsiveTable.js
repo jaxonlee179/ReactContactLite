@@ -117,9 +117,13 @@ const Header = props => {
 
 const doNewSort = (sortProps, column, fieldDefs, entities) => {
     const ascending = sortProps.column === column ? !sortProps.ascending : false
+    const fieldName = fieldDefs[column].name
+    const isEmailObject = fieldDefs[column].type == fieldType.EMAIL;
     const sorted = [...entities].sort( (a, b) => {
-        return ascending ? -a[fieldDefs[column].name].localeCompare(b[fieldDefs[column].name]) 
-        : a[fieldDefs[column].name].localeCompare(b[fieldDefs[column].name])
+        let aValue = isEmailObject ? a[fieldName][0]['address'] : a[fieldName];
+        let bValue = isEmailObject ? b[fieldName][0]['address'] : b[fieldName];
+        return ascending ? -aValue.localeCompare(bValue) 
+        : aValue.localeCompare(bValue)
     })
     sortProps.afterSort(sorted, column, ascending);
 }
