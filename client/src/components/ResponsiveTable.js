@@ -119,11 +119,12 @@ const doNewSort = (sortProps, column, fieldDefs, entities) => {
     const ascending = sortProps.column === column ? !sortProps.ascending : false
     const fieldName = fieldDefs[column].name
     const isEmailObject = fieldDefs[column].type == fieldType.EMAIL;
-    const sorted = [...entities].sort( (a, b) => {
-        let aValue = isEmailObject ? a[fieldName][0]['address'] : a[fieldName];
-        let bValue = isEmailObject ? b[fieldName][0]['address'] : b[fieldName];
-        return ascending ? -aValue.localeCompare(bValue) 
-        : aValue.localeCompare(bValue)
+    const sorted = [...entities].sort( (aValue, bValue) => {
+        // Convert EMAIL fields from object {name, address } to string address
+        let a = isEmailObject ? aValue[fieldName][0]['address'] : aValue[fieldName];
+        let b = isEmailObject ? bValue[fieldName][0]['address'] : bValue[fieldName];
+        let result = a ? (b ? -a.localeCompare(b) : -1) : (b ? 1 : 0);
+        return ascending ? result : -result;
     })
     sortProps.afterSort(sorted, column, ascending);
 }
