@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 
-// This will prevent deprecation warning re Server Discover and Monitoring engine
+/**
+ * Configures Mongoose for MongoDB access
+ */
 mongoose.set('useUnifiedTopology', true);
 
 const options = {

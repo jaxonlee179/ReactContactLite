@@ -10,6 +10,7 @@ const emailRouter = require('./routers/emailRouter')
 const personRouter = require('./routers/personRouter')
 const positionRouter = require('./routers/positionRouter')
 const attachmentRouter = require('./routers/attachmentRouter')
+const loginRouter = require('./routers/loginRouter')
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -31,6 +32,7 @@ app.use(emailRouter)
 app.use(personRouter)
 app.use(positionRouter)
 app.use(attachmentRouter)
+app.use(loginRouter)
 
 app.get('*', (req, res) => {
     res.send('<h1>404 Not Found</h1>')
