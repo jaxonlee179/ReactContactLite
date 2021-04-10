@@ -12,6 +12,7 @@ import EncounterList from './encounters/EncounterList';
 import PersonList from './persons/PersonList';
 import PositionList from './positions/PositionList';
 import EmailList from './emails/EmailList';
+import Login from './Login'
 
 import * as appointmentActions from './appointments/AppointmentActions';
 import * as companyActions from './companies/CompanyActions';
@@ -28,7 +29,8 @@ import axios from 'axios';
 class App extends Component {
 
     state = {
-        loading: true
+        loading: true,
+        authenticated: false
     };
     
     constructor(props){
@@ -64,7 +66,7 @@ class App extends Component {
             }
             return Promise.reject(error);
         });
-
+        this.onAuthenticated = this.onAuthenticated.bind(this)
     }
 
     componentDidMount() {
@@ -98,14 +100,19 @@ class App extends Component {
         })
     }
 
-    render() {      
+    onAuthenticated(){
+        this.setState({authorized: true});
+    }
+
+    render() { 
+        const showSpinner = this.state.loading && this.state.authorized;
+        const showLogin = !this.state.authorized     
         // Display spinner until all required data are obtained from the server 
-        if (this.state.loading){
-            return (
-                <div className='spinner-container'>
-                    <CircleSpinner size={80} color="#686769" loading={this.state.loading}></CircleSpinner>
-                </div>
-            )
+        if (showSpinner){
+            return <div className='centered'><CircleSpinner size={80} color="#686769" loading={this.state.loading}></CircleSpinner></div>
+        }
+        else if (showLogin){
+            return <Login onAuthenticated={this.onAuthenticated}/>
         }
 
         const routes = (
