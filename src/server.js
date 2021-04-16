@@ -25,14 +25,14 @@ app.use(express.json({type: [
     'application/json'      // For future use
 ]}))
 
-app.use(appointmentRouter)
-app.use(companyRouter)
-app.use(encounterRouter)
-app.use(emailRouter)
-app.use(personRouter)
-app.use(positionRouter)
-app.use(attachmentRouter)
-app.use(loginRouter)
+app.use('/contactlite', appointmentRouter)
+app.use('/contactlite', companyRouter)
+app.use('/contactlite', encounterRouter)
+app.use('/contactlite', emailRouter)
+app.use('/contactlite', personRouter)
+app.use('/contactlite', positionRouter)
+app.use('/contactlite', attachmentRouter)
+app.use('/contactlite', loginRouter)
 
 app.get('*', (req, res) => {
     res.send('<h1>404 Not Found</h1>')
