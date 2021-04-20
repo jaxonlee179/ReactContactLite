@@ -13,7 +13,7 @@ const attachmentRouter = require('./routers/attachmentRouter')
 const loginRouter = require('./routers/loginRouter')
 
 const app = express()
-const port = process.env.PORT || 5000
+const port = process.env.CL_PORT || 5000
 
 // Set up static directory to serve the client code
 const public = path.join(__dirname, '../client/build')

@@ -13,12 +13,8 @@ const parseEmail = require('../services/parser')
 
 const router = new express.Router()
 
-const CR_FROM = 'contactlite@softart-consulting.com'
-const CR_TO = 'robert.t.toms@gmail.com'
-const CR_SUBJECT = 'AWS Subscription Confirmation Request'
-
-const ATTACHMENT_PREFIX = process.env.ATTACHMENT_PREFIX
-const BUCKET_NAME = process.env.BUCKET_NAME
+const ATTACHMENT_PREFIX = process.env.CL_EMAIL_ATTACHMENT_PREFIX
+const BUCKET_NAME = process.env.CL_EMAIL_BUCKET_NAME
 
 /**
  * Processes email receipt notifications. If the 
