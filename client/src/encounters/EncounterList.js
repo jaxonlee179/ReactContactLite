@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import ResponsiveTable from '../components/ResponsiveTable';
 import ListHeaderFooter from '../components/ListHeaderFooter';
 import Encounter, { fieldDefs } from './Encounter';
+import Email from '../emails/Email';
 import * as actions from './EncounterActions';
 
 const PHONE_ENCOUNTER = 'phone'
@@ -83,13 +84,17 @@ class EncounterList  extends Component {
         const entityMaps = {
             'position':  {entities: this.props.positionsMap, displayField: 'title'},
             'person':   {entities: this.props.personsMap,   displayField: 'name'},
-         }
+        }
 
         // The encounter type field will not be displayed. It's value will be set
         // to 'phone' upon first saving
         // const defs = fieldDefs.filter( fieldDef => fieldDef.name != 'type')
         
         const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
+    
+        const showPhonePopup = this.state.displayForm && ((this.state.encounter && this.state.encounter.type == 'phone') || !this.state.encounter)
+        const showEmailPopup = this.state.displayForm && this.state.encounter && this.state.encounter.type == 'email'
+
         return (
             <div>
                 <ListHeaderFooter header='true' name='Encounters' label='New Encounter' createNew={this.createNew}/>
@@ -100,8 +105,9 @@ class EncounterList  extends Component {
                     colors={colors}
                     sortProps={sortProps}
                     onRowClick={this.select}/>
-                {this.state.displayForm ? <Encounter entity={this.state.encounter} closeForm={this.closeForm}></Encounter> : ''}
-            </div>
+                {showPhonePopup ? <Encounter entity={this.state.encounter} closeForm={this.closeForm}/> : ''}
+                {showEmailPopup ? <Email entity={this.props.emailsMap[this.state.encounter.email]} closeForm={this.closeForm}/> : ''}
+             </div>
         )
     }
 }
@@ -110,7 +116,8 @@ const mapStateToProps = state => {
     return {
         encounters: state.encounterReducer.encounters,
         positionsMap: state.positionReducer.positionsMap,
-        personsMap: state.personReducer.personsMap
+        personsMap: state.personReducer.personsMap,
+        emailsMap: state.emailReducer.emailsMap
     }
 }
 
