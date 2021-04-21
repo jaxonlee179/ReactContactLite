@@ -25,6 +25,11 @@ app.use(express.json({type: [
     'application/json'      // For future use
 ]}))
 
+app.use('*', (req, res, next) => {
+    console.log(`${req.method}: ${req.originalUrl}`)
+    next()
+})
+
 app.use(appointmentRouter)
 app.use(companyRouter)
 app.use(encounterRouter)
