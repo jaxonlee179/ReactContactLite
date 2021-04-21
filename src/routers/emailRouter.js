@@ -62,21 +62,22 @@ router.post('/emails', async (req, res) => {
                 
                 // Parse and extract required fields
                 const emailFields = await parseEmail(response.Body)
-                console.log(emailFields);
-                
+
                 if (emailFields.attachments){
                     emailFields.attachments = await saveAttachments(emailFields.attachments, S3)
                 }
+                
+                // Look for the Person who sent it
+                const sender = await findSender(emailFields)
+                emailFields.sender = sender ? sender._id : null
                 // Create an Email entity in the database
                 const email = new Email(emailFields)
-                // Link it to Person who sent it
-                linkEmailToPerson(email)
                 await email.save()
                
                 // If a sender Person was found, create an Encounter 
-                if (email.sender){
+                if (sender){
                     const encounter = new Encounter({
-                        person: email.sender,
+                        person: sender._id,
                         when:   email.date,
                         type:   'email',
                         email:  email._id 
@@ -121,13 +122,12 @@ const saveAttachments = async (attachments, S3) => {
     })
 }
 
-// Find the Person entity of the sender and link the Email to it 
-const linkEmailToPerson = async email => {
-    const senderEmail = email.from.address;
+// Find the Person entity of the sender and add it to the email 
+const findSender = async emailFields => {
+    const senderEmail = emailFields.from[0].address;
     const person = await Person.findOne({email: senderEmail})
-    email.sender = person ? person._id : null;
     return new Promise((resolve, reject) => {
-        resolve(email)
+        resolve(person)
     })
 }
 
