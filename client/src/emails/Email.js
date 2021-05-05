@@ -45,9 +45,7 @@ class Email extends Component {
                     type: fieldType.ATTACHMENT
                 })
                 const key = attachment.key.substring(attachment.key.indexOf('/') + 1);
-                const host = '34.221.243.254'
-                const port = '8080'        
-                let url = `http://${host}:${port}/attachments/${key}`        
+                let url = `http://${document.documentURI}/attachments/${key}`        
                 
                 if ( attachment.contentType === 'text/plain' ||  attachment.contentType === 'application/msword') {
                     attachment.onClick = this.openAttachment;
