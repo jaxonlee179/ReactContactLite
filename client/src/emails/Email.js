@@ -45,7 +45,9 @@ class Email extends Component {
                     type: fieldType.ATTACHMENT
                 })
                 const key = attachment.key.substring(attachment.key.indexOf('/') + 1);
-                let url = `http://${document.documentURI}/attachments/${key}`        
+                let baseUri = document.baseURI;
+                baseUri = baseUri.substring(0, baseUri.lastIndexOf('/'))
+                let url = `http://${baseUri}/attachments/${key}`        
                 
                 if ( attachment.contentType === 'text/plain' ||  attachment.contentType === 'application/msword') {
                     attachment.onClick = this.openAttachment;
