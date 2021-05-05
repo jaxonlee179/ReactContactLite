@@ -5,7 +5,6 @@ import axios from 'axios';
 /**
  * A dialog for entering the application password
  * TODO: This is a primitive implementation for a single user. 
- * Consider adding guest acounts demonstrations
  */
 class Login extends Component {
 

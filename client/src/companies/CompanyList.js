@@ -5,6 +5,9 @@ import ListHeaderFooter from '../components/ListHeaderFooter';
 import Company, { fieldDefs } from './Company';
 import * as actions from './CompanyActions';
 
+/**
+ * Displays the Company list
+ */
 class CompanyList extends Component {
     
     state = {}

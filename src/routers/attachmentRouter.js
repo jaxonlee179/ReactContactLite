@@ -1,5 +1,5 @@
 /**
- * Handles GET requests for attachments stored in S3
+ * Handles requests for attachments stored in S3
  */
 const express = require('express')
 const router = new express.Router()

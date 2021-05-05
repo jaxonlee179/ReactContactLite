@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 
 /**
- * A high order component providing a method to build the option sets for selectors
- * displayed in a ResponsiveForm 
- * @param {object} WrappedComponent 
+ * A high order component providing the buildOptionSets method, for assembling the options sets
+ * for selection of of Entities.  
+ * @param {object} WrappedComponent the component requiring option set support
  */
 export default function withOptionSets(WrappedComponent){
     
@@ -18,7 +18,7 @@ export default function withOptionSets(WrappedComponent){
 
         /**
          * Assembles the set of selector option sets
-         * @param {} defs 
+         * @param {array} defs array of {mappedAttribute, type}
          */
         buildOptionSets(defs){
             const optionSets = {}

@@ -8,6 +8,9 @@ import * as actions from './EncounterActions';
 
 const PHONE_ENCOUNTER = 'phone'
 
+/**
+ * Displays the Encountertclist
+ */
 class EncounterList  extends Component {
 
     state = {}

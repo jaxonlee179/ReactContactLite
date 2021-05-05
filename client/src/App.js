@@ -24,13 +24,15 @@ import * as emailActions from './emails/EmailActions';
 import axios from 'axios';
 
 /**
- * The root component of the application. 
+ * The root component of the client application. It initially displays a popup for entry of the application password
+ * while simultaneously fetching all the entities. If after authentication the fetches have not finished, 
+ * displays a spinner. Upon fetch completion it displayes the application menu
  */
 class App extends Component {
 
     state = {
         loading: true,
-        authenticated: false
+        authorized: false
     };
     
     constructor(props){

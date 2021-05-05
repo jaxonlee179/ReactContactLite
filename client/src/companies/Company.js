@@ -1,9 +1,9 @@
 /**
- * A modal popup for creating or viewing/editing a company.
- * Properties:
- * props.company (optional) an existing company to edit
- * props.closeForm handler for Save and Close buttons
- */
+* A modal popup for creating, editing or viewing a Company.
+* Properties:
+* {object} entity: the Company entity, empty or populated
+* {function} closeForm: handler for Save and Close buttons
+*/
 import React, { Component } from 'react';
 import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
 
@@ -17,13 +17,11 @@ export const fieldDefs = [
 
 class Company extends Component {
 
-    entityClass = 'Company'
-
     render() {
         const entity = this.props.entity ? this.props.entity : {}
         const isNew = this.props.entity == null
         return (
-            <ResponsiveForm entity={entity} entityClass={this.entityClass} fieldDefs={fieldDefs} closeForm={this.props.closeForm} isNew={isNew}/>
+            <ResponsiveForm entity={entity} entityClass='Company' fieldDefs={fieldDefs} closeForm={this.props.closeForm} isNew={isNew}/>
         )
     } 
 }

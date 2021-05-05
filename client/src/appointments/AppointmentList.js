@@ -5,6 +5,9 @@ import ListHeaderFooter from '../components/ListHeaderFooter';
 import Appointment, { fieldDefs } from './Appointment';
 import * as actions from './AppointmentActions';
 
+/**
+ * Displays the Appointment list
+ */
 class AppointmentList  extends Component {
 
     state = {}

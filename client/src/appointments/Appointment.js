@@ -1,8 +1,12 @@
 /**
- * A modal popup for creating or viewing/editing an Appointment.
+ * A modal popup for creating, editing or viewing an Appointment.
  * Properties:
- * props.appointment (optional) an existing appointment to edit
- * props.closeForm handler for Save and Close buttons
+ * {object} entity: the Appointment entity, empty or populated
+ * {array} companies: all the Company entities
+ * {array} positions: all the Position entities
+ * {array} persons: all the Person entities
+ * {function} buildOptionSets: 
+ * {function} closeForm: handler for Save and Close buttons
  */
 import React, { Component } from 'react';
 import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';

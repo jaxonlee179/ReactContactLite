@@ -1,14 +1,14 @@
 /** 
  * A sortable, editable and responsive table component. It switches from a conventional table to the 
- * Collapse By Rows form.
+ * Collapse By Rows form as the width is reduced. 
  * 
- * In the table form the columns are sortable. 
+ * The table form comprises a header with field labels followed by data rows, with optional column sorting.
+ * The Collapse by Rows format displays each Entity as a vertical display of {label, value} Sorting is not
+ * available in this form. 
  * 
- * Columns can be specified as containing URLs, in which case the cell content is rendered as link elements,
- * opening a new window, rather than plain text. 
- * 
- * A click listener can be supplied to process clicks elsewhere in a row. 
-*/
+ * The field value types are those defined in the ResponsiveForm fieldTypes object. For fieldType.URL,
+ * the cell is rendered as a link element rather than plain text; the vtarget is opened in a new window. 
+ */
 import React from 'react';
 import styled from 'styled-components'
 import { fieldType } from './ResponsiveForm';
@@ -16,11 +16,13 @@ import moment from 'moment';
 
 /**
  * Generates a ResponsiveTable component
- * @param {object array} props.entities Table data, one element per row 
+ * @param {array} props.entities Table data, one element per row 
  * @param {array} props.fieldDefs Array of { name, label, type }  
+ * @param {object} props.entityMaps For any field which the id of an Entity, contains an 
+ *                 object of type {entities: Map, displayField: string} keyed on the entity type   
  * @param {object} props.colors (Optional) Color override values 
- * @param {object} props.sortProps (Optional)
- * @param {object} props.onRowClick (Optional) listener for mouse click events 
+ * @param {object} props.sortProps (Optional) {afterSort: function, column: number, ascending: boolean} 
+ *                 Required if the parent component must maintain the sort state ofthe table data 
  * @param {string} props.border (Optional) Border override style
  */
 const responsiveTable = props => {
@@ -58,7 +60,7 @@ const responsiveTable = props => {
 
 /**
  * Establishes the colors from defaults and override values from the component properties
- * @param propColors (Optional) one or more color override attributes
+ * @param {object} propColors (Optional) one or more color override attributes
  * @return the combined colors
  */ 
 const setColors = propColors => {
@@ -85,7 +87,7 @@ const setColors = propColors => {
 
 /**
  * Creates the Header
- * @param {*} props 
+ * @param {object} props The sort properties defined above responsiveTable 
  */
 const Header = props => {
     const labelStyle = { width: props.cellWidth + '%' }
@@ -115,6 +117,13 @@ const Header = props => {
     </div>
 }
 
+/**
+ * Performs a sort on a selected column
+ * @param {object} sortProps As described in responsiveTableTable above
+ * @param {number} column 
+ * @param {object} fieldDefs As described in responsiveTableTable above
+ * @param {array} entities 
+ */
 const doNewSort = (sortProps, column, fieldDefs, entities) => {
     const ascending = sortProps.column === column ? !sortProps.ascending : false
     const fieldName = fieldDefs[column].name
@@ -126,6 +135,7 @@ const doNewSort = (sortProps, column, fieldDefs, entities) => {
         let result = a ? (b ? -a.localeCompare(b) : -1) : (b ? 1 : 0);
         return ascending ? result : -result;
     })
+    // Send the sorted data, the column index and the ascending/descending state to the parent component
     sortProps.afterSort(sorted, column, ascending);
 }
 

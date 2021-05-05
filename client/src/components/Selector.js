@@ -1,18 +1,20 @@
 /**
 * A wrapper for the React Select component (https://react-select.com/) providing a left side
 * label and custom styling. 
-* Additional props:
-* name:                 an optional string passed to the selectHandler argument 'name'                
-* label:                the control label
-* options:              either an array [{label: string, value: object }], or an object 
-*                       {'label': string, 'options': [{label: string, value: object }]} if options are to be grouped
-* selectHandler:        function to receive the onChange event     
-* value:                the current selected value
-* placeholder:          optional placeholder
+* Properties:
+* {string} name:            a component identifier, added to the evnt object passed to the onChange handler                
+* {string}label:            control label
+* {*} options:              either an array [{label: string, value: object }], or an object 
+*                           {'label': string, 'options': [{label: string, value: object }]} if options are to be grouped
+* {function} onChange:      callback for the onChange event     
+* {*} value:                the current selected value
+* {boolean} disabled:       if true, the current value is displayed as read only
+* {string} placeholder:     optional placeholder
 */
 import React from 'react';
 import Select from 'react-select';
 
+// Custom styling: refer the "Style modifier methods" section at https://react-select.com/props#select-props
 const valueContainer = (provided, state) => ({
     ...provided,
     padding : '0px 2px',

@@ -1,12 +1,14 @@
 /**
- * A responsive form component for creating or editing an entity,
+ * A responsive form component for creating or editing an entity, displayed as a modal popup. 
  * Properties:
- * entity           a new unpopulated entity or an existing one 
- * isNew            if true, the entity is new (i.e. unpopulated)
- * propertyClass    name of the entity type
- * closeForm                
- * fieldDefs        array of {label, name, type} defining the entity attributes
- * isReadOnly       if true, all fields are read only
+ * {object}     entity          a new unpopulated entity or an existing one
+ * {array}      optionSets      each element defined the options for entity fields of type SELECT or SELECT_ENTITY 
+ * {function}   closeForm       callback function for Save and Cancel buttons
+ * {boolean}    readOnly        if true, fields are read only
+ * {string}     entityClass     the entity type (capitalized for display)              
+ * {boolean}    isNew           if true, the entity is new (i.e. unpopulated)
+ * {number}     width           optional Bootstrap width, defaults to 'md'
+ * {array}      fieldDefs       array of {label, name, type} defining the entity attributes
  */
 import React, { Component } from 'react';
 import styled from 'styled-components';
@@ -15,15 +17,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Modal, Button } from 'react-bootstrap';
 import Selector from './Selector';
 
-
 export const fieldType = {
-    'TEXT':         'TEXT', 
-    'TEXT_AREA':    'TEXT_AREA', 
-    'DATE_TIME':    'DATE_TIME', 
-    'DATE':         'DATE', 
-    'URL':          'URL', 
-    'SELECT_ENTITY':'SELECT_ENTITY',
-    'SELECT':       'SELECT',
+    'TEXT':         'TEXT',         // Specifies HTML input element of type 'text'
+    'TEXT_AREA':    'TEXT_AREA',    // Specifies HTML textarea element 
+    'DATE_TIME':    'DATE_TIME',    // Specifies DatePicker with time select
+    'DATE':         'DATE',         // Specifies DatePicker without time select 
+    'URL':          'URL',          // Specifies a link element
+    'SELECT_ENTITY':'SELECT_ENTITY',// Specifies a selector displaying a set of entities
+    'SELECT':       'SELECT',       // Specifies a set of options
     'EMAIL':        'EMAIL',        // Valid only if readOnly
     'ATTACHMENT':   'ATTACHMENT'    // Valid only if readOnly TODO
 }

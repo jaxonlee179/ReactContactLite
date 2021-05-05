@@ -5,7 +5,9 @@ import ListHeaderFooter from '../components/ListHeaderFooter';
 import Position, { fieldDefs } from './Position';
 import * as actions from './PositionActions';
 
-
+/**
+ * Displays the Position list
+ */
 class PositionList  extends Component {
 
     state = {}

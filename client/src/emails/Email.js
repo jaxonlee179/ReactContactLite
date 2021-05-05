@@ -1,5 +1,5 @@
 /**
- * A modal popup for viewing an email.
+ * A modal popup for viewing an Email.
  * Properties:
  * props.email the email object
  */
@@ -83,23 +83,11 @@ class Email extends Component {
      * @param {String} key 
      * @param {String} contentType 
      */
- //   openAttachment (key, contentType, attachmentUrl) {
     openAttachment (attachmentUrl) {
-            // Remove the onjectid prefix
-        // key = key.substring(key.indexOf('/') + 1);
-        // const host = '34.221.243.254'
-        // const port = '8080'
-
-        // let attachmentUrl = `http://${host}:${port}/attachments/${key}`
-
-        //     if (contentType == 'application/msword') {
-        //         // Wrap the url in one for Google Document Viewer            
-        //         attachmentUrl = `https://docs.google.com/gview?url=${attachmentUrl}&embedded=true`;
-        //     }    
-            this.setState({
-                showAttachment: true,
-                attachmentUrl
-            })
+        this.setState({
+            showAttachment: true,
+            attachmentUrl
+        })
     }
 }
 

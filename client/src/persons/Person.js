@@ -1,8 +1,10 @@
 /**
- * A modal popup for creating or viewing/editing a person.
+ * A modal popup for creating, editing or viewing a Person.
  * Properties:
- * props.person (optional) an existing person to edit
- * props.closeForm handler for Save and Close buttons
+ * {object} entity: the Person entity, empty or populated
+ * {array} companies: all the Company entities
+ * {function} buildOptionSets: 
+ * {function} closeForm: handler for Save and Close buttons
  */
 import React, { Component } from 'react';
 import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';

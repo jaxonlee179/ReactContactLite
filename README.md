@@ -1,20 +1,25 @@
 # ReactContactLite
 
-Under development!
+ReactContactLite is a rudimentary contact management system, functionally similar to my old Angular [ContactLite](https://github.com/rtthomas/ContactLite) project. That project was designed for deployment on Google App Engine. This one is designed for deployment on AWS. The application stack comprises:
 
-A simple app based on React, NodeJS, ExpressJS and MongoDB. It's a rudimentary contact management system, functionally similar to my old Angular [ContactLite](https://github.com/rtthomas/ContactLite) project. That project was designed for deployment on Google App Engine. This one is targetted at AWS, utilizing the following technologies:
+- React/Redux front end
+- NodeJS/ExpressJS server
+- MongoDB repository
 
-- EC2 Amazon Linux instance hosting NodeJS server
+The AWS services employed are:
+
+- EC2 Amazon Linux hosting NodeJS server
 - MongoDB hosted on Atlas
-- SES instance for email reception
-- S3 single bucket to hold emails and attachments
-- SNS instance to publish email notification for the server
+- SES for email reception
+- S3 to store received emails and attachments
+- SNS to publish email notification for the server
+- Route53
 
 ## Functional Requirements
 
-It is based on a data model representing the following entities:
+The ReactContactLite application allows the user to:
 
-- Company: an organization advertising directly for developers, or an employment agency or consulting firm
+- define Company: an organization advertising directly for developers, or an employment agency or consulting firm
 - Person: a contact at a Company
 - Position: postings by a Company for a job
 - Contact: A phone conversation or email with a Person concerning a Position
