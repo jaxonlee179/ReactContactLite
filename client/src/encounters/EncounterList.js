@@ -95,8 +95,8 @@ class EncounterList  extends Component {
         
         const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
     
-        const showPhonePopup = this.state.displayForm && ((this.state.encounter && this.state.encounter.type == 'phone') || !this.state.encounter)
-        const showEmailPopup = this.state.displayForm && this.state.encounter && this.state.encounter.type == 'email'
+        const showPhonePopup = this.state.displayForm && ((this.state.encounter && this.state.encounter.type === 'phone') || !this.state.encounter)
+        const showEmailPopup = this.state.displayForm && this.state.encounter && this.state.encounter.type === 'email'
 
         return (
             <div>
