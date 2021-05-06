@@ -14,61 +14,75 @@ export const fieldDefs = [
     { name: 'to',       label: 'To',        type: fieldType.EMAIL},
     { name: 'cc',       label: 'Cc',        type: fieldType.EMAIL},
     { name: 'bcc',      label: 'Bcc',       type: fieldType.EMAIL},
-    { name: 'date',     label: 'Date',      type: fieldType.DATE_TIME}
+    { name: 'date',     label: 'Date',      type: fieldType.DATE_TIME},
+    { name: 'text',                         type: fieldType.TEXT_AREA }
 ]
 
 class Email extends Component {
 
-    state = {}
-
     constructor(props) {
         super(props)
-        this.state = {
-            showAttachment: false,
-            attachmentUrl: null
-        }
-        this.openAttachment = this.openAttachment.bind(this);
-        this.closeAttachment = this.closeAttachment.bind(this);
-    }
-    
-    render(){
-        const email = {...this.props.entity};
-        const defs = [...fieldDefs];
 
-        if (email.attachments) {
-           
-            email.attachments.forEach( (attachment, index) => {
+        const attachments = props.entity.attachments
+        if (attachments) {        
+            this.openAttachment = this.openAttachment.bind(this);
+            this.closeAttachment = this.closeAttachment.bind(this);
+
+             // Link fields must be added to the field definitions for each attachment
+            const newFieldDefs = [...fieldDefs]
+            // Attachment fields in the email must be augmented with URLs to fetch them
+            const newEmail = {...props.entity}
+
+            attachments.forEach( (attachment, index) => {
                 const name = `attachment${index}`
-                defs.push({
+                // All link fields will be labelled "Attachment"
+                newFieldDefs.push({
                     name,
                     label: 'Attachment',
                     type: fieldType.ATTACHMENT
                 })
+                // Create URL for retrieving the attachment
                 const key = attachment.key.substring(attachment.key.indexOf('/') + 1);
-                let baseUri = document.baseURI;
-                baseUri = baseUri.substring(0, baseUri.lastIndexOf('/'))
+
+                // For running on the dev server, set local env variable to point to remote server 
+                let baseUri = process.env.REACT_APP_PROXY
+                if (!baseUri){
+                    baseUri = document.baseURI
+                    baseUri = baseUri.substring(0, baseUri.lastIndexOf('/'))
+                }
                 let url = `${baseUri}/attachments/${key}`        
                 
-                if ( attachment.contentType === 'text/plain' ||  attachment.contentType === 'application/msword') {
-                    attachment.onClick = this.openAttachment;
-                    attachment.viewable = true
-                    if (attachment.contentType === 'application/msword') {
-                        // Wrap the url in one for Google Document Viewer            
-                        url = `https://docs.google.com/gview?url=${url}&embedded=true`;
-                    }
+                // Attachments will be displayed in a new window
+                attachment.onClick = this.openAttachment;
+                attachment.viewable = true
+                if (attachment.contentType === 'application/msword') {
+                    // Wrap the url in one for Google Document Viewer to render a Word document           
+                    url = `https://docs.google.com/gview?url=${url}&embedded=true`;
                 }
                 attachment.url = url;
-                email[name] = attachment;
+                newEmail[name] = attachment;
             })
-            defs.push( { name: 'text', type: fieldType.TEXT_AREA } );
-
-            return (
-                <>
-                <ResponsiveForm entity={email} entityClass='Email' fieldDefs={defs} closeForm={this.props.closeForm} readOnly='true' width='lg'/>
-                {this.state.showAttachment ? <NewWindow url={this.state.attachmentUrl} title='title' onUnload={this.closeAttachment}/> : ''}
-                </>
-            )
+            this.state = {
+                email: newEmail,
+                fieldDefs: newFieldDefs
+            }
         }
+        else {
+            // Use existing field definitions
+            this.state = {
+                email:  props.entity,
+                fieldDefs
+            }
+        }
+   }
+    
+    render(){
+        return (
+            <>
+            <ResponsiveForm entity={this.state.email} entityClass='Email' fieldDefs={this.state.fieldDefs} closeForm={this.props.closeForm} readOnly='true' width='lg'/>
+            {this.state.showAttachment ? <NewWindow url={this.state.attachmentUrl} title='title' onUnload={this.closeAttachment}/> : ''}
+            </>
+        )
     }
 
     closeAttachment() {
