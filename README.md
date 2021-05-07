@@ -15,15 +15,7 @@ The AWS services employed are:
 - SNS to publish email notification for the server
 - Route53
 
-Refer to the [Wiki](https://github.com/rtthomas/ReactContactLite/wiki) for the full dosumenmtation 
+The full documentation is on the [Wiki](https://github.com/rtthomas/ReactContactLite/wiki). 
 
-## Functional Requirements
 
-The ReactContactLite application allows the user to:
-
-- define Company: an organization advertising directly for developers, or an employment agency or consulting firm
-- Person: a contact at a Company
-- Position: postings by a Company for a job
-- Contact: A phone conversation or email with a Person concerning a Position
-- Appointment: a time and date for meeting a Person from a Company
 
