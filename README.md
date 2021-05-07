@@ -15,6 +15,8 @@ The AWS services employed are:
 - SNS to publish email notification for the server
 - Route53
 
+Refer to the [Wiki](https://github.com/rtthomas/ReactContactLite/wiki) for the full dosumenmtation 
+
 ## Functional Requirements
 
 The ReactContactLite application allows the user to:
