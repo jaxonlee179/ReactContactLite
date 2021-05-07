@@ -1,6 +1,8 @@
 # ReactContactLite
 
-ReactContactLite is a rudimentary contact management system, functionally similar to my old Angular [ContactLite](https://github.com/rtthomas/ContactLite) project. That project was designed for deployment on Google App Engine. This one is designed for deployment on AWS. The application stack comprises:
+ReactContactLite is a learning/demonstration project based on a React/NodeJS/MongoDB stack hosted on an AWS EC2 Linux server, with features relying other AWS services including S3, SES and SNS. It implements a rudimentary contact management system, functionally similar to my old Angular [ContactLite](https://github.com/rtthomas/ContactLite) project deployed on Google App Engine. 
+
+The ReactContactLite application stack comprises:
 
 - React/Redux front end
 - NodeJS/ExpressJS server
