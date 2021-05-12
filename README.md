@@ -35,6 +35,10 @@ The NodeJS server runs on a single Amazon EC2 T2 Micro instance running Amazon L
 
 ![ReactcontactLite](https://user-images.githubusercontent.com/1623386/118016063-cb311080-b309-11eb-9c87-4c12711147cd.gif)
 
+## Server Design
 
+## Client Design
+
+## Deployment
 
 
