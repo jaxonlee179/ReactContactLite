@@ -39,6 +39,6 @@ The NodeJS server runs on a single Amazon EC2 T2 Micro instance running Amazon L
 
 ## Client Design
 
-## Deployment
+## Configuration and Deployment
 
 
