@@ -33,7 +33,7 @@ All the entities listed above, plus emails, can ve viewed in sortable tables
 
 The NodeJS server runs on a single Amazon EC2 T2 Micro instance running Amazon Linux. The database is hosted on the MongoDB Atlas service. The diagram below illustrates how emails are received and managed.
 
-![ReactcontactLite](https://user-images.githubusercontent.com/1623386/118016063-cb311080-b309-11eb-9c87-4c12711147cd.gif)
+![](https://github.com/rtthomas/ReactContactLite/blob/master/documents/ReactcontactLite.png)
 
 ## Server Design
 
