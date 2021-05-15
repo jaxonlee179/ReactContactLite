@@ -21,9 +21,9 @@ ReactContactLite is a rudimentary contact management system supporting job searc
 
 - ***Companies***
 - ***Persons***, optionally affiliated with a Company
-- ***Positions***, describing a job posting, including links to the original source
-- ***Appointments*** 
-- ***Encounters***, in the form of a phone conversation or email correspondence
+- ***Positions***, describing a job posting by a Company, including links to the original source
+- ***Appointments*** scheduled with a Person about a Position
+- ***Encounters*** with a Person, in the form of a phone conversation or email correspondence
 
 The application can receive but not send email. The user can cc the application, or forward mail received on his or her own account. The application parses received emails, extracting and storing any attachments. The original email and Text, Word and PDF attachments can be viewed in the browser.
 
@@ -48,6 +48,8 @@ The following diagram illustrates the entity relationships.
 ![](https://github.com/rtthomas/ReactContactLite/blob/master/documents/Entity-Relationship.gif)
 
 ## Client Design
+
+
 
 ## Configuration and Deployment
 
