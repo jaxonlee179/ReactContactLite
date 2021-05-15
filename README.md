@@ -11,13 +11,13 @@ The AWS services employed are:
 - EC2 Linux instance hosting NodeJS server
 - MongoDB hosted on Atlas
 - Simple Email Service (SES) for email reception
-- Simple Storage SService (S3) storage for received emails and attachments
+- Simple Storage Service (S3) storage for received emails and attachments
 - Simple Notification Service (SNS) to publish email notification for the server
 - Route53
 
 ## Functional Overview
 
-ReactContactLite is a rudimentary contact management system supporting job search activities. The user can enter details for:
+ReactContactLite is a rudimentary contact management system supporting job search activities. The user can enter details for the following entity types:
 
 - ***Companies***
 - ***Persons***, optionally affiliated with a Company
@@ -27,7 +27,9 @@ ReactContactLite is a rudimentary contact management system supporting job searc
 
 The application can receive but not send email. The user can cc the application, or forward mail received on his or her own account. The application parses received emails, extracting and storing any attachments. The original email and Text, Word and PDF attachments can be viewed in the browser.
 
-All the entities listed above, plus emails, can ve viewed in sortable tables
+All the entities listed above can be viewed in sortable tables, and selected for editing.
+
+Access to the home page is restricted by a login dialog requiring a password configured during installation. 
 
 ## Architecture
 
@@ -36,6 +38,14 @@ The NodeJS server runs on a single Amazon EC2 T2 Micro instance running Amazon L
 ![](https://github.com/rtthomas/ReactContactLite/blob/master/documents/ReactcontactLite.gif)
 
 ## Server Design
+
+The server implements a REST API for the five entity types defined previously, all of which are defined by the user, and for ***Email*** entities. 
+
+Upon receipt of an Email Receipt Notification from the SNS service, the server retrieves the email from the S3 service. It then parses the email to identify headers and attachments. If am email is forwarded (i.e. not sent directly as Cc or Bcc,) the original is extracted by a second parsing phase. The Email entity is stored in the database. Extracted attachments are stored in the same S3 bucket as the original email object.
+
+The following diagram illustrates the entity relationships.
+
+![](https://github.com/rtthomas/ReactContactLite/blob/master/documents/Entity-Relationship.gif)
 
 ## Client Design
 
