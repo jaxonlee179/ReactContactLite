@@ -57,6 +57,12 @@ For each entity type, a source folder named for the type ("companies", etc.) con
 - `<EntityACtions>.js` defines Redux asynchronous action constants an asynchronous `save<Entity>` action method for sending new or edited entities to the server
 - `<Entity>Reducer.js` defines the Redux store for the entity type, containing an array of all the entities, and a map of the entities keyed on the entity's MongoDB ObjectId (key) field
 
+Responsive behaviour of the entity table and entity popup components is implemented using the React styled-components package. The small form (<768 px) behavious of each is implemented in:
+- `ResponsiveTable.js` switches from the column header and rows form to one where each entity is displayed one field label and value per row; in this display the table is not sortable
+- `ResponsiveFoirm.js` switches from displaying the field labels to the left of the values to displaying them above the fields
+
+
+
 ## Configuration and Deployment
 
 
