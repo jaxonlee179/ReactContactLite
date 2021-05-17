@@ -41,15 +41,15 @@ The NodeJS server runs on a single Amazon EC2 T2 Micro instance running Amazon L
 
 The server implements a REST API for the five entity types defined previously, all of which are defined by the user, and for ***Email*** entities. 
 
-Upon receipt of an Email Receipt Notification from the SNS service, the server retrieves the email from the S3 service. It then parses the email to identify headers and attachments. If am email is forwarded (i.e. not sent directly as Cc or Bcc,) the original is extracted by a second parsing phase. The Email entity is stored in the database. Extracted attachments are stored in the same S3 bucket as the original email object.
+Upon receipt of an Email Receipt Notification from the SNS service, the server retrieves the email from the S3 service. It then parses the email to identify headers and attachments. If an email is forwarded (i.e. not sent directly as Cc or Bcc,) the original is extracted by a second parsing phase. The Email entity is stored in the database. Extracted attachments are stored in the same S3 bucket as the original email object.
 
-The following diagram illustrates the entity relationships.
+The following diagram illustrates the entity relationships. Note that Attachments are not independent entities; they exist as an array of objects within an Email entity, and reference the attachment document stored in S3
 
 ![](https://github.com/rtthomas/ReactContactLite/blob/master/documents/Entity-Relationship.gif)
 
 ## Client Design
 
-
+The client is coded using "classic" React, i.e. it does not employ the hooks patterns. At startup it retrieves 
 
 ## Configuration and Deployment
 
