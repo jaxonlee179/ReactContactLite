@@ -43,13 +43,19 @@ The server implements a REST API for the five entity types defined previously, a
 
 Upon receipt of an Email Receipt Notification from the SNS service, the server retrieves the email from the S3 service. It then parses the email to identify headers and attachments. If an email is forwarded (i.e. not sent directly as Cc or Bcc,) the original is extracted by a second parsing phase. The Email entity is stored in the database. Extracted attachments are stored in the same S3 bucket as the original email object.
 
-The following diagram illustrates the entity relationships. Note that Attachments are not independent entities; they exist as an array of objects within an Email entity, and reference the attachment document stored in S3
+The following diagram illustrates the entity relationships. Note that Attachments are not independent entities; they exist as an array of objects within an Email entity, and reference the attachment document stored in S3. Entity structure is defined using Mongoose Schema.
 
 ![](https://github.com/rtthomas/ReactContactLite/blob/master/documents/Entity-Relationship.gif)
 
 ## Client Design
 
-The client is coded using "classic" React, i.e. it does not employ the hooks patterns. At startup it retrieves 
+The client is coded using "classic" React, i.e. it does not employ the hooks patterns. At startup it retrieves all entities from the server.
+
+For each entity type, a source folder named for the type ("companies", etc.) contains the following files:
+- `<Entity>List.js` displays a sortable table of all the entities
+- `<Entity>.js` displays a modal popup for creating or editing an entity
+- `<EntityACtions>.js` defines Redux asynchronous action constants an asynchronous `save<Entity>` action method for sending new or edited entities to the server
+- `<Entity>Reducer.js` defines the Redux store for the entity type, containing an array of all the entities, and a map of the entities keyed on the entity's MongoDB ObjectId (key) field
 
 ## Configuration and Deployment
 
