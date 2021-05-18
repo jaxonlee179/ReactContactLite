@@ -76,4 +76,10 @@ At this time the project does not include any CI/CD capabilities. Below are the 
 Item | Location | Description
 --- | --- | ---
 CL_MONGODB_KEY_ID |env | *
-CL_MONGODB_ACCESS_KEY | * | *
+CL_MONGODB_ACCESS_KEY | env | *
+CL_MONGODB_PATH | env | *
+CL_EMAIL_BUCKET_NAME|env | *
+CL_EMAIL_ATTACHMENT_PREFIX| env | *
+CL_PORT| * | *
+| * | *
+| * | *
