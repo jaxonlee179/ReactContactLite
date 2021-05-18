@@ -71,7 +71,9 @@ Responsive behaviour of the entity table and entity popup components is implemen
 
 ***REMAINING SECTIONS UNDER CONSTRUCTION!!***
 
-At this time the project does not include any CI/CD capabilities. Below are the steps necessary to configure and deploy the application, assuming an AWS subscription has already been created. They comprise provision of the required AWS services, and the installation and configuration of the application code.
+At this time the project does not include any CI/CD capabilities. 
+
+Below are the steps necessary to configure and deploy the application, assuming an AWS subscription has already been created. They comprise provision of the required AWS services, and the installation and configuration of the application code. They assume some familiarity with the AWS ecosystem.
 
 #### AWS Services, Part I
 
@@ -80,13 +82,17 @@ At this time the project does not include any CI/CD capabilities. Below are the 
 3. On the [AWS Route53 Service page](https://console.aws.amazon.com/route53/home#DomainListing:), register a domain for the application.
 4. On the [SES Service page](https://us-west-2.console.aws.amazon.com/ses/home?region=us-west-2#home:) veryify the domain as described [here](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-getting-started-verify.html) 
 5. Still on the SES Service page, set up an *S3 action receipt rule* as described [here](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-action-s3.html). This step includes creation of the S3 bucket to hold the incoming emails. Record your specified *Object Key Prefix*, and the *SNS Topic ARN*
-
-### Application 
 6. On the AWS EC2 Service page, create an EC2 instance. It must be created in one of the regions which allows incoming smtp email, such as [us-east-1 (Oregon)](us-east-1) A T2 Micro instance should suffice.
-7. Log into the instance and install NodeJS, as described [here](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html).
+
+#### Application 
+7. Log into the EC2 instance and install NodeJS, as described [here](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html).
 8. Clone this repository. In the ReactContactLitefolder, execute `npm run build`, proceed to the *client* folder and execute the same command, and finally execute `npm run build`.
+9. Create the Linux env variables described below in the Configuration Data section
+10. Start the application
 
+#### AWS Services, Part II
 
+11. On the SES Service page, 
 #### Configuration Data
 
 Item | Location | Description | Applied In 
