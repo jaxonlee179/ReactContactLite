@@ -73,7 +73,7 @@ At this time the project does not include any CI/CD capabilities. Below are the 
 
 #### Configuration Data
 
-Item | Location | Description
+Item | Location | Description | Applied In 
 --- | --- | ---
 CL_MONGODB_KEY_ID |env | *
 CL_MONGODB_ACCESS_KEY | env | *
