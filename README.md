@@ -65,8 +65,15 @@ Responsive behaviour of the entity table and entity popup components is implemen
 - `ResponsiveTable.js` switches from the column header and rows form to one where each entity is displayed one field label and value per row; in this display the table is not sortable
 - `ResponsiveFoirm.js` switches from displaying the field labels to the left of the values to displaying them above the fields
 
-
-
 ## Configuration and Deployment
 
+REMAINING SECTIONS UNDER CONSTRUCTION!!
 
+At this time the project does not include any CI/CD capabilities. Below are the steps necessary to configure and deploy the application
+
+#### Configuration Data
+
+Item | Location | Description
+--- | --- | ---
+CL_MONGODB_KEY_ID |env | *
+CL_MONGODB_ACCESS_KEY | * | *
