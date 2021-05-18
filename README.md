@@ -73,7 +73,10 @@ At this time the project does not include any CI/CD capabilities. Below are the 
 
 1. On the ![AWS IAM Service](https://console.aws.amazon.com/iam/home?region=us-west-2#/home) page create an AWS IAM account for accessing the Mongo database. Create an access key for it, note the account's Amazon Resource Name (ARN) and download the account credentials file containing the User name, Access Key ID and Secret access key.
 2. Create an account at ![MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and create a database configured for AWS IAM access, specifying the ARN from Step 1.
-3. Register atCreate a Mongo database in the cloud 
+3. On the AWS EC2 Service page, create an EC2 instance. It must be created in one of the regions which allows incoming smtp email, such as ![us-east-1 (Oregon)](us-east-1) A T2 Micro instance should suffice.
+4. Log into the instance and install NodeJS, as described ![here](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
+5. Clone this repository, proceed to the *client* folder, and excute the command `npm run build`
+6. On the ![AWS S3 Service page](https://s3.console.aws.amazon.com/s3/home) create a bucket to hold incoming emails.
 
 #### Configuration Data
 
