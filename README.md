@@ -53,7 +53,9 @@ Note that
 
 ## Client Design
 
-The client is coded using "classic" React, i.e. it does not employ the hooks patterns. At startup it retrieves all entities from the server.
+The client is coded using "classic" React, i.e. it does not employ the hooks patterns. 
+
+At startup the client prompts for an application password, simultaneously fetching all entities from the server. Upon password acceptance, if the entity retrieval is not finished, an activity spinner is displayed.
 
 For each entity type, a source folder named for the type ("companies", etc.) contains the following files:
 - `<Entity>List.js` displays a sortable table of all the entities
