@@ -71,15 +71,20 @@ Responsive behaviour of the entity table and entity popup components is implemen
 
 REMAINING SECTIONS UNDER CONSTRUCTION!!
 
-At this time the project does not include any CI/CD capabilities. Below are the steps necessary to configure and deploy the application, assuming an AWS subscription has already been created.
+At this time the project does not include any CI/CD capabilities. Below are the steps necessary to configure and deploy the application, assuming an AWS subscription has already been created. They combine provision of the required AWS services with building and launching the application
+
+### AWS Services
 
 1. On the [AWS IAM Service](https://console.aws.amazon.com/iam/home?region=us-west-2#/home) page create an AWS IAM account for accessing the Mongo database. Create an access key for it, note the account's Amazon Resource Name (ARN) and download the account credentials file containing the User name, Access Key ID and Secret access key.
 2. Create an account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and create a database configured for AWS IAM access, specifying the ARN from Step 1.
-3. On the AWS EC2 Service page, create an EC2 instance. It must be created in one of the regions which allows incoming smtp email, such as [us-east-1 (Oregon)](us-east-1) A T2 Micro instance should suffice.
-4. Log into the instance and install NodeJS, as described [here](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
-5. Clone this repository, proceed to the *client* folder, and excute the command `npm run build`
 6. On the [AWS S3 Service page](https://s3.console.aws.amazon.com/s3/home) create a bucket to hold incoming emails.
 7. On the [AWS Route53 Service page](https://console.aws.amazon.com/route53/home#DomainListing:), register a domain for the application 
+
+### Application Build and Installation
+3. On the AWS EC2 Service page, create an EC2 instance. It must be created in one of the regions which allows incoming smtp email, such as [us-east-1 (Oregon)](us-east-1) A T2 Micro instance should suffice.
+4. Log into the instance and install NodeJS, as described [here](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
+5. Clone this repository. In the ReactContactLitefolder, execute `npm run build`, proceed to the *client* folder and execute the same command, and finally execute `npm run build`
+
 
 #### Configuration Data
 
