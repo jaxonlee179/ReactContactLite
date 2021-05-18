@@ -69,7 +69,11 @@ Responsive behaviour of the entity table and entity popup components is implemen
 
 REMAINING SECTIONS UNDER CONSTRUCTION!!
 
-At this time the project does not include any CI/CD capabilities. Below are the steps necessary to configure and deploy the application
+At this time the project does not include any CI/CD capabilities. Below are the steps necessary to configure and deploy the application, assuming an AWS subscription has already been created.
+
+1. On the ![AWS IAM Service](https://console.aws.amazon.com/iam/home?region=us-west-2#/home) page create an AWS IAM account for accessing the Mongo database. Create an access key for it, note the account's Amazon Resource Name (ARN) and download the account credentials file containing the User name, Access Key ID and Secret access key.
+2. Create an account at ![MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and create a database configured for AWS IAM access, specifying the ARN from Step 1.
+3. Register atCreate a Mongo database in the cloud 
 
 #### Configuration Data
 
