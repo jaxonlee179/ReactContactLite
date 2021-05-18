@@ -74,12 +74,12 @@ At this time the project does not include any CI/CD capabilities. Below are the 
 #### Configuration Data
 
 Item | Location | Description | Applied In 
---- | --- | ---
-CL_MONGODB_KEY_ID |env | *
-CL_MONGODB_ACCESS_KEY | env | *
-CL_MONGODB_PATH | env | *
-CL_EMAIL_BUCKET_NAME|env | *
-CL_EMAIL_ATTACHMENT_PREFIX| env | *
-CL_PORT| * | *
-| * | *
-| * | *
+--- | --- | --- | ---
+CL_MONGODB_KEY_ID | env | * | NodeJS server
+CL_MONGODB_ACCESS_KEY | env | * | NodeJS server
+CL_MONGODB_PATH | env | * | NodeJS server
+CL_EMAIL_BUCKET_NAME | env | * | *
+CL_EMAIL_ATTACHMENT_PREFIX | env | * | *
+CL_PORT | * | * | *
+| * | * | *
+| * | * | *
