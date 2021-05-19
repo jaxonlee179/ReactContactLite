@@ -69,9 +69,9 @@ Responsive behaviour of the entity table and entity popup components is implemen
 
 ## Configuration and Deployment
 
-***REMAINING SECTIONS UNDER CONSTRUCTION!!***
-
 At this time the project does not include any CI/CD capabilities. 
+
+***The following instructions probably lack some required details. As such they reflect that this was a learning experience.***  
 
 Below are the steps necessary to configure and deploy the application, assuming an AWS subscription has already been created. They combine provision of the required AWS services, and the installation and configuration of the application code. They assume some familiarity with the AWS ecosystem.
 
