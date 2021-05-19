@@ -78,31 +78,29 @@ Below are the steps necessary to configure and deploy the application, assuming 
 #### AWS Services, Part I
 
 1. On the [AWS IAM Service](https://console.aws.amazon.com/iam/home?region=us-west-2#/home) page create an AWS IAM account for accessing the Mongo database. Create an access key for it, note the account's Amazon Resource Name (ARN) and download the account credentials file containing the User name, Access Key ID and Secret access key.
-2. Create an account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and create a database configured for AWS IAM access, specifying the ARN from Step 1.
+2. Create an account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and create a database configured for AWS IAM access, specifying the ARN from Step 1. Record the cluster URL
 3. On the AWS EC2 Service page, create an EC2 instance. It must be created in one of the regions which allows incoming smtp email, such as [us-east-1 (Oregon)](us-east-1) A T2 Micro instance should suffice.3. 
 4. On the [AWS Route53 Service page](https://console.aws.amazon.com/route53/home#DomainListing:), register a domain for the application, as described [here](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar.html) Configure the DNS to direct incoming traffic to the EC2 instance 
-5. On the [SES Service page](https://us-west-2.console.aws.amazon.com/ses/home?region=us-west-2#home:) veryify the domain as described [here](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-getting-started-verify.html) 
+5. On the [SES Service page](https://us-west-2.console.aws.amazon.com/ses/home?region=us-west-2#home:) verify the domain as described [here](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-getting-started-verify.html) 
 6. Still on the SES Service page, set up an *S3 action receipt rule* as described [here](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-action-s3.html). This step includes creation of the S3 bucket to hold the incoming emails. Record your specified *Object Key Prefix*, and the *SNS Topic ARN*
 
 #### Application 
 7. Log into the EC2 instance and install NodeJS, as described [here](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html).
 8. Clone the ReactContactLite repository. In the ReactContactLite folder, execute `npm run build`, proceed to the *client* folder and execute the same command, and finally execute `npm run build`.
-9. Create the Linux env variables described below in the Configuration Data section
+9. Create the Linux env variables described below in the table below
 10. Start the application
+
+Variable | Value 
+--- | --- 
+CL_MONGODB_KEY_ID | Access Key ID of the MongoDB IAM user (from Step 1 )
+CL_MONGODB_ACCESS_KEY  | the Secret access key
+CL_MONGODB_PATH  | URL of the Atlas database, i.e. <cluster URL from Step 2>/<database name> where the database name is arbitrary
+CL_EMAIL_BUCKET_NAME  | name of the S3 bucket created in Step 6
+CL_EMAIL_ATTACHMENT_PREFIX | an arbitrary bucket object prefix for email attachments
+CL_PORT | 8080 
 
 #### AWS Services, Part II
 
 11. On the SNS Service *Topics* page, and create a Topic (select Standard type), then create a subscription for the Topic. Specify the HTTP and set the endpoint to `http://<your domain>:8080/emails`
-12. 
-#### Configuration Data
-
-Item | Location | Description | Applied In 
---- | --- | --- | ---
-CL_MONGODB_KEY_ID | env | * | NodeJS server
-CL_MONGODB_ACCESS_KEY | env | * | NodeJS server
-CL_MONGODB_PATH | env | * | NodeJS server
-CL_EMAIL_BUCKET_NAME | env | * | *
-CL_EMAIL_ATTACHMENT_PREFIX | env | * | *
-CL_PORT | * | * | *
-| * | * | *
-| * | * | *
+12. Subscription creation triggers an HTTP POST to the server containing a Subscription Confirmation notification. The server in turn sends a GET request to the url contained in the notification message. (These are the transactions reresented by the dotted lines in the architecture diagram.) On the subscriptions page, confirm that the subscription status has switched from Pending to Confirmed
+   
