@@ -57,7 +57,7 @@ The client is coded using "classic" React, i.e. it does not employ the hooks pat
 
 At startup the client prompts for an application password, simultaneously fetching all entities from the server. Upon password acceptance, if the entity retrieval is not finished, an activity spinner is displayed.
 
-For each entity type, a source folder named for the type ("companies", etc.) contains the following files:
+For each entity type, specified as <Entity> below, a source folder named for the type ("companies", etc.) contains the following files:
 - `<Entity>List.js` displays a sortable table of all the entities
 - `<Entity>.js` displays a modal popup for creating or editing an entity
 - `<EntityACtions>.js` defines Redux asynchronous action constants an asynchronous `save<Entity>` action method for sending new or edited entities to the server
