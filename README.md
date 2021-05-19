@@ -94,7 +94,7 @@ Variable | Value
 --- | --- 
 CL_MONGODB_KEY_ID | Access Key ID of the MongoDB IAM user (from Step 1 )
 CL_MONGODB_ACCESS_KEY  | the Secret access key
-CL_MONGODB_PATH  | URL of the Atlas database, i.e. <cluster URL from Step 2>/<database name> where the database name is arbitrary
+CL_MONGODB_PATH  | URL of the Atlas database, i.e. *`cluster URL from Step 2>/database name`* where the database name is arbitrary
 CL_EMAIL_BUCKET_NAME  | name of the S3 bucket created in Step 6
 CL_EMAIL_ATTACHMENT_PREFIX | an arbitrary bucket object prefix for email attachments
 CL_PORT | 8080 
