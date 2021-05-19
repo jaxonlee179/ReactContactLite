@@ -25,7 +25,7 @@ ReactContactLite is a rudimentary contact management system supporting job searc
 - ***Appointments*** scheduled with a Person about a Position
 - ***Encounters*** with a Person, in the form of a phone conversation or email correspondence
 
-The application can receive but not send email. The user can cc the application, or forward mail received on his or her own account. The application parses received emails, extracting and storing any attachments. The original email and Text, Word and PDF attachments can be viewed in the browser.
+The application can receive but not send email. The user can cc to the application address, or forward mail received on his or her own account. The application parses received emails, extracting and storing any attachments. The original email and Text, Word and PDF attachments can be viewed in the browser.
 
 All the entities listed above can be viewed in sortable tables, and selected for editing.
 
