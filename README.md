@@ -1,4 +1,4 @@
-# ReactContactLite
+## ReactContactLite
 
 This is a learning/demonstration project based on a React/NodeJS/MongoDB stack hosted on an Amazon Web Services (AWS). The application stack comprises:
 
@@ -15,7 +15,7 @@ The AWS services employed are:
 - Simple Notification Service (SNS) to publish email notification for the server
 - Route53
 
-## Functional Overview
+### Functional Overview
 
 ReactContactLite is a rudimentary contact management system supporting job search activities. The user can enter details for the following entity types:
 
@@ -31,13 +31,13 @@ All the entities listed above can be viewed in sortable tables, and selected for
 
 Access to the home page is restricted by a login dialog requiring a password configured during installation. 
 
-## Architecture
+### Architecture
 
 The NodeJS server runs on a single Amazon EC2 T2 Micro instance running Amazon Linux. The database is hosted on the MongoDB Atlas service. The diagram below illustrates how emails are received and managed.
 
 ![](https://github.com/rtthomas/ReactContactLite/blob/master/documents/ReactcontactLite.gif)
 
-## Server Design
+### Server Design
 
 The server implements a REST API for the five entity types defined previously, all of which are defined by the user, and for ***Email*** entities. 
 
@@ -51,7 +51,7 @@ Note that
 - Attachments are not independent entities; they exist as an array of objects within an Email entity, and reference the attachment document stored in S3.
 - Entity relationships are not enforced, such that e.g. an Appointment can be defined without specifying Company, Person or Position. This allows the user to specify details in a later edit. 
 
-## Client Design
+### Client Design
 
 The client is coded using "classic" React, i.e. it does not employ the hooks patterns. 
 
@@ -67,11 +67,11 @@ Responsive behaviour of the entity table and entity popup components is implemen
 - `ResponsiveTable.js` switches from the column header and rows form to one where each entity is displayed one field label and value per row; in this display the table is not sortable
 - `ResponsiveFoirm.js` switches from displaying the field labels to the left of the values to displaying them above the fields
 
-## Configuration and Deployment
+### Configuration and Deployment
 
 At this time the project does not include any CI/CD capabilities. 
 
-***The following instructions probably lack some required details. As such they reflect that this was a learning experience.***  
+***The following instructions probably lack some required details, reflecting that this was a learning experience on AWS.***  
 
 Below are the steps necessary to configure and deploy the application, assuming an AWS subscription has already been created. They combine provision of the required AWS services, and the installation and configuration of the application code. They assume some familiarity with the AWS ecosystem.
 
@@ -103,4 +103,12 @@ CL_PORT | 8080
 
 11. On the SNS Service *Topics* page, and create a Topic (select Standard type), then create a subscription for the Topic. Specify the HTTP and set the endpoint to `http://<your domain>:8080/emails`
 12. Subscription creation triggers an HTTP POST to the server containing a Subscription Confirmation notification. The server in turn sends a GET request to the url contained in the notification message. (These are the transactions reresented by the dotted lines in the architecture diagram.) On the subscriptions page, confirm that the subscription status has switched from Pending to Confirmed
+   
+***TODO:*** Need description of:
+- setting the application incoming email address
+- email verification (required outside sandbox?)
+- etc.
+   
+### Future Enhancements 
+ 
    
