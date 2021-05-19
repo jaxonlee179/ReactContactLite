@@ -63,7 +63,7 @@ For each entity type, a source folder named for the type ("companies", etc.) con
 - `<EntityType>Actions>.js` defines Redux asynchronous action constants an asynchronous `save<Entity>` action method for sending new or edited entities to the server
 - `<EntityType>Reducer.js` defines the Redux store for the entity type, containing an array of all the entities, and a map of the entities keyed on the entity's MongoDB ObjectId (key) field
 
-Responsive behaviour of the entity table and entity popup components is implemented using the React styled-components package. The small form (<768 px) behavious of each is implemented in:
+Responsive behaviour of the entity table and entity popup components is implemented using the React styled-components package, described [here](https://styled-components.com/docs). The small form (<768 px) behavious of each is implemented in:
 - `ResponsiveTable.js` switches from the column header and rows form to one where each entity is displayed one field label and value per row; in this display the table is not sortable
 - `ResponsiveFoirm.js` switches from displaying the field labels to the left of the values to displaying them above the fields
 
@@ -104,10 +104,10 @@ CL_PORT | 8080
 11. On the SNS Service *Topics* page, and create a Topic (select Standard type), then create a subscription for the Topic. Specify the HTTP and set the endpoint to `http://<your domain>:8080/emails`
 12. Subscription creation triggers an HTTP POST to the server containing a Subscription Confirmation notification. The server in turn sends a GET request to the url contained in the notification message. (These are the transactions reresented by the dotted lines in the architecture diagram.) On the subscriptions page, confirm that the subscription status has switched from Pending to Confirmed
    
-***TODO:*** Need description of:
+***TODO:*** Missing info:
 - setting the application incoming email address
 - email verification (required outside sandbox?)
-- etc.
+- port mapping
    
 ### Future Enhancements 
  
