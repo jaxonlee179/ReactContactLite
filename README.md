@@ -106,6 +106,7 @@ CL_PORT | 8080
    
 ***TODO:*** Missing info:
 - setting the application incoming email address
+- Route53 A and MX records (for web and SMTP)
 - email verification (required outside sandbox?)
 - port mapping
    
