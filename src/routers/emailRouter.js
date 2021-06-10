@@ -26,11 +26,13 @@ router.post('/emails', async (req, res) => {
 
     if (notification.Type === 'SubscriptionConfirmation'){
         // A SubscriptionConfirmation request is sent by SNS to confirm willingness
-        // to receive events from SNS. 
+        // to receive events from SNS. Rather than just responding OK, SNS requires
+        // confirmation by issiuing a GET to a provided URL
         const subscribeURL = notification.SubscribeURL;
+        console.log('Responding to AWS SNS confirmation request\n' + subscribeURL);
         axios.get(subscribeURL)
         .then(() => {
-            console.log('Responding to AWS SNS confirmation request\n' + subscribeURL);
+            // Respond to original request
             res.status(200).send()
         })
         .catch((e) => {
