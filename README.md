@@ -86,7 +86,7 @@ Below are the steps necessary to configure and deploy the application, assuming 
 
 #### Application 
 7. Log into the EC2 instance and install NodeJS, as described [here](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html).
-8. Clone the ReactContactLite repository. In the ReactContactLite folder, execute `npm run build`, proceed to the *client* folder and execute the same command, and finally execute `npm run build`.
+8. Clone the ReactContactLite repository. In the ReactContactLite/client folder, execute `npm run build`
 9. Create the Linux env variables described below in the table below
 10. Start the application
 
