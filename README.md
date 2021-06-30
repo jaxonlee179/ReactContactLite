@@ -1,6 +1,6 @@
 ## ReactContactLite
 
-This is a learning/demonstration project based on a React/NodeJS/MongoDB stack hosted on an Amazon Web Services (AWS). The application stack comprises:
+This is a simple learning/demonstration project based on a React/NodeJS/MongoDB stack hosted on an Amazon Web Services (AWS). The application stack comprises:
 
 - React/Redux responsive client
 - NodeJS/ExpressJS server
