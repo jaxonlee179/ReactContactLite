@@ -8,7 +8,7 @@ This is a simple learning/demonstration project based on a React/NodeJS/MongoDB 
 
 The AWS services employed are:
 
-- EC2 Linux instance hosting NodeJS server
+- EC2 Linux instance hosting a NodeJS server
 - MongoDB hosted on Atlas
 - Simple Email Service (SES) for email reception
 - Simple Storage Service (S3) storage for received emails and extracted attachments
