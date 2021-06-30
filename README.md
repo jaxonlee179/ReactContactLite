@@ -45,7 +45,7 @@ The server implements a REST API for the five entity types defined previously, a
 
 Upon receipt of an Email Receipt Notification from the SNS service, the server retrieves the email from the S3 service. It then parses the email to identify headers and attachments. If an email is forwarded (i.e. not sent directly as Cc or Bcc,) the original is extracted by a second parsing phase. The Email entity is stored in the database. Extracted attachments are stored in the same S3 bucket as the original email object.
 
-The following diagram illustrates the entity relationships. Entity structures are defined using Mongoose Schema.
+The following diagram illustrates the entity relationships. In the code, the structure of these entities are defined using Mongoose Schema.
 
 ![](https://github.com/rtthomas/ReactContactLite/blob/master/documents/Entity-Relationship.gif)
 
