@@ -13,7 +13,7 @@ The AWS services employed are:
 - Simple Email Service (SES) for email reception
 - Simple Storage Service (S3) storage for received emails and attachments
 - Simple Notification Service (SNS) to publish email notification for the server
-- Route53
+- Route53 to register a domain for the application
 
 ### Functional Overview
 
@@ -25,7 +25,9 @@ ReactContactLite is a rudimentary contact management system supporting job searc
 - ***Appointments*** scheduled with a Person about a Position
 - ***Encounters*** with a Person, in the form of a phone conversation or email correspondence
 
-The application can receive but not send email. The user can cc to the application address, or forward mail received on his or her own account. The application parses received emails, extracting and storing any attachments. The original email and Text, Word and PDF attachments can be viewed in the browser.
+The application is not the *source* for email correspondence, i.e. it does not implement an email client for composing and sending emails. Rather, it can receive emails sent to an address configured for the application domain registered with the AWS Route53 service. The user can cc to the application address, or forward mail received on his or her own account. 
+
+The application parses received emails, extracting and storing any attachments. The original email and Text, Word and PDF attachments can be viewed in the browser.
 
 All the entities listed above can be viewed in sortable tables, and selected for editing.
 
