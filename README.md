@@ -12,7 +12,7 @@ The AWS services employed are:
 - MongoDB hosted on Atlas
 - Simple Email Service (SES) for email reception
 - Simple Storage Service (S3) storage for received emails and extracted attachments
-- Simple Notification Service (SNS) to publish email notification for the server
+- Simple Notification Service (SNS) to publish email notifications to the server application
 - Route53 to register a domain for the application
 
 ### Functional Overview
