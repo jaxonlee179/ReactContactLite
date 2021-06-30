@@ -11,7 +11,7 @@ The AWS services employed are:
 - EC2 Linux instance hosting NodeJS server
 - MongoDB hosted on Atlas
 - Simple Email Service (SES) for email reception
-- Simple Storage Service (S3) storage for received emails and attachments
+- Simple Storage Service (S3) storage for received emails and extracted attachments
 - Simple Notification Service (SNS) to publish email notification for the server
 - Route53 to register a domain for the application
 
