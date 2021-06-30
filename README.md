@@ -60,7 +60,7 @@ At startup the client prompts for an application password, simultaneously fetchi
 For each entity type, a source folder named for the type ("companies", etc.) contains the following files:
 - `<EntityType>List.js` displays a sortable table of all the entities
 - `<EntityType>.js` displays a modal popup for creating or editing an entity
-- `<EntityType>Actions>.js` defines Redux asynchronous action constants an asynchronous `save<Entity>` action method for sending new or edited entities to the server
+- `<EntityType>Actions.js` defines Redux asynchronous action constants an asynchronous `save<Entity>` action method for sending new or edited entities to the server
 - `<EntityType>Reducer.js` defines the Redux store for the entity type, containing an array of all the entities, and a map of the entities keyed on the entity's MongoDB ObjectId (key) field
 
 Responsive behaviour of the entity table and entity popup components is implemented using the React styled-components package, described [here](https://styled-components.com/docs). The small form (<768 px) behavious of each is implemented in:
