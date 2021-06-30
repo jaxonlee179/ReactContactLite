@@ -57,7 +57,7 @@ Note that
 
 The client is coded using "classic" React, i.e. it does not employ the hooks patterns. 
 
-At startup the client prompts for an application password, simultaneously fetching all entities from the server. Upon password acceptance, if the entity retrieval is not finished, an activity spinner is displayed.
+At startup the client prompts for an application password, simultaneously fetching all entities from the server. Upon password acceptance, if the entity retrieval is not finished, an activity spinner is displayed. Upon completion of entity retrieval, the user is presented with a menu for selecting views of each of the entity types.
 
 For each entity type, a source folder named for the type ("companies", etc.) contains the following files:
 - `<EntityType>List.js` displays a sortable table of all the entities
