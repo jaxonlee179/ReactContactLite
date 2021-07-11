@@ -26,11 +26,13 @@ router.post('/emails', async (req, res) => {
 
     if (notification.Type === 'SubscriptionConfirmation'){
         // A SubscriptionConfirmation request is sent by SNS to confirm willingness
-        // to receive events from SNS. 
+        // to receive events from SNS. Rather than just responding OK, SNS requires
+        // confirmation by issiuing a GET to a provided URL
         const subscribeURL = notification.SubscribeURL;
+        console.log('Responding to AWS SNS confirmation request\n' + subscribeURL);
         axios.get(subscribeURL)
         .then(() => {
-            console.log('Responding to AWS SNS confirmation request\n' + subscribeURL);
+            // Respond to original request
             res.status(200).send()
         })
         .catch((e) => {
@@ -43,6 +45,7 @@ router.post('/emails', async (req, res) => {
         // In such cases the notification Subject is 'Amazon SES Email Receipt Subscription Notification'
         // For normal emails, notification Subject is 'Amazon SES Email Receipt Notification'
         if (notification.Subject === 'Amazon SES Email Receipt Subscription Notification'){
+            console.log('Received Receipt Subscription Notifiction')
             res.status(200).send()
         }
         else if (notification.Subject === 'Amazon SES Email Receipt Notification'){
@@ -63,13 +66,15 @@ router.post('/emails', async (req, res) => {
                 // Parse and extract required fields
                 const emailFields = await parseEmail(response.Body)
 
-                if (emailFields.attachments){
-                    emailFields.attachments = await saveAttachments(emailFields.attachments, S3)
-                }
-                
                 // Look for the Person who sent it
                 const sender = await findSender(emailFields)
                 emailFields.sender = sender ? sender._id : null
+                console.log(sender ? `Received email from ${sender.name}` : `Received email from unknown address ${emailFields.from}`)
+
+                if (emailFields.attachments){
+                    emailFields.attachments = await saveAttachments(emailFields.attachments, S3)
+                }
+
                 // Create an Email entity in the database
                 const email = new Email(emailFields)
                 await email.save()
