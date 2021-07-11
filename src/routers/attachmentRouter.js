@@ -5,19 +5,16 @@ const express = require('express')
 const router = new express.Router()
 const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3')
 
-const ATTACHMENT_PREFIX = process.env.ATTACHMENT_PREFIX
-const bucketName = process.env.BUCKET_NAME
-
 /**
- * Retrieves an attachment. 
+ * Retrieves an attachment.
  */
 router.get('/attachments/:key', async (req, res) => {
     try {
         // Send a message to S3 to retrieve the attachment
         const S3 = new S3Client({ region: "us-west-2" });
         const params = {
-            Bucket: bucketName,
-            Key: ATTACHMENT_PREFIX + req.params.key
+            Bucket: process.env.CL_EMAIL_BUCKET_NAME,
+            Key: process.env.CL_EMAIL_ATTACHMENT_PREFIX + req.params.key
         }
         const command = new GetObjectCommand(params)
         const response = await S3.send(command);
@@ -26,7 +23,7 @@ router.get('/attachments/:key', async (req, res) => {
             const { ContentLength, ContentType } = response
             const fileName = response.Metadata.filename
             const body = await streamToBuffer(response.Body)
-            
+
             res.append('Content-Type', ContentType)
             res.append('Content-Length', ContentLength)
             res.send(body)
@@ -34,7 +31,7 @@ router.get('/attachments/:key', async (req, res) => {
         else {
             res.status(404).send()
         }
-    } 
+    }
     catch (e) {
         res.status(500).send()
     }
