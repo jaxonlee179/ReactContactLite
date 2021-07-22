@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -6,48 +6,47 @@ import axios from 'axios';
  * A dialog for entering the application password
  * TODO: This is a primitive implementation for a single user. 
  */
-class Login extends Component {
 
-    state = {}
+function Login({onAuthenticated}) {
+    
+    const [message, setMessage] = useState(null);
+    const [password, setPassword] = useState(null);
 
-    constructor(props) {
-        super(props)
-        this.login = this.login.bind(this);
-        this.onChange= this.onChange.bind(this);
-        this.state = {password: '', message: ''}
-    }
+    const passwordRef = useRef();
 
-    login(){
-        this.setState({message: ''})
-        axios.post('/login', {password: this.state.password})
+    useEffect( () => {
+        passwordRef.current.focus();
+    }, [] )
+
+    function sendPassword() {
+        axios.post('/login', {password})
         .then( response =>{
-            this.props.onAuthenticated();
+            onAuthenticated();
         })
         .catch( error => {
-            this.setState( {message: 'Ooops! Try again'})
+            setMessage('Ooops! Try again')
         })
     }
-
-    onChange(e) {
-        this.setState({password: e.target.value})
+    
+    function onChange(e) {
+        setPassword(e.target.value);
+        setMessage(null)
     }
-
-    render() {
-        return (
-            <Modal show={true} size='sm'>
-                <Modal.Header>
-                    <Modal.Title>Enter Password</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                        <input type='text' value={this.state.password} onChange={this.onChange}></input>
-                        <div>{this.state.message}</div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button size="sm" variant="secondary" onClick={this.login}>Login</Button>
-                </Modal.Footer>
-            </Modal>
-        )
-    }
+    
+    return (
+        <Modal show={true} size='sm'>
+            <Modal.Header>
+                <Modal.Title>Enter Password</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <input ref={passwordRef} type='text' value={password} onChange={onChange}></input>
+                <div>{message}</div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button size="sm" variant="secondary" onClick={sendPassword}>Login</Button>
+            </Modal.Footer>
+        </Modal>
+    )
 }
 
 export default Login
