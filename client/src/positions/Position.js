@@ -1,16 +1,10 @@
 /**
  * A modal popup for creating, editing or viewing a Position.
- * Properties:
- * {object} entity: the Position entity, empty or populated
- * {array} companies: all the Company entities
- * {array} persons: all the Person entities
- * {function} buildOptionSets: 
- * {function} closeForm: handler for Save and Close buttons
  */
-import React, { Component } from 'react';
+import React from 'react';
 import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
 import { connect } from 'react-redux';
-import withOptionSets from '../hoc/withOptionSets'
+import buildOptionSets from '../utilities/entityOptionsHelper'
 
 export const fieldDefs = [
     { name: 'title',        label: 'Title',     type: fieldType.TEXT},
@@ -21,29 +15,28 @@ export const fieldDefs = [
     { name: 'appliedDate',  label: 'Applied',   type: fieldType.DATE}
 ]
 
-class Position extends Component {
+/**
+ * Generates a Position component
+ * @param {object} entity: an existing company, or null to create a new one 
+ * @param {function} closeForm: handler for Save and Close buttons
+ * @param {array} companies: all the Company entities
+ * @param {array} persons: all the Personentities
+ * @returns the component
+ */
+function Position({entity, closeForm, companies, persons }) {
 
-    state = {}
-    optionSets = {}
-     
-    constructor(props) {
-        super(props)
+    const optionSets = buildOptionSets([
+        {entityList: companies, type: 'company', mappedAttribute: 'name'},
+        {entityList: persons,   type: 'person',  mappedAttribute: 'name'}
+    ]);
 
-        this.optionSets = this.props.buildOptionSets([
-            {entityList: this.props.companies, type: 'company',  mappedAttribute: 'name'},
-            {entityList: this.props.persons,   type: 'person',   mappedAttribute: 'name'}
-        ])
+    let isNew;
+    if (entity == null){
+        isNew = true;
+        entity = {}
     }
 
-    render() {
-        const entity = this.props.entity ? this.props.entity : {}
-        console.log("from server" + entity.when)
-
-        const isNew = this.props.entity == null
-        return (
-            <ResponsiveForm entity={entity} entityClass='Position' fieldDefs={fieldDefs} optionSets={this.optionSets} closeForm={this.props.closeForm} isNew={isNew}/>
-        )
-    } 
+    return <ResponsiveForm theEntity={entity} entityClass='Position' fieldDefs={fieldDefs} optionSets={optionSets} closeForm={closeForm} isNew={isNew}/>
 }
 
 const mapStateToProps = state => {
@@ -53,4 +46,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default withOptionSets(connect(mapStateToProps)(Position));
+export default connect(mapStateToProps)(Position);

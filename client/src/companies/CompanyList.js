@@ -1,49 +1,38 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import ResponsiveTable from '../components/ResponsiveTable';
 import ListHeaderFooter from '../components/ListHeaderFooter';
 import Company, { fieldDefs } from './Company';
 import * as actions from './CompanyActions';
 
 /**
- * Displays the Company list
+ * Generates the Company list component
  */
-class CompanyList extends Component {
+function CompanyList () {
     
-    state = {}
-    
-    constructor (props){
-        super(props);
- 
-        this.state = {
-            column: undefined,     
-            ascending: undefined,
-            displayForm: false
-        }
-        this.select= this.select.bind(this);
-        this.createNew= this.createNew.bind(this);
-        this.closeForm= this.closeForm.bind(this);
-    }
+    const [ column,         setColumn ]         = useState(null); 
+    const [ ascending,      setAscending ]      = useState(null); 
+    const [ displayForm,    setDisplayForm ]    = useState(false); 
+    const [ selectedRow,    setSelectedRow ]    = useState(null); 
+    const [ company,        setCompany ]        = useState(null); 
 
-    afterSort = (sorted, column, ascending) => {
-        this.props.storeAll(sorted)        
-        this.setState( {
-            ...this.state,
-            column,
-            ascending
-        })
+    const dispatch = useDispatch();
+    
+    const companies = useSelector(state => state.companyReducer.companies);    
+
+    function afterSort(sorted, column, ascending) {
+        dispatch( { type: actions.STORE_ALL, companies: sorted})
+        setColumn(column);
+        setAscending(ascending);        
     }
     
     /**
      * Displays the popup to create a new company
      */
-    createNew(){
-        this.setState({
-            ...this.state,
-            selectedRow: null,
-            displayForm: true,
-            company: null
-        })
+    function createNew(){
+        setSelectedRow(null);
+        setDisplayForm(true);
+        setCompany(null);
     }
 
     /**
@@ -52,59 +41,38 @@ class CompanyList extends Component {
      * @param {number} selectedRow display index of the row object
      * @param {object} company the full MongoDB company object retrieved from the server
      */
-    select(e, selectedRow, company){
-        this.setState({
-            ...this.state,
-            selectedRow,
-            displayForm: true,
-            company
-        })
+    function select(e, selectedRow, company){
+        setSelectedRow(selectedRow);
+        setDisplayForm(true);
+        setCompany(company);
     }
 
-    closeForm(company){
-        this.setState({
-            ...this.state,
-            displayForm: false
-        })
+    function closeForm(company){
+        setDisplayForm(false);
         if (company) {
-            this.props.saveCompany(company, this.state.selectedRow)
+            dispatch(actions.saveCompany(company, selectedRow))
         }    
     }
 
-    render() {
-
-        const sortProps = {
-            afterSort: this.afterSort, 
-            column: this.state.column, 
-            ascending: this.state.ascending
-        }
-        const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
-        return (
-            <div>
-                <ListHeaderFooter header='true' name='Companies' label='New Company' createNew={this.createNew}/>
-                <ResponsiveTable 
-                    entities={this.props.companies}
-                    fieldDefs={fieldDefs}
-                    colors={colors}
-                    sortProps={sortProps}
-                    onRowClick={this.select}/>
-                {this.state.displayForm ? <Company entity={this.state.company} closeForm={this.closeForm}></Company> : ''}
-            </div>
-        )
+    const sortProps = {
+        afterSort, 
+        column, 
+        ascending
     }
+    const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
+
+    return (
+        <div>
+            <ListHeaderFooter header='true' name='Companies' label='New Company' createNew={createNew} />
+            <ResponsiveTable
+                entities={companies}
+                fieldDefs={fieldDefs}
+                colors={colors}
+                sortProps={sortProps}
+                onRowClick={select} />
+            {displayForm && <Company entity={company} closeForm={closeForm}></Company> }
+        </div>
+    )
 }
 
-const mapStateToProps = state => {
-    return {
-        companies: state.companyReducer.companies
-    }
-}
-
-const mapDispatchToProps = dispatch => {
-    return {
-        saveCompany: (company, selectedRow) => dispatch(actions.saveCompany(company, selectedRow)),
-        storeAll: (companies) => dispatch( { type: actions.STORE_ALL, companies})
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CompanyList);
+export default CompanyList;

@@ -2,41 +2,33 @@
  * Am EmailList is a "read only" table of emails, either all those in the system,
  * or those sent by a specified Person
  */
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import ResponsiveTable from '../components/ResponsiveTable';
 import ListHeaderFooter from '../components/ListHeaderFooter';
 import Email, { fieldDefs } from './Email';
 import * as actions from './EmailActions';
 
-class EmailList  extends Component {
+function EmailList (){
 
-    state = {}
-    displayFieldDefs = {}
+    const [ column,         setColumn ]         = useState(null); 
+    const [ ascending,      setAscending ]      = useState(null); 
+    const [ displayForm,    setDisplayForm ]    = useState(false); 
+    const [ email,          setEmail ]          = useState(null); 
 
-    constructor (props){
-        super(props);
- 
-        this.state = {
-            column: undefined,     
-            ascending: undefined,
-            displayForm: false
-        }
-        this.displayFieldDefs = fieldDefs.filter( fieldDef => {
-            // For compactness, cc and bcc will not be shown in the table
-            return fieldDef.name !== 'cc' && fieldDef.name !== 'bcc' && fieldDef.name !== 'text'
-        })
-        this.select= this.select.bind(this);
-        this.closeForm= this.closeForm.bind(this);
-    }
+    const dispatch = useDispatch();
+    
+    const emails = useSelector(state => state.emailReducer.emails);
 
-    afterSort = (sorted, column, ascending) => {
-        this.props.storeAll(sorted)        
-        this.setState( {
-            ...this.state,
-            column,
-            ascending
-        })
+    const displayFieldDefs = fieldDefs.filter( fieldDef => {
+        // For compactness, cc and bcc will not be shown in the table
+        return fieldDef.name !== 'cc' && fieldDef.name !== 'bcc' && fieldDef.name !== 'text'
+    });
+
+    function afterSort (sorted, column, ascending) {
+        dispatch( { type: actions.STORE_ALL, emails: sorted})
+        setColumn(column);
+        setAscending(ascending);        
     }
     
     /**
@@ -45,57 +37,35 @@ class EmailList  extends Component {
      * @param {number} selectedRow display index of the row object
      * @param {object} email the full MongoDB email object retrieved from the server
      */
-    select(e, selectedRow, email){
-        this.setState({
-            ...this.state,
-            selectedRow,
-            displayForm: true,
-            email
-        })
+    function select(e, selectedRow, email){
+        setDisplayForm(true);
+        setEmail(email);
+   }
+
+    function closeForm(email){
+        setDisplayForm(false);
     }
 
-    closeForm(email){
-        this.setState({
-            ...this.state,
-            displayForm: false
-        })
+    const sortProps = {
+        afterSort,
+        column,
+        ascending
     }
+    const colors = { headerBg: '#2c3e50' } // Set to bootstrap-<them>.css body color
 
-    render() {
-        const sortProps = {
-            afterSort: this.afterSort, 
-            column: this.state.column, 
-            ascending: this.state.ascending
-        }
-        const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
-
-        return (
-            <div>
-                <ListHeaderFooter header='true' name='Emails' label='Email' readOnly='true'/>
-                <ResponsiveTable 
-                    entities={this.props.emails}
-                    fieldDefs={this.displayFieldDefs}
-                    colors={colors}
-                    sortProps={sortProps}
-                    onRowClick={this.select}
-                    readOnly='true'/>
-                {this.state.displayForm ? <Email entity={this.state.email} closeForm={this.closeForm}></Email> : ''}
-            </div>
-        )
-    }
+    return (
+        <div>
+            <ListHeaderFooter header='true' name='Emails' label='Email' readOnly='true' />
+            <ResponsiveTable
+                entities={emails}
+                fieldDefs={displayFieldDefs}
+                colors={colors}
+                sortProps={sortProps}
+                onRowClick={select}
+                readOnly='true' />
+            {displayForm ? <Email entity={email} closeForm={closeForm}></Email> : ''}
+        </div>
+    )
 }
 
-const mapStateToProps = state => {
-    return {
-        emails: state.emailReducer.emails,
-        emailMap: state.emailReducer.emailMap
-    }
-}
-
-const mapDispatchToProps = dispatch => {
-    return {
-        storeAll: (emails) => dispatch( { type: actions.STORE_ALL, emails})
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(EmailList);
+export default EmailList;

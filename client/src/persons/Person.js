@@ -1,15 +1,10 @@
 /**
  * A modal popup for creating, editing or viewing a Person.
- * Properties:
- * {object} entity: the Person entity, empty or populated
- * {array} companies: all the Company entities
- * {function} buildOptionSets: 
- * {function} closeForm: handler for Save and Close buttons
  */
-import React, { Component } from 'react';
+import React from 'react';
 import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
 import { connect } from 'react-redux';
-import withOptionSets from '../hoc/withOptionSets'
+import buildOptionSets from '../utilities/entityOptionsHelper'
 
 export const fieldDefs = [
     { name: 'name',     label: 'Name',      type: fieldType.TEXT},
@@ -18,25 +13,25 @@ export const fieldDefs = [
     { name: 'company',  label: 'Company',   type: fieldType.SELECT_ENTITY}    
 ]
 
-class Person extends Component {
+/**
+ * Generates a Person component
+ * @param {object} entity: an existing company, or null to create a new one 
+ * @param {function} closeForm: handler for Save and Close buttons
+ * @param {array} companies: all the Company entities
+ * @returns the component
+ */
+ function Person ({entity, closeForm, companies }) {
 
-    state = {}
-    optionSets = {}
-     
-    constructor(props) {
-        super(props)
-        this.optionSets = this.props.buildOptionSets([
-            {entityList: this.props.companies, type: 'company', mappedAttribute: 'name'}
-        ])
+    const optionSets = buildOptionSets([
+        {entityList: companies, type: 'company', mappedAttribute: 'name'}
+    ]);
+
+    let isNew;
+    if (entity == null){
+        isNew = true;
+        entity = {}
     }
-
-    render() {
-        const entity = this.props.entity ? this.props.entity : {}
-        const isNew = this.props.entity == null
-        return (
-            <ResponsiveForm entity={entity} entityClass='Person' fieldDefs={fieldDefs} optionSets={this.optionSets} closeForm={this.props.closeForm} isNew={isNew}/>
-        )
-    } 
+    return  <ResponsiveForm theEntity={entity} entityClass='Person' fieldDefs={fieldDefs} optionSets={optionSets} closeForm={closeForm} isNew={isNew} />
 }
 
 const mapStateToProps = state => {
@@ -44,5 +39,4 @@ const mapStateToProps = state => {
         companies: state.companyReducer.companies
     }
 }
-
-export default withOptionSets(connect(mapStateToProps)(Person));
+export default connect(mapStateToProps)(Person);

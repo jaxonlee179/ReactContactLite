@@ -20,6 +20,7 @@ export const fieldType = {
     'ATTACHMENT':   'ATTACHMENT'    // Valid only if readOnly TODO
 }
 /**
+ * Generates the component
  * @param {object}     theEntity       an entity to be viewed or edited, or null
  * @param {string}     entityClass     the entity type (capitalized for display)              
  * @param {array}      fieldDefs       array of {label, name, type} defining the entity attributes
@@ -28,6 +29,7 @@ export const fieldType = {
  * @param {boolean}    isNew           if true, the entity is new (i.e. unpopulated)
  * @param {function}   closeForm       callback function for Save and Cancel buttons
  * @param {number}     width           optional Bootstrap width, defaults to 'md'
+ * @returns the component
  */
 function ResponsiveForm({ theEntity, entityClass, fieldDefs, optionSets, readOnly, isNew, closeForm, width}) {
 
@@ -86,7 +88,7 @@ function ResponsiveForm({ theEntity, entityClass, fieldDefs, optionSets, readOnl
             <Modal.Body>
                 <Form>
                     {fieldDefs.map((field, index) => {
-                        if (field.type === 'SELECT_ENTITY' || field.type === 'SELECT') {
+                        if (field.type === fieldType.SELECT_ENTITY || field.type === fieldType.SELECT) {
                             const options = optionSets[field.name]
                             let value = entity[field.name] ? options[valueToLabelMaps[field.name][entity[field.name]]] : null
                             return <StyledRow name={field.name}
@@ -99,7 +101,7 @@ function ResponsiveForm({ theEntity, entityClass, fieldDefs, optionSets, readOnl
                                 key={index} />
                         }
                         else {
-                            let value = entity[field.name] ? entity[field.name] : null; 
+                            let value = entity[field.name] ? entity[field.name] : null;
                             return <StyledRow name={field.name}
                                 readOnly={readOnly}
                                 label={field.label}
@@ -124,16 +126,15 @@ const Form = styled.div`
     border: none;
 `
 
-const Row = (props) => {
-//         <div className={className}>
+const Row = ({name, readOnly, label, type, value, options, onChange, key}) => {
     return (
         <div>
-            {props.label ? 
+            {label ?
                 <>
-                    <StyledLabel label={props.label}/>
-                    <StyledField type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} readOnly={props.readOnly}/>
-                </> :  
-                <StyledFieldWithoutLabel type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} readOnly={props.readOnly}/>
+                    <StyledLabel label={label} />
+                    <StyledField type={type} name={name} value={value} options={options} onChange={onChange} readOnly={readOnly} />
+                </> :
+                <StyledFieldWithoutLabel type={type} name={name} value={value} options={options} onChange={onChange} readOnly={readOnly} />
             }
         </div>
     )

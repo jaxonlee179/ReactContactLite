@@ -1,10 +1,7 @@
 /**
 * A modal popup for creating, editing or viewing a Company.
-* Properties:
-* {object} entity: the Company entity, empty or populated
-* {function} closeForm: handler for Save and Close buttons
 */
-import React, { Component } from 'react';
+import React from 'react';
 import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
 
 export const fieldDefs = [
@@ -15,15 +12,22 @@ export const fieldDefs = [
     { name: 'phone',  label: 'Phone',   type: fieldType.TEXT}    
 ]
 
-class Company extends Component {
+/**
+ * Generates a Company component
+ * @param {object} entity: an existing company, or null to create a new one 
+ * @param {function} closeForm: handler for Save and Close buttons
+ * @returns the component
+ */
+function Company ( { entity, closeForm }) {
 
-    render() {
-        const entity = this.props.entity ? this.props.entity : {}
-        const isNew = this.props.entity == null
-        return (
-            <ResponsiveForm entity={entity} entityClass='Company' fieldDefs={fieldDefs} closeForm={this.props.closeForm} isNew={isNew}/>
-        )
-    } 
+    let isNew;
+    if (entity == null){
+        isNew = true;
+        entity = {}
+    }
+    return (
+        <ResponsiveForm theEntity={entity} entityClass='Company' fieldDefs={fieldDefs} closeForm={closeForm} isNew={isNew} />
+    )
 }
 
 export default Company

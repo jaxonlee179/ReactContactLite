@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import ResponsiveTable from '../components/ResponsiveTable';
 import ListHeaderFooter from '../components/ListHeaderFooter';
 import Appointment, { fieldDefs } from './Appointment';
@@ -8,42 +8,34 @@ import * as actions from './AppointmentActions';
 /**
  * Displays the Appointment list
  */
-class AppointmentList  extends Component {
+function AppointmentList () {
 
-    state = {}
+    const [ column,         setColumn ]         = useState(null); 
+    const [ ascending,      setAscending ]      = useState(null); 
+    const [ displayForm,    setDisplayForm ]    = useState(false); 
+    const [ selectedRow,    setSelectedRow ]    = useState(null); 
+    const [ appointment,    setAppointment ]    = useState(null); 
 
-    constructor (props){
-        super(props);
- 
-        this.state = {
-            column: undefined,     
-            ascending: undefined,
-            displayForm: false
-        }
-        this.select= this.select.bind(this);
-        this.createNew= this.createNew.bind(this);
-        this.closeForm= this.closeForm.bind(this);
-    }
-
-    afterSort = (sorted, column, ascending) => {
-        this.props.storeAll(sorted)        
-        this.setState( {
-            ...this.state,
-            column,
-            ascending
-        })
-    }
+    const dispatch = useDispatch();
     
+    const appointments = useSelector(state => state.appointmentReducer.appointments);
+    const companiesMap = useSelector(state => state.companyReducer.companiesMap);
+    const positionsMap = useSelector(state => state.positionReducer.positionsMap);
+    const personsMap = useSelector(state => state.personReducer.personsMap);
+
+    function afterSort (sorted, column, ascending) {
+        dispatch( { type: actions.STORE_ALL, appointments: sorted})
+        setColumn(column);
+        setAscending(ascending);        
+    }
+
     /**
      * Displays the popup to create a new appointment
      */
-    createNew(){
-        this.setState({
-            ...this.state,
-            selectedRow: null,
-            displayForm: true,
-            appointment: null
-        })
+     function createNew(){
+        setSelectedRow(null);
+        setDisplayForm(true);
+        setAppointment(null);
     }
 
     /**
@@ -52,68 +44,43 @@ class AppointmentList  extends Component {
      * @param {number} selectedRow display index of the row object
      * @param {object} appointment the full MongoDB appointment object retrieved from the server
      */
-    select(e, selectedRow, appointment){
-        this.setState({
-            ...this.state,
-            selectedRow,
-            displayForm: true,
-            appointment
-        })
+     function select(e, selectedRow, appointment){
+        setSelectedRow(selectedRow);
+        setDisplayForm(true);
+        setAppointment(appointment);
     }
 
-    closeForm(appointment){
-        this.setState({
-            ...this.state,
-            displayForm: false
-        })
+    function closeForm(appointment){
+        setDisplayForm(false);
         if (appointment) {
-            this.props.saveAppointment(appointment, this.state.selectedRow)
+            dispatch(actions.saveAppointment(appointment, selectedRow))
         }    
     }
 
-    render() {
-
-        const sortProps = {
-            afterSort: this.afterSort, 
-            column: this.state.column, 
-            ascending: this.state.ascending
-        }
-        const entityMaps = {
-            'company':  {entities: this.props.companiesMap, displayField: 'name'},
-            'person':   {entities: this.props.personsMap,   displayField: 'name'},
-            'position': {entities: this.props.positionsMap, displayField: 'title'}
-        }
-        const colors = {headerBg: '#2c3e50'} // Set to bootstrap-<them>.css body color
-        return (
-            <div>
-                <ListHeaderFooter header='true' name='Appointments' label='New Appointment' createNew={this.createNew}/>
-                <ResponsiveTable 
-                    entities={this.props.appointments}
-                    entityMaps={entityMaps}
-                    fieldDefs={fieldDefs}
-                    colors={colors}
-                    sortProps={sortProps}
-                    onRowClick={this.select}/>
-                {this.state.displayForm ? <Appointment entity={this.state.appointment} closeForm={this.closeForm}></Appointment> : ''}
-            </div>
-        )
+    const sortProps = {
+        afterSort,
+        column,
+        ascending
     }
+    const entityMaps = {
+        'company': { entities: companiesMap, displayField: 'name' },
+        'person': { entities: personsMap, displayField: 'name' },
+        'position': { entities: positionsMap, displayField: 'title' }
+    }
+    const colors = { headerBg: '#2c3e50' } // Set to bootstrap-<them>.css body color
+    return (
+        <div>
+            <ListHeaderFooter header='true' name='Appointments' label='New Appointment' createNew={createNew} />
+            <ResponsiveTable
+                entities={appointments}
+                entityMaps={entityMaps}
+                fieldDefs={fieldDefs}
+                colors={colors}
+                sortProps={sortProps}
+                onRowClick={select} />
+            {displayForm ? <Appointment entity={appointment} closeForm={closeForm}></Appointment> : ''}
+        </div>
+    )
 }
 
-const mapStateToProps = state => {
-    return {
-        appointments: state.appointmentReducer.appointments,
-        companiesMap: state.companyReducer.companiesMap,
-        personsMap: state.personReducer.personsMap,
-        positionsMap: state.positionReducer.positionsMap
-    }
-}
-
-const mapDispatchToProps = dispatch => {
-    return {
-        saveAppointment: (appointment, selectedRow) => dispatch(actions.saveAppointment(appointment, selectedRow)),
-        storeAll: (appointments) => dispatch( { type: actions.STORE_ALL, appointments})
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AppointmentList);
+export default AppointmentList;

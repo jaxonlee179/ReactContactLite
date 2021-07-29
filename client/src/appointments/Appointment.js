@@ -1,17 +1,10 @@
 /**
  * A modal popup for creating, editing or viewing an Appointment.
- * Properties:
- * {object} entity: the Appointment entity, empty or populated
- * {array} companies: all the Company entities
- * {array} positions: all the Position entities
- * {array} persons: all the Person entities
- * {function} buildOptionSets: 
- * {function} closeForm: handler for Save and Close buttons
  */
-import React, { Component } from 'react';
+import React from 'react';
 import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
 import { connect } from 'react-redux';
-import withOptionSets from '../hoc/withOptionSets'
+import buildOptionSets from '../utilities/entityOptionsHelper'
 
 export const fieldDefs = [
     { name: 'when',     label: 'When',    type: fieldType.DATE_TIME},
@@ -20,30 +13,29 @@ export const fieldDefs = [
     { name: 'company',  label: 'Company', type: fieldType.SELECT_ENTITY}    
 ]
 
-class Appointment extends Component {
+/**
+ * Generates an Appointment component
+ * @param {object} entity: an existing company, or null to create a new one 
+ * @param {function} closeForm: handler for Save and Close buttons
+ * @param {array} companies: all the Company entities
+ * @param {array} persons: all the Personentities
+ * @param {array} positions: all the Position entities
+ * @returns the component
+ */
+function Appointment ({entity, closeForm, companies, persons, positions }) {
 
-    state = {}
-    optionSets = {}
-     
-    constructor(props) {
-        super(props)
+    const optionSets = buildOptionSets([
+        {entityList: companies, type: 'company', mappedAttribute: 'name'},
+        {entityList: positions, type: 'position', mappedAttribute: 'title'},
+        {entityList: persons,   type: 'person',   mappedAttribute: 'name'}
+    ]);
 
-        this.optionSets = this.props.buildOptionSets([
-            {entityList: this.props.companies, type: 'company',  mappedAttribute: 'name'},
-            {entityList: this.props.positions, type: 'position', mappedAttribute: 'title'},
-            {entityList: this.props.persons,   type: 'person',   mappedAttribute: 'name'}
-        ])
+    let isNew;
+    if (entity == null){
+        isNew = true;
+        entity = {}
     }
-
-    render() {
-        const entity = this.props.entity ? this.props.entity : {}
-        console.log("from server" + entity.when)
-
-        const isNew = this.props.entity == null
-        return (
-            <ResponsiveForm entity={entity} entityClass='Appointment' fieldDefs={fieldDefs} optionSets={this.optionSets} closeForm={this.props.closeForm} isNew={isNew}/>
-        )
-    } 
+    return <ResponsiveForm theEntity={entity} entityClass='Appointment' fieldDefs={fieldDefs} optionSets={optionSets} closeForm={closeForm} isNew={isNew}/>
 }
 
 const mapStateToProps = state => {
@@ -54,4 +46,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default withOptionSets(connect(mapStateToProps)(Appointment));
+export default connect(mapStateToProps)(Appointment);

@@ -2,14 +2,11 @@
  * A modal popup for creating or viewing/editing a phone call encounter Encounter.
  * Note that Encounter entities for emails are created automatically on the server
  * when it receives the emails
- * Properties:
- * props.encounter (optional) an existing encounter to edit
- * props.closeForm handler for Save and Close buttons
  */
-import React, { Component } from 'react';
+import React from 'react';
 import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
 import { connect } from 'react-redux';
-import withOptionSets from '../hoc/withOptionSets'
+import buildOptionSets from '../utilities/entityOptionsHelper'
 
 export const fieldDefs = [
     { name: 'when',     label: 'When',      type: fieldType.DATE_TIME},
@@ -19,34 +16,32 @@ export const fieldDefs = [
     { name: 'details',  label: 'Details',   type: fieldType.TEXT_AREA}
 ]
 
-class Encounter extends Component {
+/**
+ * Generates an Encounter component
+ * @param {object} entity: an existing company, or null to create a new one 
+ * @param {function} closeForm: handler for Save and Close buttons
+ * @param {array} persons: all the Personentities
+ * @param {array} positions: all the Position entities
+ * @returns the component
+ */
+function Encounter({entity, closeForm, persons, positions }) {
 
-    state = {}
-    optionSets = {}
-     
-    constructor(props) {
-        super(props)
+    const optionSets = buildOptionSets([
+        {entityList: positions, type: 'position', mappedAttribute: 'title'},
+        {entityList: persons,   type: 'person',   mappedAttribute: 'name'}
+    ]);
 
-        this.optionSets = this.props.buildOptionSets([
-            {entityList: this.props.positions, type: 'position', mappedAttribute: 'title'},
-            {entityList: this.props.persons,   type: 'person',   mappedAttribute: 'name'}
-        ])
+    let isNew;
+    if (entity == null){
+        isNew = true;
+        entity = {}
+    }
 
-     }
+    // The encounter type field will not be displayed. It's value will be set
+    // to 'phone' upon first saving
+    const defs = fieldDefs.filter( fieldDef => fieldDef.name !== 'type')
 
-    render() {
-        const entity = this.props.entity ? this.props.entity : {}
-        console.log("from server" + entity.when)
-
-        const isNew = this.props.entity == null
-        // The encounter type field will not be displayed. It's value will be set
-        // to 'phone' upon first saving
-        const defs = fieldDefs.filter( fieldDef => fieldDef.name !== 'type')
-
-        return (
-            <ResponsiveForm entity={entity} entityClass='Phone Encounter' fieldDefs={defs} optionSets={this.optionSets} closeForm={this.props.closeForm} isNew={isNew}/>
-        )
-    } 
+    return <ResponsiveForm theEntity={entity} entityClass='Phone Encounter' fieldDefs={defs} optionSets={optionSets} closeForm={closeForm} isNew={isNew}/>
 }
 
 const mapStateToProps = state => {
@@ -56,4 +51,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default withOptionSets(connect(mapStateToProps)(Encounter));
+export default connect(mapStateToProps)(Encounter);
