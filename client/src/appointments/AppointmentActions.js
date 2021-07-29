@@ -13,7 +13,6 @@ export const SAVE_AND_STORE = 'SAVE_AND_STORE_APPOINTMENTS';
  * @param {*} appointment 
  */
 export const saveAppointment = ((appointment, rowIndex) => {
-    console.log("date to server" + appointment.when)
     return dispatch => {
         if (rowIndex === null){
             axios.post('/appointments', appointment)
