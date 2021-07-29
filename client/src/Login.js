@@ -6,11 +6,10 @@ import axios from 'axios';
  * A dialog for entering the application password
  * TODO: This is a primitive implementation for a single user. 
  */
-
 function Login({onAuthenticated}) {
     
     const [message, setMessage] = useState(null);
-    const [password, setPassword] = useState(null);
+    const [password, setPassword] = useState('');
 
     const passwordRef = useRef();
 
