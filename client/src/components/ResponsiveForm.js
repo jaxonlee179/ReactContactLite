@@ -1,16 +1,7 @@
 /**
- * A responsive form component for creating or editing an entity, displayed as a modal popup. 
- * Properties:
- * {object}     entity          a new unpopulated entity or an existing one
- * {array}      optionSets      each element defined the options for entity fields of type SELECT or SELECT_ENTITY 
- * {function}   closeForm       callback function for Save and Cancel buttons
- * {boolean}    readOnly        if true, fields are read only
- * {string}     entityClass     the entity type (capitalized for display)              
- * {boolean}    isNew           if true, the entity is new (i.e. unpopulated)
- * {number}     width           optional Bootstrap width, defaults to 'md'
- * {array}      fieldDefs       array of {label, name, type} defining the entity attributes
+ * A responsive form component for creating, viewing or editing an entity, displayed as a modal popup. 
  */
-import React, { Component } from 'react';
+import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -28,41 +19,44 @@ export const fieldType = {
     'EMAIL':        'EMAIL',        // Valid only if readOnly
     'ATTACHMENT':   'ATTACHMENT'    // Valid only if readOnly TODO
 }
+/**
+ * @param {object}     theEntity       an entity to be viewed or edited, or null
+ * @param {string}     entityClass     the entity type (capitalized for display)              
+ * @param {array}      fieldDefs       array of {label, name, type} defining the entity attributes
+ * @param {array}      optionSets      each element defined the options for entity fields of type SELECT or SELECT_ENTITY 
+ * @param {boolean}    readOnly        if true, fields are read only
+ * @param {boolean}    isNew           if true, the entity is new (i.e. unpopulated)
+ * @param {function}   closeForm       callback function for Save and Cancel buttons
+ * @param {number}     width           optional Bootstrap width, defaults to 'md'
+ */
+function ResponsiveForm({ theEntity, entityClass, fieldDefs, optionSets, readOnly, isNew, closeForm, width}) {
 
-class ResponsiveForm extends Component{
+    const [entity, setEntity] = useState(theEntity ? theEntity : {});
 
-    state = {}
-    valueToLabelMaps = {}
-    
-    constructor(props){
-        super(props)
-        this.state.entity = {...props.entity}
-        
-        this.save= this.save.bind(this);
-        this.cancel= this.cancel.bind(this);
-        this.onChange = this.onChange.bind(this)
+    const valueToLabelMaps = useMemo( () => createMaps(optionSets), [optionSets]); 
 
-        const selectorNames = this.props.optionSets ? Object.keys(this.props.optionSets) : null
-        if (selectorNames){
-            selectorNames.forEach ( selectorName => {
-                const options = this.props.optionSets[selectorName];
-                this.valueToLabelMaps[selectorName]= options.reduce((map, option, index, options) => {
+    function createMaps(optionSets){
+        const maps = {};
+        if (optionSets) {
+            const selectorNames = Object.keys(optionSets);
+            selectorNames.forEach(selectorName => {
+                const options = optionSets[selectorName];
+                maps[selectorName] = options.reduce((map, option, index, options) => {
                     map[option.value] = index;
                     return map
                 }, {})
             })
-            console.log(this.valueToLabelMaps)
         }
+        return maps;
     }
 
-    save(){
-        this.props.closeForm(this.state.entity)
+    function save(){
+        closeForm(entity)
     }
-    cancel(){
-        this.props.closeForm()
+    function cancel(){
+        closeForm()
     }
-    onChange(e){
-        const entity = {...this.state.entity}
+    function onChange(e){
         if (e.target){ 
             entity[e.target.name] = e.target.value
         }
@@ -70,84 +64,80 @@ class ResponsiveForm extends Component{
             entity[e.name] = e.date
         }
         else { // Selector event is not a conventional control event, i.e. no "target" attribute
-            entity[e.name] = e.value
+            entity[e.name] = e.value;
         }
-        this.setState({
-            ...this.state,
-            entity
-        })
+        setEntity({...entity});
     }
 
-    render(){
-        const title = this.props.readOnly ? this.props.entityClass :
-            this.props.isNew ? `New ${this.props.entityClass}` : `Edit ${this.props.entityClass}`
-        const bottomButtons = this.props.readOnly ?
-            (<Button size="sm" variant="secondary" onClick={this.cancel}>Close</Button>)
-            :
-            (<>
-                <Button size="sm" variant="secondary" onClick={this.save}>Save</Button>
-                <Button size="sm" variant="secondary" onClick={this.cancel}>Cancel</Button>
-            </>)
-        return (
-            <>
-            <Modal show={true} size={this.props.width ? this.props.width : 'md'}>
-                <Modal.Header>
-                    <Modal.Title>{title}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        {this.props.fieldDefs.map((field, index) => {
-                            if (field.type === 'SELECT_ENTITY' || field.type === 'SELECT'){
-                                const options = this.props.optionSets[field.name]
-                                const value = this.state.entity[field.name] ? options[this.valueToLabelMaps[field.name][this.state.entity[field.name]]] : null
-                                return <StyledRow name={field.name}
-                                    readOnly = {this.props.readOnly} 
-                                    label={field.label} 
-                                    type={field.type} 
-                                    value={value}
-                                    options={options}
-                                    onChange={this.onChange}
-                                    key={index} />
-                            }
-                            else {
-                                return <StyledRow name={field.name} 
-                                    readOnly = {this.props.readOnly}
-                                    label={field.label} 
-                                    type={field.type} 
-                                    value={this.state.entity[field.name]}
-                                    onChange={this.onChange}
-                                    key={index} />
-                            }
-                        })}
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    {bottomButtons}
-                </Modal.Footer>
-            </Modal>
+    const title = readOnly ? entityClass : isNew ? `New ${entityClass}` : `Edit ${entityClass}`
+    const bottomButtons = readOnly ?
+        (<Button size="sm" variant="secondary" onClick={cancel}>Close</Button>)
+        :
+        (<>
+            <Button size="sm" variant="secondary" onClick={save}>Save</Button>
+            <Button size="sm" variant="secondary" onClick={cancel}>Cancel</Button>
+        </>)
+    return (
+    <>
+        <Modal show={true} size={width ? width : 'md'}>
+            <Modal.Header>
+                <Modal.Title>{title}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    {fieldDefs.map((field, index) => {
+                        if (field.type === 'SELECT_ENTITY' || field.type === 'SELECT') {
+                            const options = optionSets[field.name]
+                            let value = entity[field.name] ? options[valueToLabelMaps[field.name][entity[field.name]]] : null
+                            return <StyledRow name={field.name}
+                                readOnly={readOnly}
+                                label={field.label}
+                                type={field.type}
+                                value={value}
+                                options={options}
+                                onChange={onChange}
+                                key={index} />
+                        }
+                        else {
+                            let value = entity[field.name] ? entity[field.name] : null; 
+                            return <StyledRow name={field.name}
+                                readOnly={readOnly}
+                                label={field.label}
+                                type={field.type}
+                                value={value}
+                                onChange={onChange}
+                                key={index} />
+                        }
+                    })}
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                {bottomButtons}
+            </Modal.Footer>
+        </Modal>
 
-            </>
-        )
-    }
+    </>
+    )
 }
 
 const Form = styled.div`
     border: none;
 `
 
-const Row = props => {
+const Row = (props) => {
+//         <div className={className}>
     return (
-        <div className={props.className}>
-            {props.label ? <>
-                <StyledLabel label={props.label}/>
-                <StyledField type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} readOnly={props.readOnly}/>
-            </> :  
+        <div>
+            {props.label ? 
+                <>
+                    <StyledLabel label={props.label}/>
+                    <StyledField type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} readOnly={props.readOnly}/>
+                </> :  
                 <StyledFieldWithoutLabel type={props.type} name={props.name} value={props.value} options={props.options} onChange={props.onChange} readOnly={props.readOnly}/>
             }
         </div>
     )
 }
-
 const StyledRow = styled(Row)`
     display: flex;
     padding: 0.2em;
@@ -155,9 +145,8 @@ const StyledRow = styled(Row)`
         flex-direction: column;
     }
 `
-
-const Label = props => {
-    return <div className={props.className}>{props.label}</div>
+const Label = ({className, label}) => {
+    return <div className={className}>{label}</div>
 }
 const StyledLabel = styled(Label)`
     width: 30%;
@@ -165,16 +154,15 @@ const StyledLabel = styled(Label)`
         width: 100%;;
     }
 `
-
-const Field = props => {
+const Field = (props) => {
     const style={width:'100%'}
     switch (props.type) {
         case fieldType.TEXT: 
-        case fieldType.URL: 
-            return (
+        case fieldType.URL:
+             return (
                 <div className={props.className}>
                     <input type='text' disabled={props.readOnly ? 'disabled' : null} onChange={props.onChange} 
-                    id={props.name} name={props.name} value={props.value} style={style}></input>
+                    id={props.name} name={props.name} value={props.value ? props.value : ''} style={style}></input>
                 </div>
             )
 
@@ -183,15 +171,15 @@ const Field = props => {
             return (
                 <div className={props.className}>
                     <input type='email' disabled={props.readOnly ? 'disabled' : null} onChange={props.onChange} 
-                    id={props.name} name={props.name} value={value} style={style}></input>
+                    id={props.name}name={props.name} value={value} style={style}></input>
                 </div>
             )
 
-        case fieldType.TEXT_AREA:   
+        case fieldType.TEXT_AREA:
             return (
                 <div className={props.className}>
                     <textarea disabled={props.readOnly ? 'disabled' : null} onChange={props.onChange} id={props.name} 
-                    name={props.name} value={props.value} style={style}></textarea>
+                    name={props.name} value={props.value ? props.value : ''} style={style}></textarea>
                 </div>
             )
         
@@ -234,6 +222,15 @@ const Field = props => {
         default: return <div>FUBAR</div>
     }
 }
+const StyledField = styled(Field)`
+    width: 70%;
+    @media all and (max-width: 768px) {
+        width: 100%;;
+    }
+`
+const StyledFieldWithoutLabel = styled(Field)`
+    width: 100%;
+`
 
 const formatEmailObject = email => {
     let value;
@@ -254,16 +251,5 @@ const formatEmailObject = email => {
     }
     return value;
 }
-
-const StyledField = styled(Field)`
-    width: 70%;
-    @media all and (max-width: 768px) {
-        width: 100%;;
-    }
-`
-
-const StyledFieldWithoutLabel = styled(Field)`
-    width: 100%;
-`
 
 export default ResponsiveForm;
