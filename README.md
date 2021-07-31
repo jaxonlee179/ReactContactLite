@@ -55,7 +55,7 @@ Note that
 
 ### Client Design
 
-The client is coded using "classic" React, i.e. it does not employ the newer Hooks approach inroduced with React v16.8. 
+The client is coded using the Hooks capabilities inroduced with React v16.8. As such, all React components are coded as functions rather than classes.
 
 At startup the client prompts for an application password, simultaneously fetching all entities from the server. Upon password acceptance, if the entity retrieval is not finished, an activity spinner is displayed. Upon completion of entity retrieval, the user is presented with a menu for selecting views of each of the entity types.
 
