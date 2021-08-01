@@ -5,19 +5,31 @@ const mongoose = require('mongoose')
  */
 mongoose.set('useUnifiedTopology', true);
 
+const user = encodeURIComponent(process.env.CL_MONGODB_USER);
+const clusterUrl = process.env.CL_MONGODB_PATH;
+
 const options = {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false
 }
 
-const accessKeyId = encodeURIComponent(process.env.CL_MONGODB_KEY_ID);
-const secretAccessKey = encodeURIComponent(process.env.CL_MONGODB_ACCESS_KEY);
-const clusterUrl = process.env.CL_MONGODB_PATH;
-const connectionUrl = `mongodb+srv://${accessKeyId}:${secretAccessKey}@${clusterUrl}`
-    
-options.authMechanism = "MONGODB-AWS";
-options.authSource = "$external"
+let connectionUrl;
+if (user){
+    // Connect using name/password
+    const password = encodeURIComponent(process.env.CL_MONGODB_PASSWORD);
+    connectionUrl = `mongodb+srv://${user}:${password}@${clusterUrl}`;    
+    console.log(`Connecting to ${clusterUrl} with username/password`)
+}
+else {
+    // Use IAM authentication
+    const accessKeyId = encodeURIComponent(process.env.CL_MONGODB_KEY_ID);
+    const secretAccessKey = encodeURIComponent(process.env.CL_MONGODB_ACCESS_KEY);
+    options.authMechanism = "MONGODB-AWS";
+    options.authSource = "$external"
+    connectionUrl = `mongodb+srv://${accessKeyId}:${secretAccessKey}@${clusterUrl}`
+    console.log(`Connecting to ${clusterUrl} using IAM authentication`)
+}    
     
 console.log('Connecting to ' + clusterUrl)
 
