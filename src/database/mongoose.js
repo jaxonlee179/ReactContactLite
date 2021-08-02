@@ -15,13 +15,7 @@ const options = {
 }
 
 let connectionUrl;
-if (user){
-    // Connect using name/password
-    const password = encodeURIComponent(process.env.CL_MONGODB_PASSWORD);
-    connectionUrl = `mongodb+srv://${user}:${password}@${clusterUrl}`;    
-    console.log(`Connecting to ${clusterUrl} with username/password`)
-}
-else {
+if (user === 'undefined'){
     // Use IAM authentication
     const accessKeyId = encodeURIComponent(process.env.CL_MONGODB_KEY_ID);
     const secretAccessKey = encodeURIComponent(process.env.CL_MONGODB_ACCESS_KEY);
@@ -29,6 +23,12 @@ else {
     options.authSource = "$external"
     connectionUrl = `mongodb+srv://${accessKeyId}:${secretAccessKey}@${clusterUrl}`
     console.log(`Connecting to ${clusterUrl} using IAM authentication`)
+}
+else {
+    // Connect using name/password
+    const password = encodeURIComponent(process.env.CL_MONGODB_PASSWORD);
+    connectionUrl = `mongodb+srv://${user}:${password}@${clusterUrl}`;    
+    console.log(`Connecting to ${clusterUrl} with username/password`)
 }    
     
 console.log('Connecting to ' + clusterUrl)
