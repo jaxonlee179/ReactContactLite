@@ -112,8 +112,7 @@ CL_PORT | 8080
 - email verification (required outside sandbox?)
 - port mapping
    
-### Planned Enhancements 
-- Convert React class components to function components using React v16.8+ hooks pattern
+### Possible Enhancements 
 - Implement Jenkins build/deploy pipeline with AWS CloudDeploy
 - Implement email composition/transmission to "decouple" from external email requirement  
    
