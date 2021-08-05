@@ -180,6 +180,7 @@ const Cell = ({ className, children }) => {
 
 const StyledCell = styled(Cell)`
     overflow: hidden;
+    max-height: 1.5em;
     width: ${props => props.width + '%'};
     @media all and (max-width: 768px) {
         display: flex;
