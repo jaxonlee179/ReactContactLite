@@ -39,8 +39,9 @@ const responsiveTable = ({ fieldDefs, optionSets, border, colors, sortProps, ent
     let mappedColors = setColors(colors)
     
     // Create map of the fieldDef name to the fieldDef
-    const fieldDefMap = fieldDefs.map( fieldDef => {
-        return fieldDef.name
+    const fieldDefMap = []
+    fieldDefs.forEach( fieldDef => {
+        fieldDefMap[fieldDef.id]
     })
 
     return (
