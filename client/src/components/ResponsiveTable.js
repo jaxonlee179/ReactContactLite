@@ -14,6 +14,9 @@ import styled from 'styled-components'
 import { fieldType } from './ResponsiveForm';
 import moment from 'moment';
 
+const MAX_DISPLAY_URL = 30      // URL display values will be truncated to this length
+const MAX_DISPLAY_TEXT = 50         // TEXT or TEXT_AREA display values will be truncated to this length
+
 /**
  * Generates a ResponsiveTable component
  * @param {array} props.entities Table data, one element per row 
@@ -199,7 +202,7 @@ const CollapsedLabel = styled.div`
 const UnstyledCellContent = props => {
     if (props.type === fieldType.URL){
         const url = props.value.startsWith('http') ? props.value : 'http://' + props.value
-        return <a href={url} target='_blank' rel="noopener noreferrer">{props.value}</a>
+        return <a href={url} target='_blank' rel="noopener noreferrer">{props.value.slice(0, MAX_DISPLAY_URL)}</a>
     }
     else if (props.type === fieldType.DATE){
         // Convert from ISO format
@@ -230,6 +233,9 @@ const UnstyledCellContent = props => {
             displayValue = '';
         }
         return <span onClick={props.onRowClick}>{displayValue}</span>
+    }
+    else if (props.type === fieldType.TEXT || props.type === fieldType.TEXT_AREA){
+        return <span onClick={props.onRowClick}>{props.value.slice(0, MAX_DISPLAY_TEXT)}</span>
     }
     else {
         return <span onClick={props.onRowClick}>{props.value}</span>
