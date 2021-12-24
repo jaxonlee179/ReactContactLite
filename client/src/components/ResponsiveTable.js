@@ -28,32 +28,37 @@ const MAX_DISPLAY_TEXT = 50         // TEXT or TEXT_AREA display values will be 
  *                 Required if the parent component must maintain the sort state ofthe table data 
  * @param {string} props.border (Optional) Border override style
  */
-const responsiveTable = props => {
-    const cellWidth = ((1 / props.fieldDefs.length) * 100).toString().split('.')[0];
+const responsiveTable = ({ fieldDefs, optionSets, border, colors, sortProps, entityMaps, entities, primary, onRowClick }) => {
+    const cellWidth = ((1 / fieldDefs.length) * 100).toString().split('.')[0];
     
     const tableStyle = {
         textAlign: 'left',
-        border: props.border ? props.border : '1px solid black'
+        border: border ? border : '1px solid black'
     }
 
-    const colors = setColors(props.colors)
+    let mappedColors = setColors(colors)
+    
+    // Create map of the fieldDef name to the fieldDef
+    const fieldDefMap = fieldDefs.map( fieldDef => {
+        return fieldDef.name
+    })
 
     return (
         <div style={tableStyle}>
-            <StyledHeader fieldDefs={props.fieldDefs} cellWidth={cellWidth} colors={colors} sortProps={props.sortProps} entities={props.entities}/>
-            {props.entities.map((entity, index) => {
+            <StyledHeader fieldDefs={fieldDefs} fieldDefMap={fieldDefMap} cellWidth={cellWidth} colors={colors} sortProps={sortProps} entities={entities}/>
+            {entities.map((entity, index) => {
                 return (
                     <StyledRow entity={entity} 
                         striped={index % 2 === 1} 
-                        fieldDefs={props.fieldDefs}
-                        optionSets={props.optionSets}
-                        entityMaps={props.entityMaps}
-                        colors={colors} 
+                        fieldDefs={fieldDefs}
+                        optionSets={optionSets}
+                        entityMaps={entityMaps}
+                        colors={mappedColors} 
                         cellWidth={cellWidth} 
-                        primary={props.primary} 
+                        primary={primary} 
                         key={index}
                         rowIndex={index}
-                        onRowClick={props.onRowClick}
+                        onRowClick={onRowClick}
                         />
                 )
             })}
@@ -91,30 +96,37 @@ const setColors = propColors => {
 /**
  * Creates the Header
  * @param {object} props The sort properties defined above responsiveTable 
+ * fieldDefs
+ * fieldDefMap
+ * cellWidth
+ * colors
+ * sortProps
+ * entities
+ * 
  */
-const Header = props => {
-    const labelStyle = { width: props.cellWidth + '%' }
+const Header = ({ fieldDefs, fieldDefMap, cellWidth, colors, sortProps, entities, className})  => {
+    const labelStyle = { width: cellWidth + '%' }
     
-    const doSort = props.sortProps ? props.sortProps.doSort : undefined;
-    const sortColumn = props.sortProps ? props.sortProps.column : undefined;
-    const ascending = props.sortProps ? props.sortProps.ascending : undefined;
+    const doSort = sortProps ? sortProps.doSort : undefined;
+    const sortColumn = sortProps ? sortProps.column : undefined;
+    const ascending = sortProps ?sortProps.ascending : undefined;
     
-    return <div className={props.className}>
-            {props.fieldDefs.map((fieldDef, index) => {
+    return <div className={className}>
+            {entities.map((fieldDef, index) => {
                 if (doSort && sortColumn === index){
                     if (ascending){
-                        return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index, props.fieldDefs, props.entities)}>
+                        return <div style={labelStyle} key={index} onClick={(e) => doNewSort(sortProps, index, fieldDefs, entities)}>
                             {fieldDef.label}<span className="fas fa-caret-down fa-lg"></span>
                         </div>
                     }
                     else {
-                        return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index, props.fieldDefs, props.entities)}>
+                        return <div style={labelStyle} key={index} onClick={(e) => doNewSort(sortProps, index, fieldDefs, entities)}>
                             {fieldDef.label}<span className="fas fa-caret-up fa-lg"></span>
                         </div>
                     }
                 }
                 else {
-                    return <div style={labelStyle} key={index} onClick={(e) => doNewSort(props.sortProps, index, props.fieldDefs, props.entities)}>{fieldDef.label}</div>
+                    return <div style={labelStyle} key={index} onClick={(e) => doNewSort(sortProps, index, fieldDefs, entities)}>{fieldDef.label}</div>
                 }
             })}
     </div>
@@ -130,11 +142,18 @@ const Header = props => {
 const doNewSort = (sortProps, column, fieldDefs, entities) => {
     const ascending = sortProps.column === column ? !sortProps.ascending : false
     const fieldName = fieldDefs[column].name
-    const isEmailObject = fieldDefs[column].type ===  fieldType.EMAIL;
+//    const isEmailObject = fieldDefs[column].type ===  fieldType.EMAIL;
+    const fieldType = fieldDefs[column].type
     const sorted = [...entities].sort( (aValue, bValue) => {
         // Convert EMAIL fields from object {name, address } to string address
-        let a = isEmailObject ? aValue[fieldName][0]['address'] : aValue[fieldName];
-        let b = isEmailObject ? bValue[fieldName][0]['address'] : bValue[fieldName];
+//        let a = isEmailObject ? aValue[fieldName][0]['address'] : aValue[fieldName];
+//        let b = isEmailObject ? bValue[fieldName][0]['address'] : bValue[fieldName];
+        let a = fieldType === fieldType.EMAIL ? aValue[fieldName][0]['address']
+            : fieldType === fieldType.SELECT_ENTITY ? aValue : aValue
+            //props.entityMap.entities[props.value][props.entityMap.displayField] : ''
+        let b = fieldType === fieldType.EMAIL ? aValue[fieldName][0]['address']
+            : fieldType === fieldType.SELECT_ENTITY ? bValue : bValue
+            
         let result = a ? (b ? -a.localeCompare(b) : -1) : (b ? 1 : 0);
         return ascending ? result : -result;
     })
