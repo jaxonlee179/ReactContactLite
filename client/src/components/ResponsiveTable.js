@@ -376,7 +376,7 @@ const UnstyledCellContent = (props) => {
     ) {
         return (
             <span onClick={props.onRowClick}>
-                {props.value.slice(0, MAX_DISPLAY_TEXT)}
+                {props.value && props.value.slice(0, MAX_DISPLAY_TEXT)}
             </span>
         )
     } else {
