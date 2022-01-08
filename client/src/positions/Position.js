@@ -5,15 +5,15 @@
 import React from 'react'
 import ResponsiveForm, { fieldType } from '../components/ResponsiveForm'
 import { connect } from 'react-redux'
-import buildOptionSets from '../utilities/entityOptionsHelper'
+import buildEntityOptionSets from '../utilities/entityOptionsHelper'
 
 export const fieldDefs = [
-    { name: 'title', label: 'Title', type: fieldType.TEXT },
-    { name: 'url', label: 'URL', type: fieldType.URL },
-    { name: 'person', label: 'Person', type: fieldType.SELECT_ENTITY },
-    { name: 'company', label: 'Company', type: fieldType.SELECT_ENTITY },
-    { name: 'postedDate', label: 'Posted', type: fieldType.DATE },
-    { name: 'appliedDate', label: 'Applied', type: fieldType.DATE },
+    { name: 'title',        label: 'Title',     type: fieldType.TEXT },
+    { name: 'url',          label: 'URL',       type: fieldType.URL },
+    { name: 'person',       label: 'Person',    type: fieldType.SELECT_ENTITY },
+    { name: 'company',      label: 'Company',   type: fieldType.SELECT_ENTITY },
+    { name: 'postedDate',   label: 'Posted',    type: fieldType.DATE },
+    { name: 'appliedDate',  label: 'Applied',   type: fieldType.DATE },
 ]
 
 /**
@@ -25,7 +25,7 @@ export const fieldDefs = [
  * @returns the component
  */
 function Position({ entity, closeForm, companies, persons }) {
-    const optionSets = buildOptionSets([
+    const entityOptionSets = buildEntityOptionSets([
         { entityList: companies, type: 'company', mappedAttribute: 'name' },
         { entityList: persons, type: 'person', mappedAttribute: 'name' },
     ])
@@ -41,7 +41,7 @@ function Position({ entity, closeForm, companies, persons }) {
             theEntity={entity}
             entityClass="Position"
             fieldDefs={fieldDefs}
-            optionSets={optionSets}
+            entityOptionSets={entityOptionSets}
             closeForm={closeForm}
             isNew={isNew}
         />
