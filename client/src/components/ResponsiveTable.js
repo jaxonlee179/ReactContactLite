@@ -234,11 +234,13 @@ const formSortField = (value, type, fieldName, entityMap) => {
     if (type === fieldType.EMAIL) {
         // Convert EMAIL fields from object {name, address } to string address
         return value[fieldName][0]['address']
-    } else if (type === fieldType.SELECT_ENTITY) {
+    } 
+    else if (type === fieldType.SELECT_ENTITY) {
         // "Foreign" entities are represented by id rather than display value, so look up the value
         const id = value[fieldName]
         return id ? entityMap.entities[id][entityMap.displayField] : ''
-    } else {
+    } 
+    else {
         return value[fieldName]
     }
 }
@@ -268,9 +270,7 @@ const Row = (props) => {
                             value={props.entity[fieldDef.name]}
                             type={fieldDef.type}
                             entityMap={
-                                props.entityMaps
-                                    ? props.entityMaps[fieldDef.name]
-                                    : null
+                                props.entityMaps && props.entityMaps[fieldDef.name]
                             }
                             onRowClick={(e) =>
                                 props.onRowClick(
@@ -330,26 +330,26 @@ const UnstyledCellContent = (props) => {
                 {props.value.slice(0, MAX_DISPLAY_URL)}
             </a>
         )
-    } else if (props.type === fieldType.DATE) {
+    } 
+    else if (props.type === fieldType.DATE) {
         // Convert from ISO format
-        const reformatted = props.value
-            ? moment(new Date(props.value)).format('ddd, MMM Do YYYY')
-            : ''
+        const reformatted = props.value && moment(new Date(props.value)).format('ddd, MMM Do YYYY')
         return <span onClick={props.onRowClick}>{reformatted}</span>
-    } else if (props.type === fieldType.DATE_TIME) {
+    } 
+    else if (props.type === fieldType.DATE_TIME) {
         // Convert from ISO format
-        const reformatted = props.value
-            ? moment(new Date(props.value)).format('ddd, MMM Do YYYY, h:mm a')
-            : ''
+        const reformatted = props.value && moment(new Date(props.value)).format('ddd, MMM Do YYYY, h:mm a')
         return <span onClick={props.onRowClick}>{reformatted}</span>
-    } else if (props.type === fieldType.SELECT_ENTITY) {
-        const displayValue = props.value
-            ? props.entityMap.entities[props.value][
-                  props.entityMap.displayField
-              ]
-            : ''
+    } 
+    else if (props.type === fieldType.SELECT_ENTITY) {
+        const displayValue = props.value && props.entityMap.entities[props.value][props.entityMap.displayField]
         return <span onClick={props.onRowClick}>{displayValue}</span>
-    } else if (props.type === fieldType.EMAIL) {
+    } 
+    else if (props.type === fieldType.SELECT) {
+        const displayValue = props.value ? props.value : ''
+        return <span onClick={props.onRowClick}>{displayValue}</span>
+    } 
+    else if (props.type === fieldType.EMAIL) {
         let displayValue
         if (props.value) {
             if (
@@ -359,18 +359,19 @@ const UnstyledCellContent = (props) => {
             ) {
                 //Single email, not an array
                 displayValue = props.value.address
-            } else {
+            } 
+            else {
                 displayValue =
                     props.value[0].address +
-                    (props.value.length > 1
-                        ? `, ...${props.value.length - 1} more`
-                        : '')
+                    (props.value.length > 1) && `, ...${props.value.length - 1} more`
             }
-        } else {
+        } 
+        else {
             displayValue = ''
         }
         return <span onClick={props.onRowClick}>{displayValue}</span>
-    } else if (
+    } 
+    else if (
         props.type === fieldType.TEXT ||
         props.type === fieldType.TEXT_AREA
     ) {
@@ -379,7 +380,8 @@ const UnstyledCellContent = (props) => {
                 {props.value && props.value.slice(0, MAX_DISPLAY_TEXT)}
             </span>
         )
-    } else {
+    } 
+    else {
         return <span onClick={props.onRowClick}>{props.value}</span>
     }
 }
