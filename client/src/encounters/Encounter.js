@@ -10,11 +10,10 @@ import buildEntityOptionSets from '../utilities/entityOptionsHelper'
 
 export const fieldDefs = [
     { name: 'when',     label: 'When',      type: fieldType.DATE_TIME },
-    { name: 'type',     label: 'Type',      type: fieldType.TEXT, readOnly: true },
+    { name: 'type',     label: 'Type',      type: fieldType.SELECT },
     { name: 'position', label: 'Position',  type: fieldType.SELECT_ENTITY },
     { name: 'person',   label: 'Person',    type: fieldType.SELECT_ENTITY },
-    { name: 'details',  label: 'Details',   type: fieldType.TEXT_AREA },
-    { name: 'type',     label: 'Type',      type: fieldType.SELECT },
+    { name: 'details',  label: 'Details',   type: fieldType.TEXT_AREA }
 ]
 
 /**
@@ -26,15 +25,14 @@ export const fieldDefs = [
  * @returns the component
  */
 function Encounter({ entity, closeForm, persons, positions }) {
-    // Two types of option sets
-    const entityOptionSets = buildEntityOptionSets([
+    const optionSets = buildEntityOptionSets([
         { entityList: positions, type: 'position', mappedAttribute: 'title' },
         { entityList: persons, type: 'person', mappedAttribute: 'name' },
     ])
-    // optionSets['type'] = {
-    //     label: 'Type',
-    //     options: [{ Phone: 'phone' }, { LinkedIn: 'linkedIn' }],
-    // }
+    optionSets['type'] = [
+        {label: 'Phone', value: 'phone'},
+        {label: 'LinkedIn', value: 'linkedIn'}
+    ]
 
     let isNew
     if (entity == null) {
@@ -42,16 +40,12 @@ function Encounter({ entity, closeForm, persons, positions }) {
         entity = {}
     }
 
-    // The encounter type field will not be displayed. It's value will be set
-    // to 'phone' upon first saving
-    const defs = fieldDefs.filter((fieldDef) => fieldDef.name !== 'type')
-
     return (
         <ResponsiveForm
             theEntity={entity}
-            entityClass="Phone Encounter"
-            fieldDefs={defs}
-            entityOptionSets={entityOptionSets}
+            entityClass="Encounter"
+            fieldDefs={fieldDefs}
+            optionSets={optionSets}
             closeForm={closeForm}
             isNew={isNew}
         />

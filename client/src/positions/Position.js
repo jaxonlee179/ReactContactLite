@@ -25,7 +25,7 @@ export const fieldDefs = [
  * @returns the component
  */
 function Position({ entity, closeForm, companies, persons }) {
-    const entityOptionSets = buildEntityOptionSets([
+    const optionSets = buildEntityOptionSets([
         { entityList: companies, type: 'company', mappedAttribute: 'name' },
         { entityList: persons, type: 'person', mappedAttribute: 'name' },
     ])
@@ -41,7 +41,7 @@ function Position({ entity, closeForm, companies, persons }) {
             theEntity={entity}
             entityClass="Position"
             fieldDefs={fieldDefs}
-            entityOptionSets={entityOptionSets}
+            optionSets={optionSets}
             closeForm={closeForm}
             isNew={isNew}
         />

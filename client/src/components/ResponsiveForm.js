@@ -21,21 +21,21 @@ export const fieldType = {
 }
 /**
  * Generates the component
- * @param {object}     theEntity        an entity to be viewed or edited, or null
- * @param {string}     entityClass      the entity type (capitalized for display)
- * @param {array}      fieldDefs        array of {label, name, type} defining the entity attributes
- * @param {array}      entityOptionSets each element defined the options for entity fields of type SELECT or SELECT_ENTITY
- * @param {boolean}    readOnly         if true, fields are read only
- * @param {boolean}    isNew            if true, the entity is new (i.e. unpopulated)
- * @param {function}   closeForm        callback function for Save and Cancel buttons
- * @param {number}     width            optional Bootstrap width, defaults to 'md'
+ * @param {object}     theEntity    an entity to be viewed or edited, or null
+ * @param {string}     entityClass  the entity type (capitalized for display)
+ * @param {array}      fieldDefs    array of {label, name, type} defining the entity attributes
+ * @param {array}      optionSets   each element defined the options for entity fields of type SELECT or SELECT_ENTITY
+ * @param {boolean}    readOnly     if true, fields are read only
+ * @param {boolean}    isNew        if true, the entity is new (i.e. unpopulated)
+ * @param {function}   closeForm    callback function for Save and Cancel buttons
+ * @param {number}     width        optional Bootstrap width, defaults to 'md'
  * @returns the component
  */
 function ResponsiveForm({
     theEntity,
     entityClass,
     fieldDefs,
-    entityOptionSets,
+    optionSets,
     readOnly,
     isNew,
     closeForm,
@@ -44,16 +44,16 @@ function ResponsiveForm({
     const [entity, setEntity] = useState(theEntity ? theEntity : {})
 
     const valueToLabelMaps = useMemo(
-        () => createMaps(entityOptionSets),
-        [entityOptionSets]
+        () => createMaps(optionSets),
+        [optionSets]
     )
 
-    function createMaps(entityOptionSets) {
+    function createMaps(optionSets) {
         const maps = {}
-        if (entityOptionSets) {
-            const selectorNames = Object.keys(entityOptionSets)
+        if (optionSets) {
+            const selectorNames = Object.keys(optionSets)
             selectorNames.forEach((selectorName) => {
-                const options = entityOptionSets[selectorName]
+                const options = optionSets[selectorName]
                 maps[selectorName] = options.reduce(
                     (map, option, index, options) => {
                         map[option.value] = index
@@ -75,9 +75,11 @@ function ResponsiveForm({
     function onChange(e) {
         if (e.target) {
             entity[e.target.name] = e.target.value
-        } else if (e.date) {
+        } 
+        else if (e.date) {
             entity[e.name] = e.date
-        } else {
+        } 
+        else {
             // Selector event is not a conventional control event, i.e. no "target" attribute
             entity[e.name] = e.value
         }
@@ -112,15 +114,14 @@ function ResponsiveForm({
                 <Modal.Body>
                     <Form>
                         {fieldDefs.map((field, index) => {
-                            if (field.type === fieldType.SELECT_ENTITY) {
-                                const options = entityOptionSets[field.name]
-                                let value = entity[field.name]
-                                    ? options[
-                                          valueToLabelMaps[field.name][
-                                              entity[field.name]
-                                          ]
-                                      ]
-                                    : null
+                            if (field.type === fieldType.SELECT_ENTITY || field.type === fieldType.SELECT) {
+                                const options = optionSets[field.name]
+                                let value = entity[field.name] &&
+                                    options[
+                                        valueToLabelMaps[field.name][
+                                            entity[field.name]
+                                        ]
+                                    ]
                                 return (
                                     <StyledRow
                                         name={field.name}
@@ -133,32 +134,15 @@ function ResponsiveForm({
                                         key={index}
                                     />
                                 )
-                            } else if (field.type === fieldType.SELECT) {
-                                const options = entityOptionSets[field.name]
-                                let value = entity[field.name]
+                            } 
+                            else {
                                 return (
                                     <StyledRow
                                         name={field.name}
                                         readOnly={readOnly}
                                         label={field.label}
                                         type={field.type}
-                                        value={value}
-                                        options={options}
-                                        onChange={onChange}
-                                        key={index}
-                                    />
-                                )
-                            } else {
-                                let value = entity[field.name]
-                                    ? entity[field.name]
-                                    : null
-                                return (
-                                    <StyledRow
-                                        name={field.name}
-                                        readOnly={readOnly}
-                                        label={field.label}
-                                        type={field.type}
-                                        value={value}
+                                        value={entity[field.name]}
                                         onChange={onChange}
                                         key={index}
                                     />
@@ -355,7 +339,8 @@ const formatEmailObject = (email) => {
     if (Object.getOwnPropertyNames(email).find((name) => name === 'address')) {
         // Single { ?name, address }
         value = email.name ? email.name + ` <${email.address}>` : email.address
-    } else if (
+    } 
+    else if (
         Object.getOwnPropertyNames(email).find((name) => name === 'length')
     ) {
         // Array of { ?name, address}
@@ -365,7 +350,8 @@ const formatEmailObject = (email) => {
                 ? em.name + ` <${em.address}>`
                 : em.address + (i < email.length - 1 ? ', ' : '')
         })
-    } else {
+    } 
+    else {
         value = email
     }
     return value

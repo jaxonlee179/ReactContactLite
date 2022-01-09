@@ -23,7 +23,7 @@ export const fieldDefs = [
  * @returns the component
  */
 function Appointment({ entity, closeForm, companies, persons, positions }) {
-    const entityOptionSets = buildEntityOptionSets([
+    const optionSets = buildEntityOptionSets([
         { entityList: companies, type: 'company', mappedAttribute: 'name' },
         { entityList: positions, type: 'position', mappedAttribute: 'title' },
         { entityList: persons, type: 'person', mappedAttribute: 'name' },
@@ -39,7 +39,7 @@ function Appointment({ entity, closeForm, companies, persons, positions }) {
             theEntity={entity}
             entityClass="Appointment"
             fieldDefs={fieldDefs}
-            entityOptionSets={entityOptionSets}
+            optionSets={optionSets}
             closeForm={closeForm}
             isNew={isNew}
         />
