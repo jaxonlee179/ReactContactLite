@@ -11,7 +11,8 @@ export const fieldDefs = [
     { name: 'email',    label: 'Email',             type: fieldType.TEXT },
     { name: 'phone',    label: 'Phone',             type: fieldType.TEXT },
     { name: 'company',  label: 'Company',           type: fieldType.SELECT_ENTITY },
-    { name: 'linkedIn', label: 'LinkedIn Profile',  type: fieldType.URL },
+    { name: 'linkedIn', label: 'LinkedIn Profile',  type: fieldType.URL }, 
+    { name: 'hide',     label: 'Hide',              type: fieldType.BOOLEAN_HIDDEN}
 ]
 
 /**

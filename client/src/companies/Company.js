@@ -9,7 +9,8 @@ export const fieldDefs = [
     { name: 'url',    label: 'URL',     type: fieldType.URL},
     { name: 'address',label: 'Address', type: fieldType.TEXT},
     { name: 'city',   label: 'City',    type: fieldType.TEXT},
-    { name: 'phone',  label: 'Phone',   type: fieldType.TEXT}    
+    { name: 'phone',  label: 'Phone',   type: fieldType.TEXT}, 
+    { name: 'hide',   label: 'Hide',    type: fieldType.BOOLEAN_HIDDEN}
 ]
 
 /**

@@ -13,7 +13,8 @@ export const fieldDefs = [
     { name: 'cc',       label: 'Cc',        type: fieldType.EMAIL},
     { name: 'bcc',      label: 'Bcc',       type: fieldType.EMAIL},
     { name: 'date',     label: 'Date',      type: fieldType.DATE_TIME},
-    { name: 'text',                         type: fieldType.TEXT_AREA }
+    { name: 'text',                         type: fieldType.TEXT_AREA }, 
+    { name: 'hide',     label: 'Hide',      type: fieldType.BOOLEAN_HIDDEN}
 ]
 
 /**

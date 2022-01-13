@@ -13,7 +13,8 @@ export const fieldDefs = [
     { name: 'person',       label: 'Person',    type: fieldType.SELECT_ENTITY },
     { name: 'company',      label: 'Company',   type: fieldType.SELECT_ENTITY },
     { name: 'postedDate',   label: 'Posted',    type: fieldType.DATE },
-    { name: 'appliedDate',  label: 'Applied',   type: fieldType.DATE },
+    { name: 'appliedDate',  label: 'Applied',   type: fieldType.DATE }, 
+    { name: 'hide',         label: 'Hide',      type: fieldType.BOOLEAN_HIDDEN}
 ]
 
 /**
