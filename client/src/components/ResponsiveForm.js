@@ -18,6 +18,7 @@ export const fieldType = {
     SELECT:         'SELECT',       // Specifies a set of options
     EMAIL:          'EMAIL',        // Valid only if readOnly
     ATTACHMENT:     'ATTACHMENT',   // Valid only if readOnly TODO
+    BOOLEAN_HIDDEN: 'BOOLEAN_HIDDEN'// Not to be displayed in the form 
 }
 /**
  * Generates the component
@@ -320,6 +321,8 @@ const Field = (props) => {
                 <a href={props.value.url}>{text}</a>
             )
 
+        case fieldType.BOOLEAN_HIDDEN: return null
+        
         default:
             return <div>FUBAR</div>
     }
