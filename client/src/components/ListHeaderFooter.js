@@ -8,24 +8,41 @@ import styled from 'styled-components'
 
 /**
  * Constructor
- * @param {boolean} props.header    if true, both type label and button are display; otherwise only the button
- * @param {string} props.name       the type label
- * @param {boolean} props.readOnly  if true, button is not rendered, so the corresponding list is effectively "read only," i.e. cannot be added to
+ * @param {boolean} header    if true, both type label and button are display; otherwise only the button
+ * @param {string} name       the type label
+ * @param {boolean} readOnly  if true, button is not rendered, so the corresponding list is effectively "read only," i.e. cannot be added to
  */
-const listHeaderFooter = (props, className) => {
+const listHeaderFooter = ({fieldDefs, header, name, label, toggleShowHidden, createNew, readOnly, showHidden}) => {
+    // If the entity includes a 'hide' field, the table should display a 'Show Hidden' button
+    let entitiesAreHideable;
+    fieldDefs.forEach(fieldDef => {
+        if (fieldDef.name === 'hide'){
+            entitiesAreHideable = true;
+        }
+    })
+
     return (
         <StyledDiv>
-            {props.header ? <h4>{props.name}</h4> : ''}
-            {!props.readOnly &&
+            {header && <h4>{name}</h4>}
+            {entitiesAreHideable && (
+                <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                onClick={toggleShowHidden}
+            >
+                {showHidden ? 'Hide Hidden' : "Show Hidden"}
+            </Button>
+            )}
+            {!readOnly &&
             (
                 <Button
-                    className={className}
                     type="button"
                     size="sm"
                     variant="secondary"
-                    onClick={props.createNew}
+                    onClick={createNew}
                 >
-                    {props.label}
+                    {label}
                 </Button>
             )}
         </StyledDiv>
