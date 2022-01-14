@@ -8,25 +8,36 @@
  *
  * The field value types are those defined in the ResponsiveForm fieldTypes object. For fieldType.URL,
  * the cell is rendered as a link element rather than plain text; the target is opened in a new window.
+ * 
+ * If the entity type includes a 'hide' field, it is rendered as a checkbox. When checked, a given entity 
+ * will be removed from the display. The table header will include a 'Show Hidden' / 'Hide Hidden' toggle
+ * button. Clicking Show Hidden will restore all hidden rows to the table  
  */
 import React from 'react'
 import styled from 'styled-components'
 import { fieldType } from './ResponsiveForm'
+import Checkbox from './Checkbox'
 import moment from 'moment'
 
-const MAX_DISPLAY_URL = 30 // URL display values will be truncated to this length
+const MAX_DISPLAY_URL = 30  // URL display values will be truncated to this length
 const MAX_DISPLAY_TEXT = 50 // TEXT or TEXT_AREA display values will be truncated to this length
 
 /**
  * Generates a ResponsiveTable component
  * @param {array}   entities Table data, one element per row
- * @param {array}   fieldDefs Array of { name, label, type }
+ * @param {array}   fieldDefs Array of { name, label, type } defining each field
  * @param {object}  entityMaps (Optional) a map of entity name to { displayField, entities }
  *                  where displayField is the attribute on which the entiies are sorted,
  *                  and entities is a map of entity id to entity of the table content.
  *                  It is required when the table includes columns which reference other
  *                  entities (via the id of the other entity)
+ * @param {object}  sortProps {afterSort, column, ascending} where column, ascending record 
+ *                  current sort state (null if no sort has occurred); aftersort invoked 
+ *                  after the sort is performed
  * @param {function} onRowClick handler for clicking on a table row
+ * @param {function} onChangeHide handler for the 'hide' checkbox, not
+ *                  required if the entities do not include a 'hide' field
+ * @param {boolean} showHidden if true, entities tagged as hidden will be displayed
  * @param {string}  border (Optional) Border override style
  * @param {object}  colors (Optional) Color override values
  */
@@ -36,9 +47,10 @@ const responsiveTable = ({
     entityMaps,
     sortProps,
     onRowClick,
+    onChangeHide,
+    showHidden,
     border,
-    colors,
-    primary,
+    colors
 }) => {
     const cellWidth = ((1 / fieldDefs.length) * 100).toString().split('.')[0]
 
@@ -67,7 +79,7 @@ const responsiveTable = ({
                 entities={entities}
             />
             {entities.map((entity, index) => {
-                return (
+                return (!entity.hide || showHidden) && (
                     <StyledRow
                         entity={entity}
                         striped={index % 2 === 1}
@@ -75,10 +87,10 @@ const responsiveTable = ({
                         entityMaps={entityMaps}
                         colors={mappedColors}
                         cellWidth={cellWidth}
-                        primary={primary}
                         key={index}
                         rowIndex={index}
                         onRowClick={onRowClick}
+                        onChangeHide={onChangeHide}
                     />
                 )
             })}
@@ -115,15 +127,7 @@ const setColors = (propColors) => {
 }
 
 /**
- * Creates the Header
- * @param {object} props The sort properties defined above responsiveTable
- * fieldDefs
- * fieldDefMap
- * cellWidth
- * colors
- * sortProps
- * entities
- *
+ * Creates the table header with column labels
  */
 const Header = ({
     fieldDefs,
@@ -131,10 +135,9 @@ const Header = ({
     cellWidth,
     sortProps,
     entities,
-    className,
+    className
 }) => {
     const labelStyle = { width: cellWidth + '%' }
-
     const doSort = sortProps ? sortProps.doSort : undefined
     const sortColumn = sortProps ? sortProps.column : undefined
     const ascending = sortProps ? sortProps.ascending : undefined
@@ -188,13 +191,7 @@ const Header = ({
                             style={labelStyle}
                             key={index}
                             onClick={(e) =>
-                                doNewSort(
-                                    sortProps,
-                                    index,
-                                    fieldDefs,
-                                    entities,
-                                    entityMaps
-                                )
+                                doNewSort(sortProps, index, fieldDefs, entities, entityMaps)
                             }
                         >
                             {fieldDef.label}
@@ -254,31 +251,24 @@ const StyledHeader = styled(Header)`
         display: none;
     }
 `
-const Row = (props) => {
+const Row = ({fieldDefs, className, cellWidth, colors, entity, entityMaps, onRowClick, onChangeHide, rowIndex}) => {
     return (
-        <div className={props.className}>
-            {props.fieldDefs.map((fieldDef, index) => {
+        <div className={className}>
+            {fieldDefs.map((fieldDef, index) => {
                 return (
                     <StyledCell
-                        width={props.cellWidth}
-                        colors={props.colors}
-                        primary={props.primary === index}
+                        width={cellWidth}
+                        colors={colors}
                         key={index}
                     >
                         <CollapsedLabel>{fieldDef.label}</CollapsedLabel>
                         <CellContent
-                            value={props.entity[fieldDef.name]}
+                            value={entity[fieldDef.name]}
                             type={fieldDef.type}
-                            entityMap={
-                                props.entityMaps && props.entityMaps[fieldDef.name]
-                            }
-                            onRowClick={(e) =>
-                                props.onRowClick(
-                                    e,
-                                    props.rowIndex,
-                                    props.entity
-                                )
-                            }
+                            entity={entity}
+                            entityMap={entityMaps && entityMaps[fieldDef.name]}
+                            onRowClick={(e) => onRowClick(e, rowIndex, entity)}
+                            onChangeHide={(e) => onChangeHide(e, rowIndex)}
                         ></CellContent>
                     </StyledCell>
                 )
@@ -290,9 +280,9 @@ const Row = (props) => {
 const StyledRow = styled(Row)`
     display: flex;
     padding: 0.2em;
-    color: ${(props) => props.colors.rowText};
-    background-color: ${(props) =>
-        props.striped ? props.colors.rowStripe : props.colors.rowBg};
+    color: ${({colors}) => colors.rowText};
+    background-color: ${({striped, colors}) =>
+        striped ? colors.rowStripe : colors.rowBg};
     @media all and (max-width: 768px) {
         flex-direction: column;
     }
@@ -320,69 +310,69 @@ const CollapsedLabel = styled.div`
         overflow: hidden;
     }
 `
-const UnstyledCellContent = (props) => {
-    if (props.type === fieldType.URL) {
-        const url = props.value.startsWith('http')
-            ? props.value
-            : 'http://' + props.value
+const UnstyledCellContent = ({type, value, entity, onRowClick, entityMap, onChangeHide}) => {
+    if (type === fieldType.URL) {
+        const url = value.startsWith('http')
+            ? value
+            : 'http://' + value
         return (
             <a href={url} target="_blank" rel="noopener noreferrer">
-                {props.value.slice(0, MAX_DISPLAY_URL)}
+                {value.slice(0, MAX_DISPLAY_URL)}
             </a>
         )
     } 
-    else if (props.type === fieldType.DATE) {
+    else if (type === fieldType.DATE) {
         // Convert from ISO format
-        const reformatted = props.value && moment(new Date(props.value)).format('ddd, MMM Do YYYY')
-        return <span onClick={props.onRowClick}>{reformatted}</span>
+        const reformatted = value && moment(new Date(value)).format('ddd, MMM Do YYYY')
+        return <span onClick={onRowClick}>{reformatted}</span>
     } 
-    else if (props.type === fieldType.DATE_TIME) {
+    else if (type === fieldType.DATE_TIME) {
         // Convert from ISO format
-        const reformatted = props.value && moment(new Date(props.value)).format('ddd, MMM Do YYYY, h:mm a')
-        return <span onClick={props.onRowClick}>{reformatted}</span>
+        const reformatted = value && moment(new Date(value)).format('ddd, MMM Do YYYY, h:mm a')
+        return <span onClick={onRowClick}>{reformatted}</span>
     } 
-    else if (props.type === fieldType.SELECT_ENTITY) {
-        const displayValue = props.value && props.entityMap.entities[props.value][props.entityMap.displayField]
-        return <span onClick={props.onRowClick}>{displayValue}</span>
+    else if (type === fieldType.SELECT_ENTITY) {
+        const displayValue = value && entityMap.entities[value][entityMap.displayField]
+        return <span onClick={onRowClick}>{displayValue}</span>
     } 
-    else if (props.type === fieldType.SELECT) {
-        const displayValue = props.value ? props.value : ''
-        return <span onClick={props.onRowClick}>{displayValue}</span>
+    else if (type === fieldType.SELECT) {
+        const displayValue = value ? value : ''
+        return <span onClick={onRowClick}>{displayValue}</span>
     } 
-    else if (props.type === fieldType.EMAIL) {
+    else if (type === fieldType.EMAIL) {
         let displayValue
-        if (props.value) {
+        if (value) {
             if (
-                Object.getOwnPropertyNames(props.value).find(
+                Object.getOwnPropertyNames(value).find(
                     (name) => name === 'address'
                 )
             ) {
                 //Single email, not an array
-                displayValue = props.value.address
+                displayValue = value.address
             } 
             else {
                 displayValue =
-                    props.value[0].address +
-                    (props.value.length > 1) && `, ...${props.value.length - 1} more`
+                    value[0].address +
+                    (value.length > 1) && `, ...${value.length - 1} more`
             }
         } 
         else {
             displayValue = ''
         }
-        return <span onClick={props.onRowClick}>{displayValue}</span>
+        return <span onClick={onRowClick}>{displayValue}</span>
     } 
-    else if (
-        props.type === fieldType.TEXT ||
-        props.type === fieldType.TEXT_AREA
-    ) {
+    else if (type === fieldType.TEXT || type === fieldType.TEXT_AREA) {
         return (
-            <span onClick={props.onRowClick}>
-                {props.value && props.value.slice(0, MAX_DISPLAY_TEXT)}
+            <span onClick={onRowClick}>
+                {value && value.slice(0, MAX_DISPLAY_TEXT)}
             </span>
         )
     } 
+    else if (type === fieldType.BOOLEAN_HIDDEN) {
+        return <Checkbox checked={entity.hide} onChange={onChangeHide}/>
+    } 
     else {
-        return <span onClick={props.onRowClick}>{props.value}</span>
+        return <span onClick={onRowClick}>{value}</span>
     }
 }
 const CellContent = styled(UnstyledCellContent)`

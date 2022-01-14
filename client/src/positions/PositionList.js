@@ -15,6 +15,7 @@ import * as actions from './PositionActions';
     const [ displayForm,    setDisplayForm ]    = useState(false); 
     const [ selectedRow,    setSelectedRow ]    = useState(null); 
     const [ position,       setPosition ]       = useState(null); 
+    const [ showHidden,     setShowHidden ]     = useState(false); 
 
     const dispatch = useDispatch();
     
@@ -49,6 +50,22 @@ import * as actions from './PositionActions';
         setPosition(position);
     }
 
+    /**
+     * Change handler for 'hide' checkboxes
+     * @param {object} e unused
+     * @param {number} rowIndex 
+     */
+     function onChangeHide(e, rowIndex){
+        const position = {...positions[rowIndex]}
+        position.hide = !position.hide
+        dispatch(actions.savePosition(position, rowIndex))
+    }
+
+    /**
+     * Removes or restores 'hidden' entities from the display 
+     */
+    const toggleShowHidden = () => setShowHidden(!showHidden)
+
     function closeForm(position){
         setDisplayForm(false);
         if (position) {
@@ -68,14 +85,23 @@ import * as actions from './PositionActions';
     const colors = { headerBg: '#2c3e50' } // Set to bootstrap-<them>.css body color
     return (
         <div>
-            <ListHeaderFooter header='true' name='Positions' label='New Position' createNew={createNew} />
+            <ListHeaderFooter 
+            header='true' 
+            name='Positions' 
+            label='New Position' 
+            createNew={createNew} 
+            fieldDefs={fieldDefs}
+            showHidden={showHidden}
+            toggleShowHidden={toggleShowHidden}/>
             <ResponsiveTable
                 entities={positions}
                 entityMaps={entityMaps}
                 fieldDefs={fieldDefs}
                 colors={colors}
                 sortProps={sortProps}
-                onRowClick={select} />
+                showHidden={showHidden}
+                onRowClick={select}
+                onChangeHide={onChangeHide} />
             {displayForm ? <Position entity={position} closeForm={closeForm}></Position> : ''}
         </div>
     )

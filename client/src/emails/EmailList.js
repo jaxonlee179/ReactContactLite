@@ -15,6 +15,7 @@ function EmailList (){
     const [ ascending,      setAscending ]      = useState(null); 
     const [ displayForm,    setDisplayForm ]    = useState(false); 
     const [ email,          setEmail ]          = useState(null); 
+    const [ showHidden,     setShowHidden ]     = useState(false); 
 
     const dispatch = useDispatch();
     
@@ -42,6 +43,22 @@ function EmailList (){
         setEmail(email);
    }
 
+    /**
+     * Change handler for 'hide' checkboxes
+     * @param {object} e unused
+     * @param {number} rowIndex 
+     */
+     function onChangeHide(e, rowIndex){
+        const email = {...emails[rowIndex]}
+        email.hide = !email.hide
+        dispatch(actions.saveEmail(email, rowIndex))
+    }
+
+    /**
+     * Removes or restores 'hidden' entities from the display 
+     */
+    const toggleShowHidden = () => setShowHidden(!showHidden)
+
     function closeForm(email){
         setDisplayForm(false);
     }
@@ -55,14 +72,22 @@ function EmailList (){
 
     return (
         <div>
-            <ListHeaderFooter header='true' name='Emails' label='Email' readOnly='true' />
+            <ListHeaderFooter 
+                header='true' 
+                name='Emails' 
+                label='Email' 
+                readOnly='true' 
+                fieldDefs={fieldDefs}
+                showHidden={showHidden}
+                toggleShowHidden={toggleShowHidden}/>
             <ResponsiveTable
                 entities={emails}
                 fieldDefs={displayFieldDefs}
                 colors={colors}
                 sortProps={sortProps}
+                showHidden={showHidden}
                 onRowClick={select}
-                readOnly='true' />
+                onChangeHide={onChangeHide} />
             {displayForm ? <Email entity={email} closeForm={closeForm}></Email> : ''}
         </div>
     )

@@ -15,6 +15,7 @@ function CompanyList () {
     const [ displayForm,    setDisplayForm ]    = useState(false); 
     const [ selectedRow,    setSelectedRow ]    = useState(null); 
     const [ company,        setCompany ]        = useState(null); 
+    const [ showHidden,     setShowHidden ]     = useState(false); 
 
     const dispatch = useDispatch();
     
@@ -47,7 +48,23 @@ function CompanyList () {
         setCompany(company);
     }
 
-    function closeForm(company){
+    /**
+     * Change handler for 'hide' checkboxes
+     * @param {object} e unused
+     * @param {number} rowIndex 
+     */
+     function onChangeHide(e, rowIndex){
+        const company = {...companies[rowIndex]}
+        company.hide = !company.hide
+        dispatch(actions.saveCompany(company, rowIndex))
+    }
+
+    /**
+     * Removes or restores 'hidden' entities from the display 
+     */
+     const toggleShowHidden = () => setShowHidden(!showHidden)
+
+     function closeForm(company){
         setDisplayForm(false);
         if (company) {
             dispatch(actions.saveCompany(company, selectedRow))
@@ -63,13 +80,22 @@ function CompanyList () {
 
     return (
         <div>
-            <ListHeaderFooter header='true' name='Companies' label='New Company' createNew={createNew} />
+            <ListHeaderFooter 
+                header='true' 
+                name='Companies' 
+                label='New Company' 
+                createNew={createNew} 
+                fieldDefs={fieldDefs}
+                showHidden={showHidden}
+                toggleShowHidden={toggleShowHidden}/>
             <ResponsiveTable
                 entities={companies}
                 fieldDefs={fieldDefs}
                 colors={colors}
+                showHidden={showHidden}
                 sortProps={sortProps}
-                onRowClick={select} />
+                onRowClick={select} 
+                onChangeHide={onChangeHide}/>
             {displayForm && <Company entity={company} closeForm={closeForm}></Company> }
         </div>
     )

@@ -18,6 +18,7 @@ const PHONE_ENCOUNTER = 'phone'
     const [ displayForm,    setDisplayForm ]    = useState(false); 
     const [ selectedRow,    setSelectedRow ]    = useState(null); 
     const [ encounter,      setEncounter ]      = useState(null); 
+    const [ showHidden,     setShowHidden ]     = useState(false); 
 
     const dispatch = useDispatch();
     
@@ -53,6 +54,22 @@ const PHONE_ENCOUNTER = 'phone'
         setEncounter(encounter);
     }
 
+    /**
+     * Change handler for 'hide' checkboxes
+     * @param {object} e unused
+     * @param {number} rowIndex 
+     */
+    function onChangeHide(e, rowIndex){
+        const encounter = {...encounters[rowIndex]}
+        encounter.hide = !encounter.hide
+        dispatch(actions.saveEncounter(encounter, rowIndex))
+    }
+
+    /**
+     * Removes or restores 'hidden' entities from the display 
+     */
+    const toggleShowHidden = () => setShowHidden(!showHidden)
+
     function closeForm(encounter){
         setDisplayForm(false);
         if (encounter) {
@@ -84,14 +101,23 @@ const PHONE_ENCOUNTER = 'phone'
 
      return (
          <div>
-             <ListHeaderFooter header='true' name='Encounters' label='New Encounter' createNew={createNew} />
+             <ListHeaderFooter 
+             header='true' 
+             name='Encounters' 
+             label='New Encounter' 
+             createNew={createNew} 
+             fieldDefs={fieldDefs}
+             showHidden={showHidden}
+             toggleShowHidden={toggleShowHidden}/>
              <ResponsiveTable
                  entities={encounters}
                  entityMaps={entityMaps}
                  fieldDefs={fieldDefs}
                  colors={colors}
                  sortProps={sortProps}
-                 onRowClick={select} />
+                 showHidden={showHidden}
+                 onRowClick={select}
+                 onChangeHide={onChangeHide} />
              {showPhonePopup ? <Encounter entity={encounter} closeForm={closeForm} /> : ''}
              {showEmailPopup ? <Email entity={emailsMap[encounter.email]} closeForm={closeForm} /> : ''}
          </div>

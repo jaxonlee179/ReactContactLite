@@ -115,7 +115,10 @@ function ResponsiveForm({
                 <Modal.Body>
                     <Form>
                         {fieldDefs.map((field, index) => {
-                            if (field.type === fieldType.SELECT_ENTITY || field.type === fieldType.SELECT) {
+                            if (field.name === 'hide'){
+                                return null
+                            }
+                            else if (field.type === fieldType.SELECT_ENTITY || field.type === fieldType.SELECT) {
                                 const options = optionSets[field.name]
                                 let value = entity[field.name] &&
                                     options[

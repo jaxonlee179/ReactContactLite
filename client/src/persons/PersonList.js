@@ -5,13 +5,17 @@ import ListHeaderFooter from '../components/ListHeaderFooter';
 import Person, { fieldDefs } from './Person';
 import * as actions from './PersonActions';
 
-function PersonList () {
+/**
+ * Generates the Person list component
+ */
+ function PersonList () {
 
     const [ column,         setColumn ]         = useState(null); 
     const [ ascending,      setAscending ]      = useState(null); 
     const [ displayForm,    setDisplayForm ]    = useState(false); 
     const [ selectedRow,    setSelectedRow ]    = useState(null); 
     const [ person,         setPerson ]         = useState(null); 
+    const [ showHidden,     setShowHidden ]     = useState(false); 
 
     const dispatch = useDispatch();
     
@@ -23,6 +27,7 @@ function PersonList () {
         setColumn(column);
         setAscending(ascending);        
     }
+    
     /**
      * Displays the popup to create a new person
      */
@@ -44,6 +49,22 @@ function PersonList () {
         setPerson(person);
     }
 
+    /**
+     * Change handler for 'hide' checkboxes
+     * @param {object} e unused
+     * @param {number} rowIndex 
+     */
+    function onChangeHide(e, rowIndex){
+        const person = {...persons[rowIndex]}
+        person.hide = !person.hide
+        dispatch(actions.savePerson(person, rowIndex))
+    }
+
+    /**
+     * Removes or restores 'hidden' entities from the display 
+     */
+    const toggleShowHidden = () => setShowHidden(!showHidden)
+
     function closeForm(person){
         setDisplayForm(false);
         if (person) {
@@ -62,14 +83,23 @@ function PersonList () {
     const colors = { headerBg: '#2c3e50' } // Set to bootstrap-<them>.css body color
     return (
         <div>
-            <ListHeaderFooter header='true' name='Persons' label='New Person' createNew={createNew} />
+            <ListHeaderFooter 
+                header='true' 
+                name='Persons' 
+                label='New Person' 
+                createNew={createNew} 
+                fieldDefs={fieldDefs}
+                showHidden={showHidden}
+                toggleShowHidden={toggleShowHidden}/>
             <ResponsiveTable
                 entities={persons}
                 entityMaps={entityMaps}
                 fieldDefs={fieldDefs}
                 colors={colors}
                 sortProps={sortProps}
-                onRowClick={select} />
+                showHidden={showHidden}
+                onRowClick={select}
+                onChangeHide={onChangeHide} />
             {displayForm ? <Person entity={person} closeForm={closeForm}></Person> : ''}
         </div>
     )
