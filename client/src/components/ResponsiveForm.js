@@ -106,6 +106,7 @@ function ResponsiveForm({
             </Button>
         </>
     )
+
     return (
         <>
             <Modal show={true} size={width ? width : 'md'}>
@@ -173,7 +174,7 @@ const Row = ({
     value,
     options,
     onChange,
-    key,
+    key
 }) => {
     return (
         <div>
@@ -183,7 +184,7 @@ const Row = ({
                     <StyledField
                         type={type}
                         name={name}
-                        value={value}
+                        content={value}
                         options={options}
                         onChange={onChange}
                         readOnly={readOnly}
@@ -193,7 +194,7 @@ const Row = ({
                 <StyledFieldWithoutLabel
                     type={type}
                     name={name}
-                    value={value}
+                    content={value}
                     options={options}
                     onChange={onChange}
                     readOnly={readOnly}
@@ -218,37 +219,38 @@ const StyledLabel = styled(Label)`
         width: 100%;
     }
 `
-const Field = (props) => {
+
+const Field = ({type, className, readOnly, onChange, name, content, options}) => {
     const style = { width: '100%' }
-    switch (props.type) {
+    switch (type) {
         case fieldType.TEXT:
         case fieldType.URL:
             return (
-                <div className={props.className}>
+                <div className={className}>
                     <input
                         type="text"
-                        disabled={props.readOnly ? 'disabled' : null}
-                        onChange={props.onChange}
-                        id={props.name}
-                        name={props.name}
-                        value={props.value ? props.value : ''}
+                        disabled={readOnly ? 'disabled' : null}
+                        onChange={onChange}
+                        id={name}
+                        name={name}
+                        value={content}
                         style={style}
                     ></input>
                 </div>
             )
 
         case fieldType.EMAIL:
-            const value = props.readOnly
-                ? formatEmailObject(props.value)
-                : props.value
+            const value = readOnly
+                ? formatEmailObject(content)
+                : content
             return (
-                <div className={props.className}>
+                <div className={className}>
                     <input
                         type="email"
-                        disabled={props.readOnly ? 'disabled' : null}
-                        onChange={props.onChange}
-                        id={props.name}
-                        name={props.name}
+                        disabled={readOnly ? 'disabled' : null}
+                        onChange={onChange}
+                        id={name}
+                        name={name}
                         value={value}
                         style={style}
                     ></input>
@@ -257,31 +259,31 @@ const Field = (props) => {
 
         case fieldType.TEXT_AREA:
             return (
-                <div className={props.className}>
+                <div className={className}>
                     <textarea
-                        disabled={props.readOnly ? 'disabled' : null}
-                        onChange={props.onChange}
-                        id={props.name}
-                        name={props.name}
-                        value={props.value ? props.value : ''}
+                        disabled={readOnly ? 'disabled' : null}
+                        id={name}
+                        name={name}
+                        value={content}
                         style={style}
+                        onChange={onChange}
                     ></textarea>
                 </div>
             )
 
         case fieldType.DATE_TIME:
         case fieldType.DATE:
-            const theDate = props.value ? new Date(props.value) : null
+            const theDate = content ? new Date(content) : null
             return (
-                <div className={props.className}>
+                <div className={className}>
                     <DatePicker
-                        disabled={props.readOnly ? 'disabled' : null}
+                        disabled={readOnly ? 'disabled' : null}
                         selected={theDate}
                         onChange={(date) =>
-                            props.onChange({ name: props.name, date: date })
+                            onChange({ name: name, date: date })
                         }
                         showTimeSelect={
-                            props.type === fieldType.DATE_TIME
+                            type === fieldType.DATE_TIME
                                 ? 'true'
                                 : undefined
                         }
@@ -290,7 +292,7 @@ const Field = (props) => {
                         timeIntervals={15}
                         timeCaption="time"
                         dateFormat={
-                            props.type === fieldType.DATE_TIME
+                            type === fieldType.DATE_TIME
                                 ? 'yyyy/MM/dd h:mm aa'
                                 : 'yyyy/MM/dd'
                         }
@@ -301,27 +303,27 @@ const Field = (props) => {
         case fieldType.SELECT:
         case fieldType.SELECT_ENTITY:
             return (
-                <div className={props.className}>
+                <div className={className}>
                     <Selector
-                        name={props.name}
-                        value={props.value}
-                        options={props.options}
-                        onChange={props.onChange}
+                        name={name}
+                        value={content}
+                        options={options}
+                        onChange={onChange}
                     />
                 </div>
             )
 
         case fieldType.ATTACHMENT:
-            const text = `${props.value.fileName};  ${props.value.contentType}`
-            return props.value.viewable ? (
+            const text = `${content.fileName};  ${content.contentType}`
+            return content.viewable ? (
                 <div
-                    className={props.className}
-                    onClick={(e) => props.value.onClick(props.value.url)}
+                    className={className}
+                    onClick={(e) => content.onClick(content.url)}
                 >
                     {text}
                 </div>
             ) : (
-                <a href={props.value.url}>{text}</a>
+                <a href={content.url}>{text}</a>
             )
 
         case fieldType.BOOLEAN_HIDDEN: return null
@@ -340,7 +342,11 @@ const StyledFieldWithoutLabel = styled(Field)`
     width: 100%;
 `
 
-const formatEmailObject = (email) => {
+const formatEmailObject = (emailArray) => {
+    if (emailArray.length == 0){
+        return null
+    }
+    const email = emailArray[0]
     let value
     if (Object.getOwnPropertyNames(email).find((name) => name === 'address')) {
         // Single { ?name, address }

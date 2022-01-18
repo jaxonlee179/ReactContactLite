@@ -348,12 +348,13 @@ const UnstyledCellContent = ({type, value, entity, onRowClick, entityMap, onChan
                 )
             ) {
                 //Single email, not an array
-                displayValue = value.address
+                displayValue = value[0].address
             } 
             else {
-                displayValue =
-                    value[0].address +
-                    (value.length > 1) && `, ...${value.length - 1} more`
+                displayValue = value[0].address
+                if (value.length > 1) {
+                    displayValue += `, ...${value.length - 1} more`
+                }
             }
         } 
         else {
