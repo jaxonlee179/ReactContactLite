@@ -70,7 +70,12 @@ function AppointmentList () {
     const colors = { headerBg: '#2c3e50' } // Set to bootstrap-<them>.css body color
     return (
         <div>
-            <ListHeaderFooter header='true' name='Appointments' label='New Appointment' createNew={createNew} />
+            <ListHeaderFooter 
+                fieldDefs={fieldDefs}
+                header='true' 
+                name='Appointments' 
+                label='New Appointment' 
+                createNew={createNew} />
             <ResponsiveTable
                 entities={appointments}
                 entityMaps={entityMaps}

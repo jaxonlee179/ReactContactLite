@@ -90,25 +90,23 @@ const PHONE_ENCOUNTER = 'phone'
          'person': { entities: personsMap, displayField: 'name' },
      }
 
-     // The encounter type field will not be displayed. It's value will be set
-     // to 'phone' upon first saving
-     // const defs = fieldDefs.filter( fieldDef => fieldDef.name != 'type')
-
      const colors = { headerBg: '#2c3e50' } // Set to bootstrap-<them>.css body color
 
-     const showPhonePopup = displayForm && ((encounter && encounter.type === 'phone') || !encounter)
+     const showPhoneOrLinkedInPopup = displayForm &&
+         ((encounter && (encounter.type === 'phone' || encounter.type === 'linkedIn')) || !encounter)
      const showEmailPopup = displayForm && encounter && encounter.type === 'email'
 
      return (
          <div>
-             <ListHeaderFooter 
-             header='true' 
-             name='Encounters' 
-             label='New Encounter' 
-             createNew={createNew} 
-             fieldDefs={fieldDefs}
-             showHidden={showHidden}
-             toggleShowHidden={toggleShowHidden}/>
+             <ListHeaderFooter
+                 header="true"
+                 name="Encounters"
+                 label="New Encounter"
+                 createNew={createNew}
+                 fieldDefs={fieldDefs}
+                 showHidden={showHidden}
+                 toggleShowHidden={toggleShowHidden}
+             />
              <ResponsiveTable
                  entities={encounters}
                  entityMaps={entityMaps}
@@ -117,9 +115,10 @@ const PHONE_ENCOUNTER = 'phone'
                  sortProps={sortProps}
                  showHidden={showHidden}
                  onRowClick={select}
-                 onChangeHide={onChangeHide} />
-             {showPhonePopup ? <Encounter entity={encounter} closeForm={closeForm} /> : ''}
-             {showEmailPopup ? <Email entity={emailsMap[encounter.email]} closeForm={closeForm} /> : ''}
+                 onChangeHide={onChangeHide}
+             />
+             {showPhoneOrLinkedInPopup && <Encounter entity={encounter} closeForm={closeForm} />}
+             {showEmailPopup && <Email entity={emailsMap[encounter.email]} closeForm={closeForm} />}
          </div>
      )
 }
