@@ -7,6 +7,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Modal, Button } from 'react-bootstrap'
 import Selector from './Selector'
+import TextArea from './TextArea'
 
 export const fieldType = {
     TEXT:           'TEXT',         // Specifies HTML input element of type 'text'
@@ -85,6 +86,10 @@ function ResponsiveForm({
             entity[e.name] = e.value
         }
         setEntity({ ...entity })
+    }
+
+    function expandTextArea(e) {
+        console.log(e);
     }
 
     const title = readOnly
@@ -174,6 +179,7 @@ const Row = ({
     value,
     options,
     onChange,
+    expandTextArea,
     key
 }) => {
     return (
@@ -187,6 +193,7 @@ const Row = ({
                         content={value}
                         options={options}
                         onChange={onChange}
+                        expandTextArea={expandTextArea}
                         readOnly={readOnly}
                     />
                 </>
@@ -197,6 +204,7 @@ const Row = ({
                     content={value}
                     options={options}
                     onChange={onChange}
+                    expandTextArea={expandTextArea}
                     readOnly={readOnly}
                 />
             )}
@@ -220,7 +228,7 @@ const StyledLabel = styled(Label)`
     }
 `
 
-const Field = ({type, className, readOnly, onChange, name, content, options}) => {
+const Field = ({type, className, readOnly, onChange, name, content, options, expandTextArea}) => {
     const style = { width: '100%' }
     switch (type) {
         case fieldType.TEXT:
@@ -258,18 +266,13 @@ const Field = ({type, className, readOnly, onChange, name, content, options}) =>
             )
 
         case fieldType.TEXT_AREA:
-            return (
-                <div className={className}>
-                    <textarea
-                        disabled={readOnly ? 'disabled' : null}
+           return <TextArea disabled={readOnly ? 'disabled' : null}
                         id={name}
                         name={name}
-                        value={content}
-                        style={style}
-                        onChange={onChange}
-                    ></textarea>
-                </div>
-            )
+                        content={content}
+                        defaultStyle={style}
+                        onChange={onChange}/>
+
 
         case fieldType.DATE_TIME:
         case fieldType.DATE:
