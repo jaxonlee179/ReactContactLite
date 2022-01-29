@@ -11,7 +11,10 @@
  * 
  * If the entity type includes a 'hide' field, it is rendered as a checkbox. When checked, a given entity 
  * will be removed from the display. The table header will include a 'Show Hidden' / 'Hide Hidden' toggle
- * button. Clicking Show Hidden will restore all hidden rows to the table  
+ * button. Clicking Show Hidden will restore all hidden rows to the table
+ * 
+ * The width of a field in the conventional table form varies according to its fieldType. This is
+ * implemented using the CSS 'flex-grow' property  
  */
 import React from 'react'
 import styled from 'styled-components'
@@ -21,6 +24,18 @@ import moment from 'moment'
 
 const MAX_DISPLAY_URL = 30  // URL display values will be truncated to this length
 const MAX_DISPLAY_TEXT = 50 // TEXT or TEXT_AREA display values will be truncated to this length
+
+const FIELD_WIDTH = {
+    'TEXT':         3,        
+    'TEXT_AREA':    3,     
+    'DATE_TIME':    3,     
+    'DATE':         2,          
+    'URL':          2,           
+    'SELECT_ENTITY':2, 
+    'SELECT':       1,        
+    'EMAIL':        2,         
+    'BOOLEAN_HIDDEN':1    
+}
 
 /**
  * Generates a ResponsiveTable component
@@ -262,14 +277,14 @@ const Row = ({fieldDefs, className, cellWidth, colors, entity, entityMaps, onRow
                         key={index}
                     >
                         <CollapsedLabel>{fieldDef.label}</CollapsedLabel>
-                        <CellContent
+                        <StyledCellContent
                             value={entity[fieldDef.name]}
                             type={fieldDef.type}
                             entity={entity}
                             entityMap={entityMaps && entityMaps[fieldDef.name]}
                             onRowClick={(e) => onRowClick(e, rowIndex, entity)}
                             onChangeHide={(e) => onChangeHide(e, rowIndex)}
-                        ></CellContent>
+                        ></StyledCellContent>
                     </StyledCell>
                 )
             })}
@@ -310,7 +325,7 @@ const CollapsedLabel = styled.div`
         overflow: hidden;
     }
 `
-const UnstyledCellContent = ({type, value, entity, onRowClick, entityMap, onChangeHide}) => {
+const CellContent = ({type, value, entity, onRowClick, entityMap, onChangeHide}) => {
     if (type === fieldType.URL) {
         const url = value.startsWith('http')
             ? value
@@ -376,7 +391,7 @@ const UnstyledCellContent = ({type, value, entity, onRowClick, entityMap, onChan
         return <span onClick={onRowClick}>{value}</span>
     }
 }
-const CellContent = styled(UnstyledCellContent)`
+const StyledCellContent = styled(CellContent)`
     @media all and (max-width: 768px) {
         display: inline !important;
         overflow: hidden;
