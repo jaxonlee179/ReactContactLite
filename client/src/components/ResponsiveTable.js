@@ -153,66 +153,26 @@ const Header = ({
     className
 }) => {
     const labelStyle = { width: cellWidth + '%' }
-    const doSort = sortProps ? sortProps.doSort : undefined
-    const sortColumn = sortProps ? sortProps.column : undefined
-    const ascending = sortProps ? sortProps.ascending : undefined
 
     return (
         <div className={className}>
             {fieldDefs.map((fieldDef, index) => {
-                if (doSort && sortColumn === index) {
-                    if (ascending) {
-                        return (
-                            <div
-                                style={labelStyle}
-                                key={index}
-                                onClick={(e) =>
-                                    doNewSort(
-                                        sortProps,
-                                        index,
-                                        fieldDefs,
-                                        entities,
-                                        entityMaps
-                                    )
-                                }
-                            >
-                                {fieldDef.label}
-                                <span className="fas fa-caret-down fa-lg"></span>
-                            </div>
-                        )
-                    } else {
-                        return (
-                            <div
-                                style={labelStyle}
-                                key={index}
-                                onClick={(e) =>
-                                    doNewSort(
-                                        sortProps,
-                                        index,
-                                        fieldDefs,
-                                        entities,
-                                        entityMaps
-                                    )
-                                }
-                            >
-                                {fieldDef.label}
-                                <span className="fas fa-caret-up fa-lg"></span>
-                            </div>
-                        )
-                    }
-                } else {
                     return (
                         <div
                             style={labelStyle}
                             key={index}
                             onClick={(e) =>
-                                doNewSort(sortProps, index, fieldDefs, entities, entityMaps)
+                                doNewSort(
+                                    sortProps, 
+                                    index, 
+                                    fieldDefs, 
+                                    entities, 
+                                    entityMaps)
                             }
                         >
                             {fieldDef.label}
                         </div>
                     )
-                }
             })}
         </div>
     )
