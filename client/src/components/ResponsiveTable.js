@@ -25,18 +25,6 @@ import moment from 'moment'
 const MAX_DISPLAY_URL = 30  // URL display values will be truncated to this length
 const MAX_DISPLAY_TEXT = 50 // TEXT or TEXT_AREA display values will be truncated to this length
 
-const FIELD_WIDTH = {
-    'TEXT':         3,        
-    'TEXT_AREA':    3,     
-    'DATE_TIME':    3,     
-    'DATE':         2,          
-    'URL':          2,           
-    'SELECT_ENTITY':2, 
-    'SELECT':       1,        
-    'EMAIL':        2,         
-    'BOOLEAN_HIDDEN':1    
-}
-
 /**
  * Generates a ResponsiveTable component
  * @param {array}   entities Table data, one element per row
