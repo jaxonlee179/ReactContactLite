@@ -19,7 +19,15 @@ export const fieldType = {
     SELECT:         'SELECT',       // Specifies a set of options
     EMAIL:          'EMAIL',        // Valid only if readOnly
     ATTACHMENT:     'ATTACHMENT',   // Valid only if readOnly TODO
-    BOOLEAN_HIDDEN: 'BOOLEAN_HIDDEN'// Not to be displayed in the form 
+    BOOLEAN_HIDDEN: 'BOOLEAN_HIDDEN'// Not to be displayed in the form; it is displayed in <ResponsiveTable> as a checkbox 
+}
+
+// Display widths to apply to fields in the table view; not relevant for the form
+// The values i.e. 1, 2, 3 will become the 'flex-grow' CSS attribute 
+export const fieldWidth = {
+    NARROW: 1,
+    NORMAL: 2,
+    WIDE:   3
 }
 /**
  * Generates the component
@@ -328,7 +336,7 @@ const Field = ({type, className, readOnly, onChange, name, content, options, exp
             ) : (
                 <a href={content.url}>{text}</a>
             )
-
+        // Refer to ResponsiveTable for its use in that context 
         case fieldType.BOOLEAN_HIDDEN: return null
         
         default:

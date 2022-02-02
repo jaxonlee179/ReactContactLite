@@ -55,8 +55,6 @@ const responsiveTable = ({
     border,
     colors
 }) => {
-    const cellWidth = ((1 / fieldDefs.length) * 100).toString().split('.')[0]
-
     const tableStyle = {
         textAlign: 'left',
         border: border ? border : '1px solid black',
@@ -76,7 +74,6 @@ const responsiveTable = ({
                 fieldDefs={fieldDefs}
                 fieldDefMap={fieldDefMap}
                 entityMaps={entityMaps}
-                cellWidth={cellWidth}
                 colors={mappedColors}
                 sortProps={sortProps}
                 entities={entities}
@@ -89,7 +86,6 @@ const responsiveTable = ({
                         fieldDefs={fieldDefs}
                         entityMaps={entityMaps}
                         colors={mappedColors}
-                        cellWidth={cellWidth}
                         key={index}
                         rowIndex={index}
                         onRowClick={onRowClick}
@@ -135,32 +131,32 @@ const setColors = (propColors) => {
 const Header = ({
     fieldDefs,
     entityMaps,
-    cellWidth,
     sortProps,
     entities,
     className
 }) => {
-    const labelStyle = { width: cellWidth + '%' }
 
     return (
         <div className={className}>
             {fieldDefs.map((fieldDef, index) => {
-                    return (
-                        <div
-                            style={labelStyle}
-                            key={index}
-                            onClick={(e) =>
-                                doNewSort(
-                                    sortProps, 
-                                    index, 
-                                    fieldDefs, 
-                                    entities, 
-                                    entityMaps)
-                            }
-                        >
-                            {fieldDef.label}
-                        </div>
-                    )
+            const style = { flexGrow: fieldDef.displayWidth }
+            return (
+                    <div
+                        style={style}
+                        key={index}
+                        onClick={(e) =>
+                            doNewSort(
+                                sortProps,
+                                index,
+                                fieldDefs,
+                                entities,
+                                entityMaps
+                            )
+                        }
+                    >
+                        {fieldDef.label}
+                    </div>
+                )
             })}
         </div>
     )
@@ -214,13 +210,13 @@ const StyledHeader = styled(Header)`
         display: none;
     }
 `
-const Row = ({fieldDefs, className, cellWidth, colors, entity, entityMaps, onRowClick, onChangeHide, rowIndex}) => {
+const Row = ({fieldDefs, className, colors, entity, entityMaps, onRowClick, onChangeHide, rowIndex}) => {
     return (
         <div className={className}>
             {fieldDefs.map((fieldDef, index) => {
                 return (
                     <StyledCell
-                        width={cellWidth}
+                        width={fieldDef.displayWidth}
                         colors={colors}
                         key={index}
                     >
@@ -242,44 +238,54 @@ const Row = ({fieldDefs, className, cellWidth, colors, entity, entityMaps, onRow
 
 const StyledRow = styled(Row)`
     display: flex;
+    overflow: hidden;
+    text-overflow: ellipsis;
     padding: 0.2em;
+
     color: ${({colors}) => colors.rowText};
     background-color: ${({striped, colors}) =>
         striped ? colors.rowStripe : colors.rowBg};
     @media all and (max-width: 768px) {
         flex-direction: column;
+        white-space: nowrap;
     }
 `
-const Cell = ({ className, children }) => {
+const Cell = ({ width, colors, key, className, children }) => {
+    const style = {'flex': width}
     return <div className={className}>{children}</div>
 }
 
 const StyledCell = styled(Cell)`
-    overflow: hidden;
     max-height: 1.5em;
-    width: ${(props) => props.width + '%'};
+    flex: ${(props) => props.width};
     @media all and (max-width: 768px) {
         display: flex;
         width: 100% !important;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: clip;
     }
 `
+
+//         display: inline;
+
 const CollapsedLabel = styled.div`
     display: none;
     @media all and (max-width: 768px) {
-        display: inline;
-        flex-basis: 30%;
+        display: block;
+        flex-grow: 3;
+        flex-basis: 3;
         text-align: right;
         margin-right: 0.6em;
-        overflow: hidden;
     }
 `
-const CellContent = ({type, value, entity, onRowClick, entityMap, onChangeHide}) => {
+const CellContent = ({type, value, entity, onRowClick, entityMap, onChangeHide, className}) => {
     if (type === fieldType.URL) {
         const url = value.startsWith('http')
             ? value
             : 'http://' + value
         return (
-            <a href={url} target="_blank" rel="noopener noreferrer">
+            <a className={className} href={url} target="_blank" rel="noopener noreferrer">
                 {value.slice(0, MAX_DISPLAY_URL)}
             </a>
         )
@@ -287,20 +293,20 @@ const CellContent = ({type, value, entity, onRowClick, entityMap, onChangeHide})
     else if (type === fieldType.DATE) {
         // Convert from ISO format
         const reformatted = value && moment(new Date(value)).format('ddd, MMM Do YYYY')
-        return <span onClick={onRowClick}>{reformatted}</span>
+        return <span className={className} onClick={onRowClick}>{reformatted}</span>
     } 
     else if (type === fieldType.DATE_TIME) {
         // Convert from ISO format
         const reformatted = value && moment(new Date(value)).format('ddd, MMM Do YYYY, h:mm a')
-        return <span onClick={onRowClick}>{reformatted}</span>
+        return <span className={className} onClick={onRowClick}>{reformatted}</span>
     } 
     else if (type === fieldType.SELECT_ENTITY) {
         const displayValue = value && entityMap.entities[value][entityMap.displayField]
-        return <span onClick={onRowClick}>{displayValue}</span>
+        return <span className={className} onClick={onRowClick}>{displayValue}</span>
     } 
     else if (type === fieldType.SELECT) {
         const displayValue = value ? value : ''
-        return <span onClick={onRowClick}>{displayValue}</span>
+        return <span className={className} onClick={onRowClick}>{displayValue}</span>
     } 
     else if (type === fieldType.EMAIL) {
         let displayValue
@@ -323,27 +329,30 @@ const CellContent = ({type, value, entity, onRowClick, entityMap, onChangeHide})
         else {
             displayValue = ''
         }
-        return <span onClick={onRowClick}>{displayValue}</span>
+        return <span className={className} onClick={onRowClick}>{displayValue}</span>
     } 
     else if (type === fieldType.TEXT || type === fieldType.TEXT_AREA) {
         return (
-            <span onClick={onRowClick}>
+            <div className={className} onClick={onRowClick}>
                 {value && value.slice(0, MAX_DISPLAY_TEXT)}
-            </span>
+            </div>
         )
     } 
     else if (type === fieldType.BOOLEAN_HIDDEN) {
-        return <Checkbox checked={entity.hide} onChange={onChangeHide}/>
+        return <div className={className}><Checkbox  checked={entity.hide} onChange={onChangeHide}/></div>
     } 
     else {
         return <span onClick={onRowClick}>{value}</span>
     }
 }
+//         display: inline !important;
+
 const StyledCellContent = styled(CellContent)`
     @media all and (max-width: 768px) {
-        display: inline !important;
-        overflow: hidden;
-        margin-bottom: 0.6em;
+        display: block;
+        flex-grow: 7;
+        flex-basis: 7;
+        text-align: left;
     }
 `
 export default responsiveTable
