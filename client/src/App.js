@@ -30,14 +30,19 @@ import axios from 'axios';
  */
 class App extends Component {
 
-    state = {
-        loading: true,
-        authorized: false
-    };
+    state = {} 
     
     constructor(props){
         super(props);
         
+        // Set initial state
+        let baseURI = document.baseURI; // non IE only, otherwise use window.location.href
+        if (baseURI.indexOf('localhost:3000')) {
+            // Local development; no need for login
+            this.state.authorized = true;
+        }
+        this.state.loading = true;
+
         // Add axios interceptors
         axios.interceptors.request.use(request => {
             this.setState({
