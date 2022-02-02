@@ -2,15 +2,15 @@
 * A modal popup for creating, editing or viewing a Company.
 */
 import React from 'react';
-import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
+import ResponsiveForm, { fieldType, fieldWidth } from '../components/ResponsiveForm';
 
 export const fieldDefs = [
-    { name: 'name',   label: 'Name',    type: fieldType.TEXT},
-    { name: 'url',    label: 'URL',     type: fieldType.URL},
-    { name: 'address',label: 'Address', type: fieldType.TEXT},
-    { name: 'city',   label: 'City',    type: fieldType.TEXT},
-    { name: 'phone',  label: 'Phone',   type: fieldType.TEXT}, 
-    { name: 'hide',   label: 'Hide',    type: fieldType.BOOLEAN_HIDDEN}
+    { name: 'name',   label: 'Name',    type: fieldType.TEXT,           displayWidth: fieldWidth.NORMAL},
+    { name: 'url',    label: 'URL',     type: fieldType.URL,            displayWidth: fieldWidth.NORMAL},
+    { name: 'address',label: 'Address', type: fieldType.TEXT,           displayWidth: fieldWidth.NORMAL},
+    { name: 'city',   label: 'City',    type: fieldType.TEXT,           displayWidth: fieldWidth.NARROW},
+    { name: 'phone',  label: 'Phone',   type: fieldType.TEXT,           displayWidth: fieldWidth.NARROW}, 
+    { name: 'hide',   label: 'Hide',    type: fieldType.BOOLEAN_HIDDEN, displayWidth: fieldWidth.NARROW}
 ]
 
 /**

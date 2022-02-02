@@ -3,18 +3,18 @@
  * TODO If post date unavailable, set to today
  */
 import React from 'react'
-import ResponsiveForm, { fieldType } from '../components/ResponsiveForm'
+import ResponsiveForm, { fieldType, fieldWidth } from '../components/ResponsiveForm'
 import { connect } from 'react-redux'
 import buildEntityOptionSets from '../utilities/entityOptionsHelper'
 
 export const fieldDefs = [
-    { name: 'title',        label: 'Title',     type: fieldType.TEXT },
-    { name: 'url',          label: 'URL',       type: fieldType.URL },
-    { name: 'person',       label: 'Person',    type: fieldType.SELECT_ENTITY },
-    { name: 'company',      label: 'Company',   type: fieldType.SELECT_ENTITY },
-    { name: 'postedDate',   label: 'Posted',    type: fieldType.DATE },
-    { name: 'appliedDate',  label: 'Applied',   type: fieldType.DATE }, 
-    { name: 'hide',         label: 'Hide',      type: fieldType.BOOLEAN_HIDDEN}
+    { name: 'title',        label: 'Title',     type: fieldType.TEXT,           displayWidth: fieldWidth.WIDE },
+    { name: 'url',          label: 'URL',       type: fieldType.URL,            displayWidth: fieldWidth.NARROW },
+    { name: 'person',       label: 'Person',    type: fieldType.SELECT_ENTITY,  displayWidth: fieldWidth.NORMAL },
+    { name: 'company',      label: 'Company',   type: fieldType.SELECT_ENTITY,  displayWidth: fieldWidth.NORMAL },
+    { name: 'postedDate',   label: 'Posted',    type: fieldType.DATE,           displayWidth: fieldWidth.NARROW },
+    { name: 'appliedDate',  label: 'Applied',   type: fieldType.DATE,           displayWidth: fieldWidth.NARROW }, 
+    { name: 'hide',         label: 'Hide',      type: fieldType.BOOLEAN_HIDDEN, displayWidth: fieldWidth.NARROW}
 ]
 
 /**

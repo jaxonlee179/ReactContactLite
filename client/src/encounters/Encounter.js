@@ -4,17 +4,17 @@
  * when it receives the emails
  */
 import React from 'react'
-import ResponsiveForm, { fieldType } from '../components/ResponsiveForm'
+import ResponsiveForm, { fieldType, fieldWidth } from '../components/ResponsiveForm'
 import { connect } from 'react-redux'
 import buildEntityOptionSets from '../utilities/entityOptionsHelper'
 
 export const fieldDefs = [
-    { name: 'when',     label: 'When',      type: fieldType.DATE_TIME },
-    { name: 'type',     label: 'Type',      type: fieldType.SELECT },
-    { name: 'position', label: 'Position',  type: fieldType.SELECT_ENTITY },
-    { name: 'person',   label: 'Person',    type: fieldType.SELECT_ENTITY },
-    { name: 'details',  label: 'Details',   type: fieldType.TEXT_AREA }, 
-    { name: 'hide',     label: 'Hide',      type: fieldType.BOOLEAN_HIDDEN}
+    { name: 'when',     label: 'When',      type: fieldType.DATE_TIME,      displayWidth: fieldWidth.NORMAL },
+    { name: 'type',     label: 'Type',      type: fieldType.SELECT,         displayWidth: fieldWidth.NARROW },
+    { name: 'position', label: 'Position',  type: fieldType.SELECT_ENTITY,  displayWidth: fieldWidth.NORMAL },
+    { name: 'person',   label: 'Person',    type: fieldType.SELECT_ENTITY,  displayWidth: fieldWidth.NORMAL },
+    { name: 'details',  label: 'Details',   type: fieldType.TEXT_AREA,      displayWidth: fieldWidth.WIDE }, 
+    { name: 'hide',     label: 'Hide',      type: fieldType.BOOLEAN_HIDDEN, displayWidth: fieldWidth.NARROW}
 ]
 
 /**

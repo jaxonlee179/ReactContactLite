@@ -2,15 +2,15 @@
  * A modal popup for creating, editing or viewing an Appointment.
  */
 import React from 'react'
-import ResponsiveForm, { fieldType } from '../components/ResponsiveForm'
+import ResponsiveForm, { fieldType, fieldWidth } from '../components/ResponsiveForm'
 import { connect } from 'react-redux'
 import buildEntityOptionSets from '../utilities/entityOptionsHelper'
 
 export const fieldDefs = [
-    { name: 'when',     label: 'When',      type: fieldType.DATE_TIME },
-    { name: 'position', label: 'Position',  type: fieldType.SELECT_ENTITY },
-    { name: 'person',   label: 'Person',    type: fieldType.SELECT_ENTITY },
-    { name: 'company',  label: 'Company',   type: fieldType.SELECT_ENTITY },
+    { name: 'when',     label: 'When',      type: fieldType.DATE_TIME,       displayWidth: fieldWidth.NORMAL },
+    { name: 'position', label: 'Position',  type: fieldType.SELECT_ENTITY,   displayWidth: fieldWidth.WIDE },
+    { name: 'person',   label: 'Person',    type: fieldType.SELECT_ENTITY,   displayWidth: fieldWidth.NORMAL },
+    { name: 'company',  label: 'Company',   type: fieldType.SELECT_ENTITY,   displayWidth: fieldWidth.NORMAL },
 ]
 
 /**

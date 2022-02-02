@@ -4,17 +4,17 @@
 import React, { useState, useMemo } from 'react';
 import NewWindow from 'react-new-window';
 
-import ResponsiveForm, { fieldType } from '../components/ResponsiveForm';
+import ResponsiveForm, { fieldType, fieldWidth } from '../components/ResponsiveForm';
 
 export const fieldDefs = [
-    { name: 'subject',  label: 'Subject',   type: fieldType.TEXT},
-    { name: 'from',     label: 'From',      type: fieldType.EMAIL},
-    { name: 'to',       label: 'To',        type: fieldType.EMAIL},
-    { name: 'cc',       label: 'Cc',        type: fieldType.EMAIL},
-    { name: 'bcc',      label: 'Bcc',       type: fieldType.EMAIL},
-    { name: 'date',     label: 'Date',      type: fieldType.DATE_TIME},
-    { name: 'text',                         type: fieldType.TEXT_AREA }, 
-    { name: 'hide',     label: 'Hide',      type: fieldType.BOOLEAN_HIDDEN}
+    { name: 'subject',  label: 'Subject',   type: fieldType.TEXT,           displayWidth: fieldWidth.WIDE},
+    { name: 'from',     label: 'From',      type: fieldType.EMAIL,          displayWidth: fieldWidth.WIDE},
+    { name: 'to',       label: 'To',        type: fieldType.EMAIL,          displayWidth: fieldWidth.WIDE},
+    { name: 'cc',       label: 'Cc',        type: fieldType.EMAIL,          displayWidth: fieldWidth.NORMAL},
+    { name: 'bcc',      label: 'Bcc',       type: fieldType.EMAIL,          displayWidth: fieldWidth.NORMAL},
+    { name: 'date',     label: 'Date',      type: fieldType.DATE_TIME,      displayWidth: fieldWidth.WIDE},
+    { name: 'text',                         type: fieldType.TEXT_AREA,      displayWidth: fieldWidth.WIDE }, 
+    { name: 'hide',     label: 'Hide',      type: fieldType.BOOLEAN_HIDDEN, displayWidth: fieldWidth.NARROW}
 ]
 
 /**
