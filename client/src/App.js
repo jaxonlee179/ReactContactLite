@@ -22,6 +22,7 @@ import * as positionActions from './positions/PositionActions';
 import * as emailActions from './emails/EmailActions';
 
 import axios from 'axios';
+import webSocketManager from './utilities/webSocketManager'
 
 /**
  * The root component of the client application. It initially displays a popup for entry of the application password
@@ -32,47 +33,71 @@ class App extends Component {
 
     state = {} 
     
-    constructor(props){
-        super(props);
-        
+    /**
+     * Constructor
+     * @param {object} the Redux store 
+     */
+    constructor({store}){
+        super({store})
+
         // Set initial state
-        let baseURI = document.baseURI; // non IE only, otherwise use window.location.href
+        let baseURI = document.baseURI // non IE only, otherwise use window.location.href
         if (baseURI.indexOf('localhost:3000')) {
             // Local development; no need for login
-            this.state.authorized = true;
+            this.state.authorized = true
         }
-        this.state.loading = true;
+        this.state.loading = true
+
+        // Create and initialize the WebSocket Manager. 
+        // Save it for access from componentDidMount
+        this.webSocketManager = webSocketManager()
+        this.webSocketManager.initialize(baseURI, store)
 
         // Add axios interceptors
-        axios.interceptors.request.use(request => {
-            this.setState({
-                requestUrl: request.url,
-                requestData: request.data
-            });
-            return request;
-        }, error => {
-            console.log(error);
-            return Promise.reject(error);
-        });
+        axios.interceptors.request.use(
+            (request) => {
+                this.setState({
+                    requestUrl: request.url,
+                    requestData: request.data,
+                })
+                return request
+            },
+            (error) => {
+                console.log(error)
+                return Promise.reject(error)
+            }
+        )
 
-        axios.interceptors.response.use(response => {
-            return response;
-        }, error => {
-            console.log(error);
-            if (error.response){
-                if (error.response.status !== 401 && error.response.status !== 403){
-                alert('An error has occurred. Please report this information:\n'
-                    + 'Status = ' + error.response.status
-                    + '\nURL = ' + this.state.requestUrl
-                    + '\ndata = ' + JSON.stringify(this.state.requestData));
+        axios.interceptors.response.use(
+            (response) => {
+                return response
+            },
+            (error) => {
+                console.log(error)
+                if (error.response) {
+                    if (
+                        error.response.status !== 401 &&
+                        error.response.status !== 403
+                    ) {
+                        alert(
+                            'An error has occurred. Please report this information:\n' +
+                                'Status = ' +
+                                error.response.status +
+                                '\nURL = ' +
+                                this.state.requestUrl +
+                                '\ndata = ' +
+                                JSON.stringify(this.state.requestData)
+                        )
+                    }
+                } else {
+                    alert(
+                        'There was a problem connecting to the server\n' +
+                            'Try closing your browser and try again'
+                    )
                 }
+                return Promise.reject(error)
             }
-            else {
-                alert('There was a problem connecting to the server\n'
-                    + 'Try closing your browser and try again');
-            }
-            return Promise.reject(error);
-        });
+        )
         this.onAuthenticated = this.onAuthenticated.bind(this)
     }
 
@@ -98,9 +123,11 @@ class App extends Component {
             this.props.storePersons(persons.data);
             this.props.storePositions(positions.data);
             this.props.storeEmails(emails.data);
-            })
+        })
         .then(() => {
             this.setState({loading: false});
+            // Open the web socket to receive new emails arriving at the server
+            this.webSocketManager.openSocket()
         })
         .catch(error => {
             console.log(error);
