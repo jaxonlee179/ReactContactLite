@@ -1,5 +1,22 @@
 const express = require('express')
 const path = require('path')
+const http = require('http')
+const socketio = require('socket.io')
+const webSocketManager = require('./services/webSocketManager')
+
+// Create the express server
+const app = express()
+
+// socketio expects to receive an http server, not an express server
+// so just 'wrap' the express server in an http server
+const server = http.createServer(app);
+
+// Create the socketio server and register it with the webSocketManager
+const socket = socketio(server)
+socket.on('connection', () => {
+    console.log('New connection')
+    webSocketManager.registerWebSocket(socket)
+})
 
 require('./database/mongoose')
 
@@ -12,7 +29,6 @@ const positionRouter = require('./routers/positionRouter')
 const attachmentRouter = require('./routers/attachmentRouter')
 const loginRouter = require('./routers/loginRouter')
 
-const app = express()
 const port = process.env.CL_PORT || 5000
 
 // Set up static directory to serve the client code
@@ -43,6 +59,6 @@ app.get('*', (req, res) => {
     res.send('<h1>404 Not Found</h1>')
 })
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log('Server listening on port ' + port)
 })
