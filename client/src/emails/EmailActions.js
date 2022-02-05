@@ -5,7 +5,7 @@ import axios from 'axios';
 
 /******* Synchronous actions *********/
 export const STORE_ALL = 'STORE_ALL_EMAILS';
-export const SAVE_AND_STORE = 'SAVE_AND_STORE_EMAILS'; 
+export const STORE_ONE = 'STORE_ONE_EMAIL';
 
 /******* Asynchronous actions *********/
 /**
@@ -16,7 +16,7 @@ export const saveEmail = ((email, rowIndex) => {
     return dispatch => {
         axios.put('/emails/' + email._id, email)
         .then((response) => {
-            dispatch({ type: SAVE_AND_STORE, data: {email: response.data, rowIndex} })
+            dispatch({ type: STORE_ONE, data: {email: response.data, rowIndex} })
         });        
     }    
 })

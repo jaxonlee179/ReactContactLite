@@ -5,7 +5,7 @@ import axios from 'axios';
 
  /******* Synchronous actions *********/
 export const STORE_ALL = 'STORE_ALL_CONTACTS';
-export const SAVE_AND_STORE = 'SAVE_AND_STORE_CONTACTS'; 
+export const STORE_ONE = 'STORE_ONE_CONTACT'; 
 
 /******* Asynchronous actions *********/
 /**
@@ -17,13 +17,13 @@ export const saveEncounter = ((encounter, rowIndex) => {
         if (rowIndex === null){
             axios.post('/encounters', encounter)
             .then((response) => {
-                dispatch({ type: SAVE_AND_STORE, data: {encounter: response.data} })
+                dispatch({ type: STORE_ONE, data: {encounter: response.data} })
             });        
         }
         else {
             axios.put('/encounters/' + encounter._id, encounter)
             .then((response) => {
-                dispatch({ type: SAVE_AND_STORE, data: {encounter: response.data, rowIndex} })
+                dispatch({ type: STORE_ONE, data: {encounter: response.data, rowIndex} })
             });        
         }    
     }
