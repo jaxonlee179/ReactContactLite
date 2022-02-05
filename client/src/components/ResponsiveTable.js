@@ -18,7 +18,7 @@
  */
 import React from 'react'
 import styled from 'styled-components'
-import { fieldType } from './ResponsiveForm'
+import { fieldType } from './Constants'
 import Checkbox from './Checkbox'
 import moment from 'moment'
 
@@ -251,7 +251,6 @@ const StyledRow = styled(Row)`
     }
 `
 const Cell = ({ width, colors, key, className, children }) => {
-    const style = {'flex': width}
     return <div className={className}>{children}</div>
 }
 
