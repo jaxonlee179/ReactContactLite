@@ -6,7 +6,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "basic-react-timepicker": "^1.0.0",
     "concurrently": "^5.2.0",
     "moment": "^2.29.1",
@@ -22,7 +22,8 @@
     "react-select": "^4.3.1",
     "react-spinners-kit": "^1.9.1",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "socket.io-client": "^4.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
