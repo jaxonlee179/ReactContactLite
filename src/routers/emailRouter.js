@@ -1,5 +1,6 @@
 /**
- * Processes email receipt notifications from SNS and serves email content to the client.
+ * Services email requests from the client, and email notifications from the AWS 
+ * Simple Notification System. Newly received emails are also pushed to the client 
  */
 const express = require('express')
 const axios = require('axios')
@@ -10,6 +11,8 @@ const Email = require('../models/email')
 const Person = require('../models/person')
 const Encounter = require('../models/encounter')
 const parseEmail = require('../services/parser')
+
+const webSocketManager = require('../services/webSocketManager')
 
 const router = new express.Router()
 
@@ -78,6 +81,8 @@ router.post('/emails', async (req, res) => {
                 // Create an Email entity in the database
                 const email = new Email(emailFields)
                 await email.save()
+                // Push it to the client
+                webSocketManager.pushToClient('email', email)
                
                 // If a sender Person was found, create an Encounter 
                 if (sender){
@@ -88,6 +93,8 @@ router.post('/emails', async (req, res) => {
                         email:  email._id 
                     })
                     await encounter.save()
+                    // Push it to the client
+                    webSocketManager.pushToClient('encounter', encounter)
                 }
                
                 res.status(200).send()
@@ -143,7 +150,6 @@ const findSender = async emailFields => {
  */
 router.get('/emails', async (req, res) => {
     try {
-//        const query = req.query.person ? {
         const emails = await Email.find({})
         res.send(emails)
     } 
