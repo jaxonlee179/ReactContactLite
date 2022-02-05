@@ -11,11 +11,11 @@ const encounterSchema = new Schema({
     when:       {type: Date},
     type:       {
                     type: String,
-                    enum: ['email', 'phone'],
-                    lowercase: true
+                    enum: ['email', 'phone', 'linkedIn']
                 },
     details:    {type: String},
-    email:      {type: mongoose.ObjectId}
+    email:      {type: mongoose.ObjectId},
+    hide:       {type: Boolean, default: false}
 }, {
     timestamps: true
 })
