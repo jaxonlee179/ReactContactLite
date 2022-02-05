@@ -4,7 +4,8 @@
  * when it receives the emails
  */
 import React from 'react'
-import ResponsiveForm, { fieldType, fieldWidth } from '../components/ResponsiveForm'
+import ResponsiveForm from '../components/ResponsiveForm';
+import { fieldType, fieldWidth } from '../components/Constants';
 import { connect } from 'react-redux'
 import buildEntityOptionSets from '../utilities/entityOptionsHelper'
 

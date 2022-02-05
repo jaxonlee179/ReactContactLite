@@ -4,7 +4,8 @@
 import React, { useState, useMemo } from 'react';
 import NewWindow from 'react-new-window';
 
-import ResponsiveForm, { fieldType, fieldWidth } from '../components/ResponsiveForm';
+import ResponsiveForm from '../components/ResponsiveForm';
+import { fieldType, fieldWidth } from '../components/Constants';
 
 export const fieldDefs = [
     { name: 'subject',  label: 'Subject',   type: fieldType.TEXT,           displayWidth: fieldWidth.WIDE},

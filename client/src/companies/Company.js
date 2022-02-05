@@ -2,7 +2,8 @@
 * A modal popup for creating, editing or viewing a Company.
 */
 import React from 'react';
-import ResponsiveForm, { fieldType, fieldWidth } from '../components/ResponsiveForm';
+import ResponsiveForm from '../components/ResponsiveForm';
+import { fieldType, fieldWidth } from '../components/Constants';
 
 export const fieldDefs = [
     { name: 'name',   label: 'Name',    type: fieldType.TEXT,           displayWidth: fieldWidth.NORMAL},
