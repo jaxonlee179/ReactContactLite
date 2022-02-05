@@ -12,8 +12,8 @@ const initialState = {
 const encounterReducer = (state = initialState, action) => {
     switch (action.type){
         case actions.STORE_ALL : return storeAll(state, 'encounters', 'encountersMap', action.encounters);
-        case actions.SAVE_AND_STORE : return storeOne(state, action.data.encounter, action.data.rowIndex, 'encounters', 'encountersMap');
-        default: return state;
+        case actions.STORE_ONE : return storeOne(state, action.data.encounter, action.data.rowIndex, 'encounters', 'encountersMap');
+       default: return state;
     }
 }
 
