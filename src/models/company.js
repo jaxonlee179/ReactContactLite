@@ -9,7 +9,8 @@ const schema = new Schema({
     url:        {type: String, default: ''},
     address:    {type: String, default: ''},
     city:       {type: String, default: ''},
-    phone:      {type: String, default: ''}
+    phone:      {type: String, default: ''},
+    hide:       {type: Boolean, default: false}
     /*,
     login:      {type: String, default: ''},
     password:   {type: String, default: ''}

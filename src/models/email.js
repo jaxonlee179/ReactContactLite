@@ -1,5 +1,6 @@
 /**
- * 
+ * An email entity records messages sent to the application. Attachments
+ * are represented by metadata for retrieving attachment documents stored in S3 
  */
 const mongoose = require('mongoose')
 
@@ -12,7 +13,8 @@ const emailSchema = new mongoose.Schema({
     subject:    String,
     text:       String,
     attachments:[{bucket: String, key: String, fileName: String, contentType: String}],
-    sender:     {type: mongoose.ObjectId}
+    sender:     {type: mongoose.ObjectId},
+    hide:       {type: Boolean, default: false}
 }, {
     timestamps: true
 })

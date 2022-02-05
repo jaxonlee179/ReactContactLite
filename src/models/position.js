@@ -11,7 +11,8 @@ const positionSchema = new mongoose.Schema({
     company:    {type: mongoose.ObjectId},
     person:     {type: mongoose.ObjectId},
     postedDate: {type: Date},
-    appliedDate:{type: Date}
+    appliedDate:{type: Date},
+    hide:       {type: Boolean, default: false}
 }, {
     timestamps: true
 })

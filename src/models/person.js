@@ -8,6 +8,8 @@ const personSchema = new mongoose.Schema({
     email:      {type: String, default: ''},
     phone:      {type: String, default: ''},
     company:    {type: mongoose.ObjectId},
+    linkedIn:   {type: String, default: ''},
+    hide:       {type: Boolean, default: false}
 }, {
     timestamps: true
 })
